@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run build",
+  "functions": {
+    "api/ai-chat.js": {
+      "maxDuration": 30
+    }
+  },
+  "outputDirectory": "Public",
+  "installCommand": "npm ci --ignore-scripts"
+}
