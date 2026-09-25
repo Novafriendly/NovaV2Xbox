@@ -385,5 +385,32 @@
     "genres": [
       "Entertainment"
     ]
+  },
+   {
+    "id": "app-43",
+    "name": "Stumble Guys",
+    "art": "Img/game/stumbleguys.jpg",
+    "url": "https://nowgg.lol/apps/a/10011/b.html",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-44",
+    "name": "Call Of duty",
+    "art": "Img/game/Callofduty.jpg",
+    "url": "https://nowgg.lol/apps/a/10008/b.html",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-45",
+    "name": "Fc mobile",
+    "art": "Img/game/Fcmobile.webp",
+    "url": "https://nowgg.lol/apps/a/1353/b.html",
+    "genres": [
+      "Gaming"
+    ]
   }
-]
+]  
