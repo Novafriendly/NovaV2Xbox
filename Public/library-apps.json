@@ -1,1 +1,389 @@
-[{"id":"app-0","name":"YouTube","art":"Img/app/youtueb.jpg","url":"https://www.youtube.com","genres":["Entertainment"]},{"id":"app-1","name":"Fortnite","art":"Img/app/fortnite.jpg","url":"https://www.fortnite.com","genres":["Other"]},{"id":"app-2","name":"Minecraft","art":"Img/app/images (1).jpg","url":"https://www.minecraft.net","genres":["Other"]},{"id":"app-3","name":"Discord","art":"https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg","url":"https://discord.com","genres":["Social"]},{"id":"app-4","name":"Reddit","art":"https://www.redditinc.com/assets/images/site/reddit-logo.png","url":"https://www.reddit.com","genres":["Social"]},{"id":"app-5","name":"Twitter","art":"https://img.icons8.com/fluency/240/twitter.png","url":"https://twitter.com","genres":["Social"]},{"id":"app-6","name":"Spotify","art":"https://img.icons8.com/fluency/240/spotify.png","url":"https://open.spotify.com","genres":["Entertainment"]},{"id":"app-7","name":"Netflix","art":"https://img.icons8.com/fluency/240/netflix.png","url":"https://www.netflix.com","genres":["Entertainment"]},{"id":"app-8","name":"GitHub","art":"https://img.icons8.com/fluency/240/github.png","url":"https://github.com","genres":["Development"]},{"id":"app-9","name":"Gmail","art":"https://img.icons8.com/fluency/240/gmail.png","url":"https://mail.google.com","genres":["Productivity"]},{"id":"app-10","name":"Google Drive","art":"https://img.icons8.com/fluency/240/google-drive.png","url":"https://drive.google.com","genres":["Productivity"]},{"id":"app-11","name":"Twitch","art":"https://img.icons8.com/fluency/240/twitch.png","url":"https://www.twitch.tv","genres":["Entertainment"]},{"id":"app-12","name":"Instagram","art":"https://img.icons8.com/fluency/240/instagram-new.png","url":"https://www.instagram.com","genres":["Social"]},{"id":"app-13","name":"TikTok","art":"https://img.icons8.com/fluency/240/tiktok.png","url":"https://www.tiktok.com","genres":["Social"]},{"id":"app-14","name":"Amazon","art":"https://img.icons8.com/fluency/240/amazon.png","url":"https://www.amazon.com","genres":["Other"]},{"id":"app-15","name":"ChatGPT","art":"https://img.icons8.com/fluency/240/chatgpt.png","url":"https://chat.openai.com","genres":["Other"]},{"id":"app-16","name":"Snapchat","art":"https://img.icons8.com/fluency/240/snapchat.png","url":"https://web.snapchat.com","genres":["Social"]},{"id":"app-17","name":"WhatsApp","art":"https://img.icons8.com/fluency/240/whatsapp.png","url":"https://web.whatsapp.com","genres":["Other"]},{"id":"app-18","name":"Messenger","art":"https://img.icons8.com/fluency/240/facebook-messenger.png","url":"https://www.messenger.com","genres":["Other"]},{"id":"app-19","name":"Pinterest","art":"https://img.icons8.com/fluency/240/pinterest.png","url":"https://www.pinterest.com","genres":["Social"]},{"id":"app-20","name":"SoundCloud","art":"https://img.icons8.com/fluency/240/soundcloud.png","url":"https://soundcloud.com","genres":["Entertainment"]},{"id":"app-21","name":"Roblox","art":"https://img.icons8.com/fluency/240/roblox.png","url":"https://www.roblox.com","genres":["Gaming"]},{"id":"app-22","name":"Steam","art":"https://img.icons8.com/fluency/240/steam.png","url":"https://store.steampowered.com","genres":["Gaming"]},{"id":"app-23","name":"Crunchyroll","art":"https://img.icons8.com/fluency/240/crunchyroll.png","url":"https://www.crunchyroll.com","genres":["Other"]},{"id":"app-24","name":"Duolingo","art":"https://img.icons8.com/fluency/240/duolingo-logo.png","url":"https://www.duolingo.com","genres":["Education"]},{"id":"app-25","name":"Khan Academy","art":"https://img.icons8.com/fluency/240/khan-academy.png","url":"https://www.khanacademy.org","genres":["Education"]},{"id":"app-26","name":"Quizlet","art":"https://img.icons8.com/fluency/240/quizlet.png","url":"https://quizlet.com","genres":["Education"]},{"id":"app-27","name":"Canva","art":"https://img.icons8.com/fluency/240/canva.png","url":"https://www.canva.com","genres":["Productivity"]},{"id":"app-28","name":"Figma","art":"https://img.icons8.com/fluency/240/figma.png","url":"https://www.figma.com","genres":["Productivity"]},{"id":"app-29","name":"Notion","art":"https://img.icons8.com/fluency/240/notion.png","url":"https://www.notion.so","genres":["Productivity"]},{"id":"app-30","name":"Trello","art":"https://img.icons8.com/fluency/240/trello.png","url":"https://trello.com","genres":["Productivity"]},{"id":"app-31","name":"Coolmath Games","art":"https://www.coolmathgames.com/sites/default/files/public_games/50065/mobile_v2.jpg","url":"https://www.coolmathgames.com","genres":["Gaming"]},{"id":"app-32","name":"Y8","art":"https://img.icons8.com/fluency/240/controller.png","url":"https://www.y8.com","genres":["Gaming"]},{"id":"app-33","name":"Poki","art":"https://a.poki-cdn.com/images/poki-logo-blue.svg","url":"https://poki.com","genres":["Gaming"]},{"id":"app-34","name":"GeForce NOW","art":"https://img.icons8.com/fluency/240/nvidia.png","url":"https://play.geforcenow.com","genres":["Gaming"]},{"id":"app-35","name":"Google Docs","art":"https://img.icons8.com/fluency/240/google-docs.png","url":"https://docs.google.com","genres":["Productivity"]},{"id":"app-36","name":"Google Sheets","art":"https://img.icons8.com/fluency/240/google-sheets.png","url":"https://sheets.google.com","genres":["Productivity"]},{"id":"app-37","name":"Google Slides","art":"https://img.icons8.com/fluency/240/google-slides.png","url":"https://slides.google.com","genres":["Productivity"]},{"id":"app-38","name":"Desmos","art":"https://www.desmos.com/assets/img/apps/scientific/icon.png","url":"https://www.desmos.com/calculator","genres":["Education"]},{"id":"app-39","name":"CodePen","art":"https://img.icons8.com/fluency/240/codepen.png","url":"https://codepen.io","genres":["Development"]}]
+[
+  {
+    "id": "app-0",
+    "name": "YouTube",
+    "art": "Img/app/Youtube.png",
+    "url": "https://voidgpt.xyz/~v/",
+    "genres": [
+      "Entertainment"
+    ]
+  },
+  {
+    "id": "app-1",
+    "name": "Fortnite",
+    "art": "Img/app/fortnitelogo.jpg",
+    "url": "https://nowgg.lol/apps/aptoide/5874/aptoide.html?deep_link=aptoidesearch://com.epicgames.fortnite",
+    "genres": [
+      "Other"
+    ]
+  },
+  {
+    "id": "app-2",
+    "name": "Minecraft",
+    "art": "Img/app/minecraft.png",
+    "url": "https://nowgg.lol/apps/aptoide/5874/aptoide.html?deep_link=aptoidesearch://com.mojang.minecrafttrialpe",
+    "genres": [
+      "Other"
+    ]
+  },
+  {
+    "id": "app-3",
+    "name": "Discord",
+    "art": "Img/app/Discord.png",
+    "url": "https://discord.com",
+    "genres": [
+      "Social"
+    ]
+  },
+  {
+    "id": "app-4",
+    "name": "Reddit",
+    "art": "Img/app/Reddit.jpg",
+    "url": "https://www.reddit.com",
+    "genres": [
+      "Social"
+    ]
+  },
+  {
+    "id": "app-5",
+    "name": "Twitter",
+    "art": "Img/app/Twitter.jpg",
+    "url": "https://twitter.com",
+    "genres": [
+      "Social"
+    ]
+  },
+  {
+    "id": "app-6",
+    "name": "Spotify",
+    "art": "Img/app/spotify.png",
+    "url": "https://open.spotify.com",
+    "genres": [
+      "Entertainment"
+    ]
+  },
+  {
+    "id": "app-7",
+    "name": "Netflix",
+    "art": "Img/app/Neflix.png",
+    "url": "https://gaiaflix.live/",
+    "genres": [
+      "Entertainment"
+    ]
+  },
+  {
+    "id": "app-8",
+    "name": "GitHub",
+    "art": "Img/app/Github.png",
+    "url": "https://github.com",
+    "genres": [
+      "Development"
+    ]
+  },
+  {
+    "id": "app-9",
+    "name": "Gmail",
+    "art": "Img/app/gmail.png",
+    "url": "https://mail.google.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-10",
+    "name": "Google Drive",
+    "art": "Img/app/googledrive.jpg",
+    "url": "https://drive.google.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-11",
+    "name": "Twitch",
+    "art": "Img/app/Twitch.jpg",
+    "url": "https://www.twitch.tv",
+    "genres": [
+      "Entertainment"
+    ]
+  },
+  {
+    "id": "app-12",
+    "name": "Instagram",
+    "art": "Img/app/insta.jpg",
+    "url": "https://www.instagram.com",
+    "genres": [
+      "Social"
+    ]
+  },
+  {
+    "id": "app-13",
+    "name": "TikTok",
+    "art": "Img/app/Tiktok.png",
+    "url": "https://www.tiktok.com",
+    "genres": [
+      "Social"
+    ]
+  },
+  {
+    "id": "app-14",
+    "name": "Amazon",
+    "art": "Img/app/AmazonIcon.png",
+    "url": "https://www.amazon.com",
+    "genres": [
+      "Other"
+    ]
+  },
+  {
+    "id": "app-15",
+    "name": "ChatGPT",
+    "art": "Img/app/chagpt.jpg",
+    "url": "https://chat.openai.com",
+    "genres": [
+      "Other"
+    ]
+  },
+  {
+    "id": "app-16",
+    "name": "Snapchat",
+    "art": "Img/app/Snapchat.png",
+    "url": "https://web.snapchat.com",
+    "genres": [
+      "Social"
+    ]
+  },
+  {
+    "id": "app-17",
+    "name": "WhatsApp",
+    "art": "Img/app/whatsapp.png",
+    "url": "https://web.whatsapp.com",
+    "genres": [
+      "Other"
+    ]
+  },
+  {
+    "id": "app-18",
+    "name": "Messenger",
+    "art": "Img/app/messenger.jpg",
+    "url": "https://www.messenger.com",
+    "genres": [
+      "Other"
+    ]
+  },
+  {
+    "id": "app-19",
+    "name": "Pinterest",
+    "art": "Img/app/pinterest.jpg",
+    "url": "https://www.pinterest.com",
+    "genres": [
+      "Social"
+    ]
+  },
+  {
+    "id": "app-20",
+    "name": "SoundCloud",
+    "art": "Img/app/Soundcloud.png",
+    "url": "https://soundcloud.com",
+    "genres": [
+      "Entertainment"
+    ]
+  },
+    {
+        "id": "app-21",
+        "name": "Antiwatch",
+        "art": "Img/app/antiwatch.jpg",
+        "url": "https://aniwatch9.com.ro/",
+        "genres": [
+        "Entertainment"
+        ]
+    },
+  {
+    "id": "app-22",
+    "name": "Steam",
+    "art": "Img/app/Steam.jpg",
+    "url": "https://store.steampowered.com",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-23",
+    "name": "Crunchyroll",
+    "art": "Img/app/Crunchyroll.png",
+    "url": "https://www.crunchyroll.com",
+    "genres": [
+      "Other"
+    ]
+  },
+  {
+    "id": "app-24",
+    "name": "Duolingo",
+    "art": "Img/app/Duolingo.jpg",
+    "url": "https://www.duolingo.com",
+    "genres": [
+      "Education"
+    ]
+  },
+  {
+    "id": "app-25",
+    "name": "Khan Academy",
+    "art": "Img/app/Khan academny.png",
+    "url": "https://www.khanacademy.org",
+    "genres": [
+      "Education"
+    ]
+  },
+  {
+    "id": "app-26",
+    "name": "Quizlet",
+    "art": "Img/app/quizlet.png",
+    "url": "https://quizlet.com",
+    "genres": [
+      "Education"
+    ]
+  },
+  {
+    "id": "app-27",
+    "name": "Canva",
+    "art": "Img/app/canva.jpg",
+    "url": "https://www.canva.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-28",
+    "name": "Figma",
+    "art": "Img/app/Figma.png",
+    "url": "https://www.figma.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-29",
+    "name": "Notion",
+    "art": "Img/app/notion.png",
+    "url": "https://www.notion.so",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-30",
+    "name": "Trello",
+    "art": "Img/app/Trello.jpg",
+    "url": "https://trello.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-31",
+    "name": "Coolmath Games",
+    "art": "Img/app/Crazygames.jpg",
+    "url": "https://www.coolmathgames.com",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-32",  
+    "name": "Y8",
+    "art": "Img/app/y8.png",
+    "url": "https://www.y8.com",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-33",
+    "name": "Poki",
+    "art": "Img/app/Poki.png",
+    "url": "https://poki.com",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-34",
+    "name": "GeForce NOW",
+    "art": "Img/app/Geforcenow.png",
+    "url": "https://play.geforcenow.com",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-35",
+    "name": "Google Docs",
+    "art": "Img/app/Docs.jpg",
+    "url": "https://docs.google.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-36",
+    "name": "Google Sheets",
+    "art": "Img/app/googlesheets.jpg",
+    "url": "https://sheets.google.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-37",
+    "name": "Google Slides",
+    "art": "Img/app/Google slides.jpg",
+    "url": "https://slides.google.com",
+    "genres": [
+      "Productivity"
+    ]
+  },
+  {
+    "id": "app-38",
+    "name": "Desmos",
+    "art": "Img/app/Desmos.jpg",
+    "url": "https://www.desmos.com/calculator",
+    "genres": [
+      "Education"
+    ]
+  },
+  {
+    "id": "app-39",
+    "name": "CodePen",
+    "art": "Img/app/CodePen.png",
+    "url": "https://codepen.io",
+    "genres": [
+      "Development"
+    ]
+  },
+   {
+    "id": "app-40",
+    "name": "Roblox",
+    "art": "Img/app/Roblox.jpg",
+    "url": "https://nowgg.lol/apps/a/19900/b.html",
+    "genres": [
+      "Gaming"
+    ]
+  },
+  {
+    "id": "app-41",
+    "name": "Sport App",
+    "art": "Img/app/Thetvvapps.png",
+    "url": "https://thetvapp.plus/v7",
+    "genres": [
+      "Entertainment"
+    ]
+  },
+  {
+    "id": "app-42",
+    "name": "Hianime",
+    "art": "Img/app/Hianime.jpg",
+    "url": "https://hianime.ms/home",
+    "genres": [
+      "Entertainment"
+    ]
+  }
+]
