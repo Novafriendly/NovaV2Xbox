@@ -12,3 +12,7 @@
 @media(max-width:600px){.startup-controls{right:16px;bottom:18px}.startup:not(.setup) .startup-progress{bottom:78px}}
 
 .startup-start{position:absolute;z-index:3;bottom:80px;border:1px solid #ffffff40;border-radius:4px;background:#191919dd;color:white;padding:16px 40px;font:500 18px system-ui;cursor:pointer}.startup-start[hidden]{display:none}.startup-start:hover{outline:2px solid #87d747}.startup.intro-ended .startup-start{display:none}.startup-progress i{transition:none!important;background:#9abd45;box-shadow:0 0 8px #9abd4540}
+
+.startup-progress i{width:100%;transform:scaleX(0);transform-origin:left;will-change:transform}
+.startup.video-fallback .startup-video{display:none}
+.startup.video-fallback:not(.setup) .startup-brand,.startup.video-fallback:not(.setup) .startup-halo{display:flex}

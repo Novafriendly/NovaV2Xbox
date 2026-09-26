@@ -1,0 +1,10 @@
+{
+  "route": "/~/sj/",
+  "scramjet": "2.0.67-alpha.2",
+  "controller": "0.0.14",
+  "libcurlTransport": "2.0.5",
+  "builtFrom": "scramjet-2.0.67-alpha.2/scramjet-2.0.67-alpha.2/packages/core",
+  "patch": "Guard unsupported synchronous XHR without calling the missing client.getFlag method.",
+  "wasm": "Pinned 2.0.67-alpha.2 release WASM and generated binding; JavaScript rebuilt from supplied source.",
+  "curl": "Browser WebAssembly transport. Native curl-curl-8_22_0 C source is not compiled into this build."
+}

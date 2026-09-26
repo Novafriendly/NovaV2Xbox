@@ -5,3 +5,18 @@
 .flight{height:190px}.ship{top:24px}.loading-copy{padding:0 24px}.track{width:min(320px,75vw);margin:12px auto 0}
 body.failed #message{position:static;width:auto;height:auto;margin:12px 0;overflow:visible;clip-path:none;white-space:normal}
 body.failed #back{display:block}
+
+/* Composite transforms rather than width/filter animations on laptop GPUs. */
+.track i{width:100%;transform:scaleX(0);transform-origin:left;transition:none;will-change:transform}
+.track.waiting i{background:#86f4af;animation:none}
+.track.waiting::after{content:'';display:block;width:28%;height:3px;background:linear-gradient(90deg,transparent,#e2ffea,transparent);transform:translateX(-110%);animation:load-sweep 1.8s ease-in-out infinite;margin-top:-3px}
+.ship{will-change:transform;animation:ship-hover 2.8s ease-in-out infinite}
+.ship svg{filter:none}.trail{filter:none;background:linear-gradient(90deg,transparent,#25b19b33,#a8ff9b);opacity:.8;animation:engine-pulse .7s ease-in-out alternate infinite}
+.stars{animation:star-drift 1s linear infinite;will-change:transform}
+body.leaving .ship{animation:ship-launch .65s cubic-bezier(.45,0,1,.6) forwards}
+@keyframes ship-hover{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-7px)}}
+@keyframes ship-launch{to{transform:translate(100vw,-25px);opacity:0}}
+@keyframes engine-pulse{to{opacity:.45;transform:scaleY(.7)}}
+@keyframes star-drift{to{transform:translateX(-70px)}}
+@keyframes load-sweep{to{transform:translateX(470%)}}
+@media(prefers-reduced-motion:reduce){.ship,.trail,.stars,.track.waiting::after{animation:none!important}}

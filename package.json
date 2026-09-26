@@ -2,13 +2,10 @@
   "private": true,
   "dependencies": {
     "firebase-admin": "^13.0.0",
-    "@mercuryworkshop/wisp-js": "0.4.1",
-    "@mercuryworkshop/bare-mux": "2.1.9",
-    "@mercuryworkshop/libcurl-transport": "1.5.2",
-    "@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/v1.1.0/mercuryworkshop-scramjet-1.1.0.tgz"
+    "@mercuryworkshop/wisp-js": "0.4.1"
   },
   "scripts": {
     "build": "node scripts/check-systems.mjs",
-    "start:transport": "node server/search-wisp.mjs"
+    "start:transport": "node scripts/patch-wisp.mjs && node server/search-wisp.mjs"
   }
 }

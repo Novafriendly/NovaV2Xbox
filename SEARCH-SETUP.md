@@ -1,15 +1,26 @@
-# Nova Search and console update
+# Nova connection and loading update
 
-Search uses the vendored Scramjet 2.0.67-alpha.2, controller 0.0.14 and libcurl WebAssembly transport 2.0.5. The native curl source archive is not a browser runtime. The source folder and original Nova are preserved.
+Search, games and apps now share Public/src/connection.js and use /~/sj/. No runtime assets are loaded from the original Nova project. The old Public/nova-proxy folder is excluded from deployment.
 
-## Local development
-Serve Public over HTTP (not file URLs). Run npm ci --ignore-scripts, then npm run start:transport. The transport listens on 127.0.0.1:8781; Search uses it from 127.0.0.1. Its default allowed page origins are localhost:8780 and 127.0.0.1:8780. Configure NOVA_ALLOWED_ORIGINS when using another origin.
+## Runtime provenance
+Scramjet JavaScript was rebuilt from your supplied scramjet-2.0.67-alpha.2 source. Its missing client.getFlag call in the synchronous-XHR handler is guarded: this alpha does not implement that worker. Retro Bowl and College preload their packaged text data instead. College's missing local save files no longer trigger a network request. Existing local saves are read first and are not cleared.
 
-## Vercel
-The static proxy and existing AI, voice and moderation APIs deploy with NovaV2. A Wisp transport must run on a host that supports persistent WebSockets; Vercel HTTP functions cannot provide it. Set NOVA_WISP_URL to your dedicated wss:// endpoint and rebuild. Without it, Search uses the original shared Mercury Workshop endpoint. A dedicated host uses server/search-wisp.mjs; set WISP_HOST, WISP_PORT and NOVA_ALLOWED_ORIGINS explicitly for that deployment. Private destinations and non-web ports are blocked.
+The matching 2.0.67-alpha.2 release supplies the WASM rewriter and generated binding. Controller 0.0.14 and libcurl-transport 2.0.5 are pinned release builds. The native curl 8.22.0 C source archive is NOT compiled or used as a browser transport: that requires a separate WebAssembly build and browser socket integration. See Public/~/sj/runtime-versions.json for provenance.
 
-Google is the default engine. Its bot checks may still appear through a proxy. Search settings also offer Bing, DuckDuckGo and Brave. No CAPTCHA or access-control bypass is implemented.
+## Run locally
+Serve Public over HTTP on localhost:8780. Install dependencies with npm ci --ignore-scripts and run npm run start:transport. This applies the Wisp 0.4.1 object-iteration fix before starting the server. Without it, enabling per-host limits crashes Wisp on its first request. Limits, origin checks, private-address restrictions and certificate verification remain enabled. DNS prefers IPv4 for hosts without working IPv6 connectivity.
 
-Chat, guide DMs, images, reports and admin replies reuse the existing Firebase data and moderation checks. Admin actions still require the existing authorized role. Local static preview cannot serve the AI/voice/appeal APIs; use the configured backend deployment for those features.
+## Deploy
+Run npm run build and deploy NovaV2 to update the static files. This task did not deploy your live website.
 
-Startup uses the supplied opening video with sound. If the browser blocks audio autoplay, Start Nova begins it with a user gesture. Reduced-motion users skip the intro. Progress reflects playback, not a fake download percentage.
+Vercel functions do not host the persistent WebSocket transport. Run npm run start:transport on a WebSocket-capable host, put it behind HTTPS/WSS, and set NOVA_ALLOWED_ORIGINS to your Nova origin, WISP_HOST and WISP_PORT for that host. Set NOVA_WISP_URL to its wss:// endpoint in the Vercel build environment, then rebuild. Without a configured endpoint, the existing shared endpoint is used; its performance and TLS errors are outside this static app's control. No endpoint or credentials were supplied for a dedicated deployment.
+
+The route change alone does not fix a school network block, a site's bot checks, or an upstream TLS error. Connection failures get retry/back controls; safe reads retry one transient connection error. Form submissions are never automatically replayed.
+
+## Loading
+The opening movie autoplays muted. Failed autoplay, a decode error, an eight-second stall, or reduced-motion preferences show a short silent Nova fallback before username/PIN/Home. Username and PIN setup still run.
+
+The ship uses transform and opacity animations with a smoothly interpolated stage bar and a moving waiting highlight. The loader stays visible for at least 1.4 seconds. The bar represents connection and document-load stages, not a measured download percentage for all third-party game assets. Required blocking-script failures show an error instead of silently displaying an empty player. Reduced-motion preferences disable travel animations.
+
+## Updating a game
+Edit Public/content/games/33-ff.html (Retro Bowl) or 34-fixed.html (College); the editable html-main copies are kept in sync for these fixes. Open games through Nova over HTTPS/localhost, not file://. The player fetches local HTML with cache disabled, so reopening uses the current deployed file. Publish the updated Public file to update the live site. Preserve the compatibility script when replacing a GameMaker game wrapper.
