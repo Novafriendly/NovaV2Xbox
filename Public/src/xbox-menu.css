@@ -27,3 +27,7 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{display:none!important}
 .home-scroll-thumb{position:absolute;right:0;width:5px;height:56px;border-radius:99px;background:#808080;cursor:grab;touch-action:none;transition:background .15s,width .15s}
 .home-scroll-thumb:hover,.home-scroll-thumb:focus-visible{width:7px;background:#aaa;outline:none}
 .home-scroll-thumb:active{cursor:grabbing}
+.xg-conversation-flyout{position:absolute;left:calc(100% + 12px);top:0;width:min(560px,calc(100vw - 510px));height:100%;display:flex;flex-direction:column;background:#0c100ff5;border:1px solid #ffffff20;border-radius:12px;box-shadow:0 18px 60px #0008;overflow:hidden;z-index:4}.xg-conversation-flyout>.xg-flyout-heading{padding:14px 18px;border-bottom:1px solid #ffffff12}.xg-conversation-flyout>iframe{flex:1;min-height:0;width:100%;border:0;background:transparent}@media(max-width:850px){.xg-conversation-flyout{left:12px;top:12px;width:calc(100vw - 72px);height:calc(100% - 24px)}}
+
+/* Let conversations use more of the available desktop width. */
+@media(min-width:851px){.xg-conversation-flyout{width:min(820px,calc(100vw - 515px))}}
