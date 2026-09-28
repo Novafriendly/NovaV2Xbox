@@ -88,7 +88,7 @@ if(!items.length)body.append(node('p',view==='requests'?(window.novaGuideRequest
   function tick() {
     const now = new Date();
     time.dateTime = now.toISOString();
-    time.textContent = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    renderNovaClock(time, now);
   }
   let timer;
   function syncOpen() {

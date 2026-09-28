@@ -19,6 +19,7 @@
     panel.classList.remove('full-library');panel.dataset.view=kind(g);panel.hidden=false;content.hidden=true;document.getElementById('panel-title').textContent=g.name;
     document.querySelectorAll('nav [data-page]').forEach(b=>b.classList.remove('active'));
     stopOtherSessions(id);
+    if(!el.dataset.counted){el.dataset.counted="true";dispatchEvent(new CustomEvent("nova-title-launched",{detail:{id:g.id,kind:kind(g)}}));}
     record(g);
   }
   function stopOtherSessions(keepId){

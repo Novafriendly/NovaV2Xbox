@@ -7,7 +7,7 @@
   const note = document.createElement('p'); note.textContent = 'Connecting Nova Music…';
   const retry = document.createElement('button'); retry.textContent = 'Try again'; retry.hidden = true;
   status.append(note, retry); host.append(status); panel.append(host);
-  let view, starting, timer, ready = false;
+  let view, controller, starting, timer, ready = false;
   const paths = {previous:'M6 5v14M19 5 8 12l11 7Z',next:'M18 5v14M5 5l11 7-11 7Z',play:'m8 5 11 7-11 7Z',pause:'M8 5v14M16 5v14',volume:'M3 9h4l5-4v14l-5-4H3ZM16 8q4 4 0 8'};
   const icon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="'+paths[name]+'"/></svg>';
   const card = document.createElement('section'); card.className = 'xg-music'; card.setAttribute('aria-label','Nova Music player');
@@ -25,8 +25,26 @@
   const volume = document.createElement('input'); volume.type = 'range'; volume.min = 0; volume.max = 100; volume.value = 70; volume.setAttribute('aria-label','Music volume'); volume.disabled = true;
   volume.oninput = () => command('setVolume',Number(volume.value)/100);
   const volumeIcon = document.createElement('span'); volumeIcon.innerHTML = icon('volume'); controls.append(volumeIcon,volume);
-  card.append(info,controls); const bottom = document.querySelector('.xg-bottom'); bottom.before(card);
-  function player() {try {return view?.element.contentWindow.__NEO_METING_PLAYER__;} catch {return null;}}
+  const progress=document.createElement('div');progress.className='music-progress';
+  const elapsed=document.createElement('small'),duration=document.createElement('small'),seek=document.createElement('input');
+  seek.type='range';seek.min=0;seek.max=0;seek.step=.1;seek.value=0;seek.disabled=true;seek.setAttribute('aria-label','Song position');elapsed.textContent=duration.textContent='0:00';
+  const stamp=n=>{n=Number.isFinite(n)?Math.max(0,Math.floor(n)):0;return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')};
+  let dragging=false;
+  seek.oninput=()=>{dragging=true;elapsed.textContent=stamp(Number(seek.value))};
+  seek.onchange=()=>{command('seek',Number(seek.value));dragging=false};
+  seek.onblur=()=>{dragging=false};progress.append(elapsed,seek,duration);
+  card.append(info,progress,controls); const bottom = document.querySelector('.xg-bottom'); bottom.before(card);
+  function player() {
+    function find(win,depth=0){try{if(win.__NEO_METING_PLAYER__)return win.__NEO_METING_PLAYER__;if(depth<4)for(const f of win.document.querySelectorAll('iframe')){const p=find(f.contentWindow,depth+1);if(p)return p;}}catch{}return null;}
+    return view?find(view.element.contentWindow):null;
+  }
+  function artwork(src){
+    if(!src||!view||!controller)return;
+    try{const target=new URL(src,url);if(!['https:','http:','blob:','data:'].includes(target.protocol))return;
+      const proxied=target.origin===location.origin||['blob:','data:'].includes(target.protocol)?target.href:view.prefix+controller.config.codec.encode(target.href);
+      if(cover.getAttribute('src')!==proxied)cover.src=proxied;
+    }catch{}
+  }
   async function command(action,value) {
     try {const p=player(); if(!p)throw Error('Open Nova Music to connect.'); await p[action](value); update();}
     catch {artist.textContent='Open Music to resume playback';}
@@ -38,9 +56,15 @@
     artist.textContent=track?.artist || track?.author || (track ? 'Now playing' : 'Choose a song');
     try {
       const image=view.element.contentDocument.getElementById('npThumb');
-      const src=image?.getAttribute('src');
-      if(src && cover.getAttribute('src')!==src)cover.src=src;
+      const raw=track?.thumb||track?.pic||track?.cover||track?.artwork||track?.image;
+      const trackImage=typeof raw==='string'?raw:raw?.src||raw?.url;
+      const youtubeId=String(track?.id||'');
+      artwork(trackImage||image?.getAttribute('src')||(/^[A-Za-z0-9_-]{11}$/.test(youtubeId)?'https://i.ytimg.com/vi/'+youtubeId+'/hqdefault.jpg':''));
     } catch {}
+    const length=Number(media?.duration),position=Number(media?.currentTime)||0;
+    seek.disabled=!Number.isFinite(length)||length<=0;seek.max=seek.disabled?0:length;
+    if(!dragging){seek.value=position;elapsed.textContent=stamp(position)}
+    duration.textContent=stamp(length);seek.setAttribute('aria-valuetext',stamp(Number(seek.value))+' of '+stamp(length));
     Object.values(buttons).forEach(b=>b.disabled=!track); volume.disabled=!media;
     const playing=media&&!media.paused&&!media.ended;
     buttons.toggle.innerHTML=icon(playing?'pause':'play'); buttons.toggle.setAttribute('aria-label',playing?'Pause music':'Play music');
@@ -71,7 +95,7 @@
     status.hidden=false;retry.hidden=true;note.textContent='Connecting Nova Music…';
     starting=(async()=>{
       try {
-        const controller=await NovaConnection.create();
+        controller=await NovaConnection.create();
         view=controller.createFrame(); view.element.id='nova-music-frame'; view.element.title='Nova Music'; view.element.allow='autoplay; fullscreen';
         view.element.addEventListener('load',customize); host.append(view.element); view.go(url);
         timer=setTimeout(()=>{if(!ready){note.textContent='Music is taking longer to connect. You can try again.';retry.hidden=false;}},45000);
