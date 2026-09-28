@@ -18,3 +18,9 @@
 .startup.video-fallback:not(.setup) .startup-brand,.startup.video-fallback:not(.setup) .startup-halo{display:flex}
 /* Continue directly from the account flow, with a quiet fade into Home. */
 .startup.account-arrival{background:#070709;transition:opacity .6s ease;transform:none}.startup.account-arrival:not(.setup)>*{display:none!important}.startup.account-arrival.leaving{transform:none;opacity:0}
+
+/* Loading-screen motion follows the explicit Nova preference on every device. */
+.startup.animated-intro .startup-brand{animation:startup-logo 1.4s ease both!important}
+.startup.animated-intro .startup-halo{animation:startup-bloom 2.2s ease both!important}
+.startup.animated-intro .startup-video{animation:opening-fade .5s ease both!important}
+.startup.reduce-motion,.startup.reduce-motion *{animation:none!important;transition:none!important}
