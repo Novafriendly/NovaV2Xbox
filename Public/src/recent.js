@@ -18,10 +18,20 @@
     frame=el;frame.id='system';frame.title=g.name;frame.hidden=false;
     panel.classList.remove('full-library');panel.dataset.view=kind(g);panel.hidden=false;content.hidden=true;document.getElementById('panel-title').textContent=g.name;
     document.querySelectorAll('nav [data-page]').forEach(b=>b.classList.remove('active'));
-    // Keep a bounded set of live sessions. History survives a reload; live frames do not.
-    while(sessions.size>3){const oldest=sessions.keys().next().value;sessions.get(oldest).remove();sessions.delete(oldest);}
+    stopInactive();
     record(g);
   }
+  function stopInactive(){
+    for(const [id,el] of sessions){
+      const visible=el===frame&&!panel.hidden&&!el.hidden&&['game','app'].includes(panel.dataset.view);
+      if(visible)continue;
+      // Unload the entire browsing context, including nested Web Audio and timers.
+      // Muting HTML media alone leaves many games' audio engines running.
+      el.src='about:blank';el.remove();sessions.delete(id);
+      if(frame===el)frame=freshFrame();
+    }
+  }
+  new MutationObserver(stopInactive).observe(panel,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','data-view']});
   function render(){
     const host=document.getElementById('tiles'),recent=list();host.replaceChildren();
     const rows=recent.length?recent:defaults;
