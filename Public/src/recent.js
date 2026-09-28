@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const sessions=new Map();let defaults=[];
+  const pages=new Map();const sessions=new Map();let defaults=[];
   const account=()=>localStorage.getItem('nova_user')||localStorage.getItem('nova_username')||'guest';
   const key=()=> 'nova-v2-recent-'+account();
   const kind=g=>g.kind==='app'||g._kind==='apps'?'app':'game';
@@ -34,7 +34,14 @@
       b.append(img,caption);b.onclick=()=>launch(g);const select=()=>{host.querySelectorAll('.tile').forEach(x=>x.classList.toggle('selected',x===b));};b.onmouseenter=select;b.onfocus=select;host.append(b);
     });
   }
-  window.NovaRecent={list,record,park,launch};
+  function openSystem(page){
+    if(!['search','ai','novatube'].includes(page)){park();return;}
+    const key=account()+':'+page;
+    if(frame.dataset.session==='true'){frame.hidden=true;frame.removeAttribute('id');}else frame.remove();
+    if(!pages.has(key)){const el=freshFrame();el.dataset.session='true';pages.set(key,el);}
+    frame=pages.get(key);frame.id='system';frame.hidden=false;
+  }
+  window.NovaRecent={list,record,park,launch,openSystem};
   fetch('home-covers.json').then(r=>r.json()).then(rows=>{defaults=rows;render();}).catch(render);
   addEventListener('storage',render);addEventListener('nova-profile-changed',render);render();window.novaGuideRender?.('home');
 })();
