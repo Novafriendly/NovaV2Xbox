@@ -12,6 +12,6 @@ export async function presence(uid){const p=ref(db,ROOT+'/presence/'+uid);const 
 export async function saveAccount(uid,name,photo){await update(ref(db,'novaAccounts/'+uid),{name,photo,updatedAt:Date.now()});await update(ref(db,ROOT+'/profiles/'+uid),{name,photo});}
 export async function resetPassword(){const {sendPasswordResetEmail}=await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js');await sendPasswordResetEmail(auth,auth.currentUser.email)}
 export async function claimOwner(code){const response=await fetch('/api/chat-owner',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await auth.currentUser.getIdToken()},body:JSON.stringify({code})});const data=await response.json();if(!response.ok)throw Error(data.error||'Owner setup failed.')}
-import {orderByChild,equalTo} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
-export const watchGroups=(uid,fn,error)=>onValue(query(ref(db,ROOT+'/groups'),orderByChild('members/'+uid),equalTo(true)),s=>fn(s.val()||{}),error);
-export async function createGroup(uid,name,members){const key=push(ref(db,ROOT+'/groups')).key;await write('groups/'+key,{name,owner:uid,members:Object.fromEntries([uid,...members].map(id=>[id,true]))});return key}
+import {watchMemberGroups} from './chat-group-list.js';
+export const watchGroups=(uid,fn,error)=>watchMemberGroups(db,uid,fn,error);
+export async function createGroup(uid,name,members){const key=push(ref(db,ROOT+'/groups')).key;await write('groups/'+key,{name,owner:uid,members:Object.fromEntries([uid,...members].map(id=>[id,true]))});await patch(Object.fromEntries([uid,...members].map(id=>['userGroups/'+id+'/'+key,true])));return key}

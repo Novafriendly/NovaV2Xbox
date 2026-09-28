@@ -19,7 +19,7 @@ No Firebase admin credentials were available during implementation. Live deletio
 - Nova server categories: Start here, Community, Feedback, and private Staff lounge. DMs appear only in the direct-message sidebar. The profile controls stay pinned at the bottom.
 - Friends, requests, groups, private DMs, message editing/deletion, profile editor, welcome page, Nitro game showcase, and cosmetic gallery.
 - Only participants read DMs. Staff may delete server messages, not DMs. The owner manages roles; moderators can ban regular members.
-- Reports and suggestions are private forms saved to novaChatV2/feedback/{uid}. Only their sender and the owner can read them. Settings > Owner inbox shows submissions. No email or external message is sent.
+- Reports and suggestions are private forms saved to novaChatV2/feedback/{uid}. Only their sender and Nova staff can read them. Staff Reports and Staff Suggestions show submissions and allow replies. Senders can read responses under Your submissions & replies. No email or external message is sent.
 - Settings > Server appearance lets the owner change the name, banner URL/upload, and icon. The 40/100 boost bar is decorative, not an actual subscription or purchase count.
 - The shop previews 157 supplied cosmetics, with Coming soon labels. Equipping is disabled in both the UI and profile rules; previously selected cosmetics remain. Original files are preserved in Profile; public copies/catalog are in Public/profile-assets.
 - Firebase send reservations enforce at least 1.5 seconds between new messages or submissions for each account. The composer adds a 1.8-second cooldown and rejects repeated text for 15 seconds. Message edits are not covered by the new-message cooldown. Publish rules with the client update or sends will fail.
@@ -29,3 +29,9 @@ No Firebase admin credentials were available during implementation. Live deletio
 Preview browser tests cover welcome, fixed layout, sidebar separation, private feedback/inbox, owner server editing, messaging/duplicate protection, group creation, and the preview-only shop. Tests use sample data and do not send live messages. Rule-expression tests check ownership, staff privacy, feedback privacy, and send reservations with local fixtures; they are not Firebase emulator tests. Live Firebase rule enforcement and owner/reset operations remain unverified.
 
 The latest 100 messages are displayed per conversation. Older-history pagination and voice/video calls are not included. The boost display and preview account role are presentation-only.
+
+
+## Navigation and support update
+Links and Leaks are under Start here and remain staff-only for posting. Staff Reports and Staff Suggestions use private feedback plus feedbackReplies, accessible to the submitting user and owner/admin/moderator roles. Publish the latest rules to enable these paths. AI Assistance embeds the existing ai.html UI and uses the same Nova AI backend/configuration. Navigation now clears subscriptions, animations, and open dialogs when changing views. The glass styling uses neutral translucent surfaces.
+
+The signed-in permission error cannot be resolved by the local preview. Firebase rules must be published by the project owner; no live rules deployment was performed here. Existing profile joined timestamps are preserved during initialization to avoid immutable-field write failures.
