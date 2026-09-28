@@ -6,3 +6,7 @@
 #panel:not([data-view="music"]) #nova-music{display:none}
 .xbox-panel-open #nova-music{height:100%} body:has(#panel[data-view=music]:not([hidden]))>header,body:has(#panel[data-view=music]:not([hidden]))>main{visibility:hidden}
 #panel[data-view="music"]{background:rgba(8,12,10,.30)!important} #nova-music{background:transparent!important}
+
+#panel[data-view=novatube]{background:rgba(8,12,10,.3)!important;backdrop-filter:blur(16px)}
+body:has(#panel[data-view=novatube]:not([hidden]))>header,body:has(#panel[data-view=novatube]:not([hidden]))>main{visibility:hidden}
+#panel[data-view=novatube]>iframe{background:transparent;color-scheme:normal}
