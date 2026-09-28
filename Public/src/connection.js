@@ -1,19 +1,18 @@
 /* Shared Scramjet 2 startup for Search and the standalone game/app player. */
 (()=>{
-const base='/~/sj/',revision='20260926-1';let resources;
+const base='/~/sj/',revision='neon-20260926-2';let resources;
 const deadline=(promise,ms,message)=>new Promise((resolve,reject)=>{const id=setTimeout(()=>reject(Error(message)),ms);promise.then(v=>{clearTimeout(id);resolve(v)},e=>{clearTimeout(id);reject(e)})});
 const load=src=>new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=base+src+'?v='+revision;script.onload=resolve;script.onerror=()=>reject(Error('A connection component could not load. Refresh and try again.'));document.head.append(script)});
 async function prepare(){
  if(!window.isSecureContext||!navigator.serviceWorker)throw Error('Open Nova over HTTPS, or on localhost. This browser cannot start the connection here.');
  const registration=await navigator.serviceWorker.register(base+'sw.js',{scope:base,updateViaCache:'none'});
  const active=registration.active||await deadline(new Promise(resolve=>{const worker=registration.installing||registration.waiting;const check=()=>{if(worker?.state==='activated')resolve(worker)};worker?.addEventListener('statechange',check);check()}),15000,'The connection worker did not start. Reload Nova.');
- await Promise.all([load('scram/scramjet.js'),load('clients/index.js')]);await load('controller/controller.api.js');
+ await Promise.all([load('scram/scramjet.js'),load('clients/index.js')]);await load('controller/controller.api.js');await load('scram/scramjet-utils.js');
  return active;
 }
 async function create(options={}){
  resources??=prepare().catch(e=>{resources=null;throw e});const worker=await resources;
- const endpoint=localStorage.getItem('nova_wisp_url')||window.NOVA_WISP_URL||(['127.0.0.1','localhost'].includes(location.hostname)?'ws://127.0.0.1:8781/':'wss://wisp.mercurywork.shop/');
- const url=new URL(endpoint);if(!['ws:','wss:'].includes(url.protocol)||(location.protocol==='https:'&&url.protocol!=='wss:'))throw Error('Choose a secure wss:// transport server in Search settings.');
+ const url=new URL('/api/wisp/',location.origin);url.protocol=location.protocol==='https:'?'wss:':'ws:';
  if(!url.pathname.endsWith('/'))url.pathname+='/';
  const remote=new LibcurlTransport.LibcurlClient({wisp:url.href,connections:[32,24,6]});
  let initialization;

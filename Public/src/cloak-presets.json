@@ -1,0 +1,98 @@
+[
+  {
+    "title": "Nova",
+    "icon": "Nova12.png",
+    "id": "default",
+    "label": "Nova"
+  },
+  {
+    "title": "Home - Google Classroom",
+    "icon": "https://ssl.gstatic.com/classroom/favicon.png",
+    "id": "classroom",
+    "label": "Classroom"
+  },
+  {
+    "title": "Dashboard - Canvas",
+    "icon": "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico",
+    "id": "canvas",
+    "label": "Canvas"
+  },
+  {
+    "title": "Khan Academy | Free Online Courses",
+    "icon": "https://cdn.kastatic.org/images/favicon.ico",
+    "id": "khan",
+    "label": "Khan Academy"
+  },
+  {
+    "title": "Wikipedia, the free encyclopedia",
+    "icon": "https://en.wikipedia.org/favicon.ico",
+    "id": "wikipedia",
+    "label": "Wikipedia"
+  },
+  {
+    "title": "Desmos | Graphing Calculator",
+    "icon": "https://www.desmos.com/favicon.ico",
+    "id": "desmos",
+    "label": "Desmos"
+  },
+  {
+    "title": "Clever | Portal",
+    "icon": "https://assets.clever.com/launchpad/favicon.ico",
+    "id": "clever",
+    "label": "Clever"
+  },
+  {
+    "title": "New Tab",
+    "icon": "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Cpath fill=%22%23e8eaed%22 d=%22M0 0h24v24H0z%22/%3E%3C/svg%3E",
+    "id": "newtab",
+    "label": "New Tab"
+  },
+  {
+    "title": "Google",
+    "icon": "https://www.google.com/favicon.ico",
+    "id": "google",
+    "label": "Google"
+  },
+  {
+    "title": "Gmail",
+    "icon": "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico",
+    "id": "gmail",
+    "label": "Gmail"
+  },
+  {
+    "title": "My Drive - Google Drive",
+    "icon": "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png",
+    "id": "drive",
+    "label": "Google Drive"
+  },
+  {
+    "title": "YouTube",
+    "icon": "https://www.youtube.com/favicon.ico",
+    "id": "youtube",
+    "label": "Youtube"
+  },
+  {
+    "title": "Notion – The all-in-one workspace",
+    "icon": "https://www.notion.so/favicon.ico",
+    "id": "notion",
+    "label": "Notion"
+  },
+  {
+    "title": "Microsoft Office Home",
+    "icon": "https://res.cdn.office.net/officehub/images/content/images/favicon-8f211ea1.ico",
+    "id": "office",
+    "label": "Microsoft Office"
+  },
+  {
+    "title": "GitHub",
+    "icon": "https://github.com/favicon.ico",
+    "id": "github",
+    "label": "Github"
+  },
+  {
+    "title": "Bing",
+    "icon": "https://www.bing.com/favicon.ico",
+    "id": "bing",
+    "label": "Bing"
+  }
+]

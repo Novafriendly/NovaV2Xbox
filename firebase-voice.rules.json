@@ -11,52 +11,52 @@
       ".write": "now < 1791345600000"
     },
     "blocked": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "channels": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "customRoles": {
       ".read": "now < 1791345600000",
       ".write": "now < 1791345600000"
     },
     "directMessages": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "dms": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "friendRequests": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "friends": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "groups": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "messages": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "mutes": {
       ".read": "now < 1791345600000",
       ".write": "now < 1791345600000"
     },
     "nicknames": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "notifications": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "novaActivity": {
       ".read": "now < 1791345600000",
@@ -91,16 +91,16 @@
       ".write": "now < 1791345600000"
     },
     "presence": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "reports": {
       ".read": "now < 1791345600000",
       ".write": "now < 1791345600000"
     },
     "streaks": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "suggestions": {
       ".read": "now < 1791345600000",
@@ -111,16 +111,16 @@
       ".write": "now < 1791345600000"
     },
     "typing": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "unbanRequests": {
       ".read": "now < 1791345600000",
       ".write": "now < 1791345600000"
     },
     "unreadMessages": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": false,
+      ".write": false
     },
     "users": {
       ".read": "now < 1791345600000",
@@ -141,6 +141,311 @@
     "novaVoiceInvites": {
       ".read": false,
       ".write": false
+    },
+    "novaAccounts": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['name', 'onboardingComplete'])",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 24"
+        },
+        "photo": {
+          ".validate": "newData.isString() && newData.val().length < 100000"
+        },
+        "onboardingComplete": {
+          ".validate": "newData.isBoolean()"
+        },
+        "preferences": {
+          "nova_grad": {
+            ".validate": "newData.isString() && newData.val().length < 500"
+          },
+          "nova_cloak_title": {
+            ".validate": "newData.isString() && newData.val().length <= 60"
+          },
+          "nova_cloak_icon": {
+            ".validate": "newData.isString() && newData.val().length < 2048"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "novaChatV2": {
+      ".read": false,
+      ".write": false,
+      "profiles": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists()",
+        "$uid": {
+          ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['name','joined'])",
+          "name": {
+            ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 24"
+          },
+          "photo": {
+            ".validate": "newData.isString() && newData.val().length <= 99999"
+          },
+          "bio": {
+            ".validate": "newData.isString() && newData.val().length <= 240"
+          },
+          "joined": {
+            ".validate": "newData.isNumber() && (!data.exists() || newData.val() === data.val())"
+          },
+          "decoration": {
+            ".validate": "newData.val() === data.val()"
+          },
+          "effect": {
+            ".validate": "newData.val() === data.val()"
+          },
+          "banner": {
+            ".validate": "newData.val() === data.val()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "roles": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists()",
+        "$uid": {
+          ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' && $uid !== auth.uid && data.val() !== 'owner'",
+          ".validate": "newData.val() === 'admin' || newData.val() === 'moderator' || newData.val() === 'member'"
+        }
+      },
+      "bans": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && (root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' || root.child('novaChatV2/roles').child(auth.uid).val() === 'admin' || root.child('novaChatV2/roles').child(auth.uid).val() === 'moderator')",
+        "$uid": {
+          ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && (root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' || root.child('novaChatV2/roles').child(auth.uid).val() === 'admin' || root.child('novaChatV2/roles').child(auth.uid).val() === 'moderator') && $uid !== auth.uid && (!root.child('novaChatV2/roles').child($uid).exists() || root.child('novaChatV2/roles').child($uid).val() === 'member')",
+          ".validate": "newData.val() === true"
+        }
+      },
+      "presence": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists()",
+        "$uid": {
+          ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && auth.uid === $uid",
+          "online": {
+            ".validate": "newData.isBoolean()"
+          },
+          "updatedAt": {
+            ".validate": "newData.isNumber()"
+          },
+          "activity": {
+            ".validate": "newData.isString() && newData.val().length <= 150"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "requests": {
+        "$to": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $to",
+          "$from": {
+            ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && ((!newData.exists() && (auth.uid === $to || auth.uid === $from)) || (auth.uid === $from && $from !== $to && root.child('novaChatV2/profiles').child($to).exists() && !root.child('novaChatV2/friends').child($to).child($from).exists()))",
+            ".validate": "newData.hasChildren(['createdAt'])",
+            "createdAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        }
+      },
+      "friends": {
+        "$uid": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $uid",
+          "$other": {
+            ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && ((!newData.exists() && (auth.uid === $uid || auth.uid === $other)) || (newData.val() === true && ((auth.uid === $uid && root.child('novaChatV2/requests').child($uid).child($other).exists()) || (auth.uid === $other && root.child('novaChatV2/requests').child($other).child($uid).exists()))))",
+            ".validate": "newData.val() === true"
+          }
+        }
+      },
+      "channels": {
+        "$channel": {
+          "messages": {
+            ".read": "(auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && (($channel === 'owner-lounge' && (root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' || root.child('novaChatV2/roles').child(auth.uid).val() === 'admin' || root.child('novaChatV2/roles').child(auth.uid).val() === 'moderator')) || $channel === 'welcome' || $channel === 'announcements' || $channel === 'updates' || $channel === 'leaks' || $channel === 'links' || $channel === 'general' || $channel === 'community-links' || $channel === 'ai-assistance' || $channel === 'report' || $channel === 'suggestions')) && $channel !== 'report' && $channel !== 'suggestions'",
+            ".indexOn": [
+              "createdAt"
+            ],
+            "$message": {
+              ".write": "((auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && ($channel === 'owner-lounge' || $channel === 'welcome' || $channel === 'announcements' || $channel === 'updates' || $channel === 'leaks' || $channel === 'links' || $channel === 'general' || $channel === 'community-links' || $channel === 'ai-assistance' || $channel === 'report' || $channel === 'suggestions') && ((!data.exists() && (!($channel === 'owner-lounge' || $channel === 'welcome' || $channel === 'announcements' || $channel === 'updates' || $channel === 'leaks' || $channel === 'links') || (root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' || root.child('novaChatV2/roles').child(auth.uid).val() === 'admin' || root.child('novaChatV2/roles').child(auth.uid).val() === 'moderator'))) || (data.child('author').val() === auth.uid && (!($channel === 'owner-lounge' || $channel === 'welcome' || $channel === 'announcements' || $channel === 'updates' || $channel === 'leaks' || $channel === 'links') || (root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' || root.child('novaChatV2/roles').child(auth.uid).val() === 'admin' || root.child('novaChatV2/roles').child(auth.uid).val() === 'moderator'))) || (!newData.exists() && (root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' || root.child('novaChatV2/roles').child(auth.uid).val() === 'admin' || root.child('novaChatV2/roles').child(auth.uid).val() === 'moderator')))) && (data.exists() || (root.child('novaChatV2/sendClock').child(auth.uid).child('key').val() === $message && root.child('novaChatV2/sendClock').child(auth.uid).child('path').val() === 'channels/' + $channel + '/messages' && now - root.child('novaChatV2/sendClock').child(auth.uid).child('at').val() < 10000))) && $channel !== 'report' && $channel !== 'suggestions'",
+              ".validate": "newData.hasChildren(['author','text','createdAt'])",
+              "author": {
+                ".validate": "newData.val() === auth.uid && (!data.exists() || newData.val() === data.val())"
+              },
+              "text": {
+                ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 4000"
+              },
+              "createdAt": {
+                ".validate": "newData.isNumber() && ((!data.exists() && newData.val() <= now + 10000 && newData.val() >= now - 60000) || newData.val() === data.val())"
+              },
+              "edited": {
+                ".validate": "newData.val() === true"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          }
+        }
+      },
+      "dms": {
+        "$a": {
+          "$b": {
+            "messages": {
+              ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && (auth.uid === $a || auth.uid === $b)",
+              ".indexOn": [
+                "createdAt"
+              ],
+              "$message": {
+                ".write": "(auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && (auth.uid === $a || auth.uid === $b) && root.child('novaChatV2/friends').child($a).child($b).val() === true && root.child('novaChatV2/friends').child($b).child($a).val() === true && (!data.exists() || data.child('author').val() === auth.uid)) && (data.exists() || (root.child('novaChatV2/sendClock').child(auth.uid).child('key').val() === $message && root.child('novaChatV2/sendClock').child(auth.uid).child('path').val() === 'dms/' + $a + '/' + $b + '/messages' && now - root.child('novaChatV2/sendClock').child(auth.uid).child('at').val() < 10000))",
+                ".validate": "newData.hasChildren(['author','text','createdAt'])",
+                "author": {
+                  ".validate": "newData.val() === auth.uid && (!data.exists() || newData.val() === data.val())"
+                },
+                "text": {
+                  ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 4000"
+                },
+                "createdAt": {
+                  ".validate": "newData.isNumber() && ((!data.exists() && newData.val() <= now + 10000 && newData.val() >= now - 60000) || newData.val() === data.val())"
+                },
+                "edited": {
+                  ".validate": "newData.val() === true"
+                },
+                "$other": {
+                  ".validate": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "ownerClaim": {
+        ".read": false,
+        ".write": false
+      },
+      "groups": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && query.orderByChild === 'members/' + auth.uid && query.equalTo === true",
+        "$id": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && data.child('members').child(auth.uid).val() === true",
+          ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && !data.exists() && newData.child('owner').val() === auth.uid && newData.child('members').child(auth.uid).val() === true",
+          ".validate": "newData.hasChildren(['owner','name','members'])",
+          "owner": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "name": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 40"
+          },
+          "members": {
+            ".validate": "newData.numChildren() >= 2 && newData.numChildren() <= 10",
+            "$uid": {
+              ".validate": "newData.val() === true && ($uid === auth.uid || root.child('novaChatV2/friends').child(auth.uid).child($uid).val() === true)"
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "groupMessages": {
+        "$group": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && root.child('novaChatV2/groups').child($group).child('members').child(auth.uid).val() === true",
+          "$message": {
+            ".write": "(auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && root.child('novaChatV2/groups').child($group).child('members').child(auth.uid).val() === true && (!data.exists() || data.child('author').val() === auth.uid)) && (data.exists() || (root.child('novaChatV2/sendClock').child(auth.uid).child('key').val() === $message && root.child('novaChatV2/sendClock').child(auth.uid).child('path').val() === 'groupMessages/' + $group && now - root.child('novaChatV2/sendClock').child(auth.uid).child('at').val() < 10000))",
+            ".validate": "newData.hasChildren(['author','text','createdAt'])",
+            "author": {
+              ".validate": "newData.val() === auth.uid && (!data.exists() || newData.val() === data.val())"
+            },
+            "text": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 4000"
+            },
+            "createdAt": {
+              ".validate": "newData.isNumber() && ((!data.exists() && newData.val() <= now + 10000 && newData.val() >= now - 60000) || newData.val() === data.val())"
+            },
+            "edited": {
+              ".validate": "newData.val() === true"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        }
+      },
+      "server": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists()",
+        ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && root.child('novaChatV2/roles').child(auth.uid).val() === 'owner'",
+        ".validate": "newData.hasChildren(['name'])",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 40"
+        },
+        "banner": {
+          ".validate": "newData.isString() && newData.val().length <= 1000000"
+        },
+        "icon": {
+          ".validate": "newData.isString() && newData.val().length <= 100000"
+        },
+        "$other": {
+          ".validate": false
+        }
+      },
+      "sendClock": {
+        "$uid": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $uid",
+          ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $uid && newData.exists() && (!data.exists() || now - data.child('at').val() >= 1500)",
+          ".validate": "newData.hasChildren(['at','key','path'])",
+          "at": {
+            ".validate": "newData.isNumber() && newData.val() === now"
+          },
+          "key": {
+            ".validate": "newData.isString() && newData.val().length <= 100"
+          },
+          "path": {
+            ".validate": "newData.isString() && newData.val().length <= 300"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "feedback": {
+        ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && root.child('novaChatV2/roles').child(auth.uid).val() === 'owner'",
+        "$uid": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $uid",
+          "$message": {
+            ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $uid && !data.exists() && newData.exists() && (root.child('novaChatV2/sendClock').child(auth.uid).child('key').val() === $message && root.child('novaChatV2/sendClock').child(auth.uid).child('path').val() === 'feedback/' + $uid && now - root.child('novaChatV2/sendClock').child(auth.uid).child('at').val() < 10000)",
+            ".validate": "newData.hasChildren(['author','text','subject','kind','createdAt'])",
+            "author": {
+              ".validate": "newData.val() === auth.uid"
+            },
+            "text": {
+              ".validate": "newData.isString() && newData.val().length >= 10 && newData.val().length <= 4000"
+            },
+            "subject": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+            },
+            "kind": {
+              ".validate": "newData.val() === 'report' || newData.val() === 'suggestions'"
+            },
+            "createdAt": {
+              ".validate": "newData.isNumber() && newData.val() === now"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        }
+      }
     }
   }
 }

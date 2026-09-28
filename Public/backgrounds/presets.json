@@ -1,0 +1,393 @@
+[
+  {
+    "name": "Azure Horizon",
+    "src": "/backgrounds/azure-horizon.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/azure-horizon.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft BMW M5",
+    "src": "/backgrounds/ba979bdd99_minecraft-bmw-m5-live-wallpaper-4k-wallsflow-com.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/ba979bdd99_minecraft-bmw-m5-live-wallpaper-4k-wallsflow-com.jpg"
+  },
+  {
+    "name": "Batman Black Judgment",
+    "src": "/backgrounds/batman-black-judgment.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/batman-black-judgment.1920x1080.jpg"
+  },
+  {
+    "name": "Beneath the Seventh",
+    "src": "/backgrounds/beneath-the-seventh.3840x2160.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/beneath-the-seventh.3840x2160.jpg"
+  },
+  {
+    "name": "Blue Lake Minecraft",
+    "src": "/backgrounds/blue-lake-minecraft.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/blue-lake-minecraft.1920x1080.jpg"
+  },
+  {
+    "name": "Brother",
+    "src": "/backgrounds/Brother.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/Brother.jpg"
+  },
+  {
+    "name": "Celestial Veil",
+    "src": "/backgrounds/celestial-veil.3840x2160.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/celestial-veil.3840x2160.jpg"
+  },
+  {
+    "name": "Cherry Blossom",
+    "src": "/backgrounds/cherry-blossom.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/cherry-blossom.1920x1080.jpg"
+  },
+  {
+    "name": "Crimson Blind Faith",
+    "src": "/backgrounds/crimson-blind-faith.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/crimson-blind-faith.1920x1080.jpg"
+  },
+  {
+    "name": "Dark King Abyss",
+    "src": "/backgrounds/dark-king-abyss.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/dark-king-abyss.1920x1080.jpg"
+  },
+  {
+    "name": "Default",
+    "src": "/backgrounds/default.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/default.jpg"
+  },
+  {
+    "name": "Edge of the Universe",
+    "src": "/backgrounds/edge-of-the-universe.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/edge-of-the-universe.1920x1080.jpg"
+  },
+  {
+    "name": "Gabimaru the Hollow Hells Paradise",
+    "src": "/backgrounds/gabimaru-the-hollow-hells-paradise.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/gabimaru-the-hollow-hells-paradise.1920x1080.jpg"
+  },
+  {
+    "name": "Gachiakuta The Fall of Rudo Surebrec",
+    "src": "/backgrounds/gachiakuta-the-fall-of-rudo-surebrec.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/gachiakuta-the-fall-of-rudo-surebrec.1920x1080.jpg"
+  },
+  {
+    "name": "Gear 5 Technique",
+    "src": "/backgrounds/gear-5-technique.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/gear-5-technique.1920x1080.jpg"
+  },
+  {
+    "name": "Gojo Satoru Beyond Infinity",
+    "src": "/backgrounds/gojo-satoru-beyond-infinity.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/gojo-satoru-beyond-infinity.1920x1080.jpg"
+  },
+  {
+    "name": "Gojo Six Eyes Jujutsu Kaisen",
+    "src": "/backgrounds/gojo-six-eyes-jujutsu-kaisen.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/gojo-six-eyes-jujutsu-kaisen.1920x1080.jpg"
+  },
+  {
+    "name": "Goku Ultra Instinct 2",
+    "src": "/backgrounds/goku-ultra-instinct_2.3840x2160.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/goku-ultra-instinct_2.3840x2160.jpg"
+  },
+  {
+    "name": "Hiyuki Silent Storm",
+    "src": "/backgrounds/hiyuki-silent-storm.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/hiyuki-silent-storm.1920x1080.jpg"
+  },
+  {
+    "name": "Hunt Showdown Veil of Thorns",
+    "src": "/backgrounds/hunt-showdown-veil-of-thorns.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/hunt-showdown-veil-of-thorns.1920x1080.jpg"
+  },
+  {
+    "name": "Hunt",
+    "src": "/backgrounds/Hunt.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/Hunt.jpg"
+  },
+  {
+    "name": "King of Darkness",
+    "src": "/backgrounds/king-of-darkness.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/king-of-darkness.1920x1080.jpg"
+  },
+  {
+    "name": "Mahoraga Behind Megumi",
+    "src": "/backgrounds/mahoraga-behind-megumi.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/mahoraga-behind-megumi.1920x1080.jpg"
+  },
+  {
+    "name": "Mahoraga Wheel of Adaptation",
+    "src": "/backgrounds/mahoraga-wheel-of-adaptation.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/mahoraga-wheel-of-adaptation.1920x1080.jpg"
+  },
+  {
+    "name": "Michael Jackson Neon Moonwalk",
+    "src": "/backgrounds/michael-jackson-neon-moonwalk.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/michael-jackson-neon-moonwalk.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Aquarium",
+    "src": "/backgrounds/minecraft-aquarium.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-aquarium.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Falling Snow",
+    "src": "/backgrounds/minecraft-falling-snow.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-falling-snow.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft in the Night",
+    "src": "/backgrounds/minecraft-in-the-night.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-in-the-night.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Northern Light",
+    "src": "/backgrounds/minecraft-northern-light.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-northern-light.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Rainy Cabin",
+    "src": "/backgrounds/minecraft-rainy-cabin.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-rainy-cabin.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Rainy Landscape",
+    "src": "/backgrounds/minecraft-rainy-landscape.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-rainy-landscape.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Relaxing Fireplace",
+    "src": "/backgrounds/minecraft-relaxing-fireplace.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-relaxing-fireplace.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Snowy Campfire",
+    "src": "/backgrounds/minecraft-snowy-campfire.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-snowy-campfire.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Sunset Farm",
+    "src": "/backgrounds/minecraft-sunset-farm.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-sunset-farm.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft Sunset",
+    "src": "/backgrounds/minecraft-sunset.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/minecraft-sunset.1920x1080.jpg"
+  },
+  {
+    "name": "Minecraft 02",
+    "src": "/backgrounds/Minecraft02.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/Minecraft02.jpg"
+  },
+  {
+    "name": "Musashi Vagabond with Dual Katana",
+    "src": "/backgrounds/musashi-vagabond-with-dual-katana.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/musashi-vagabond-with-dual-katana.1920x1080.jpg"
+  },
+  {
+    "name": "Nature in Minecraft",
+    "src": "/backgrounds/nature-in-minecraft.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/nature-in-minecraft.1920x1080.jpg"
+  },
+  {
+    "name": "Nissan GTR R34 Skyline",
+    "src": "/backgrounds/nissan-gtr-r34-skyline.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/nissan-gtr-r34-skyline.1920x1080.jpg"
+  },
+  {
+    "name": "Portal in Minecraft",
+    "src": "/backgrounds/portal-in-minecraft.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/portal-in-minecraft.1920x1080.jpg"
+  },
+  {
+    "name": "Rick Cosmic Serenity",
+    "src": "/backgrounds/rick-cosmic-serenity.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/rick-cosmic-serenity.1920x1080.jpg"
+  },
+  {
+    "name": "Sakura Forest Minecraft",
+    "src": "/backgrounds/sakura-forest-minecraft.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/sakura-forest-minecraft.1920x1080.jpg"
+  },
+  {
+    "name": "Serious Girl",
+    "src": "/backgrounds/serious-girl.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/serious-girl.1920x1080.jpg"
+  },
+  {
+    "name": "Silver Surfer Black Silence",
+    "src": "/backgrounds/silver-surfer-black-silence.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/silver-surfer-black-silence.1920x1080.jpg"
+  },
+  {
+    "name": "Silver Surfer Cosmic Void",
+    "src": "/backgrounds/silver-surfer-cosmic-void.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/silver-surfer-cosmic-void.1920x1080.jpg"
+  },
+  {
+    "name": "Skello",
+    "src": "/backgrounds/Skello.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/Skello.jpg"
+  },
+  {
+    "name": "Sukuna Fire",
+    "src": "/backgrounds/sukuna-fire.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/sukuna-fire.jpg"
+  },
+  {
+    "name": "Superman Beyond Earth",
+    "src": "/backgrounds/superman-beyond-earth.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/superman-beyond-earth.1920x1080.jpg"
+  },
+  {
+    "name": "Tanjiro in Akazas Eye",
+    "src": "/backgrounds/tanjiro-in-akazas-eye.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/tanjiro-in-akazas-eye.1920x1080.jpg"
+  },
+  {
+    "name": "Ultraman Tiga Statue",
+    "src": "/backgrounds/ultraman-tiga-statue.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/ultraman-tiga-statue.1920x1080.jpg"
+  },
+  {
+    "name": "Vinland Saga 3",
+    "src": "/backgrounds/vinland-saga3.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/vinland-saga3.1920x1080.jpg"
+  },
+  {
+    "name": "Void Dark King",
+    "src": "/backgrounds/void-dark-king.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/void-dark-king.1920x1080.jpg"
+  },
+  {
+    "name": "White Toyota Drifting",
+    "src": "/backgrounds/white-toyota-drifting.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/white-toyota-drifting.1920x1080.jpg"
+  },
+  {
+    "name": "Yuta Okkotsu Summer Sky",
+    "src": "/backgrounds/yuta-okkotsu-summer-sky.1920x1080.mp4",
+    "type": "video",
+    "poster": "/backgrounds/thumbnails/yuta-okkotsu-summer-sky.1920x1080.jpg"
+  },
+  {
+    "name": "Choso Live Wallpaper",
+    "src": "/backgrounds/choso-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Gachiakuta Live Wallpaper",
+    "src": "/backgrounds/gachiakuta-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Mazda RX-7 by Visualdon",
+    "src": "/backgrounds/mazda-rx-7-by-visualdon-live-wallpaper (1).mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Midnight Meadow Live Wallpaper",
+    "src": "/backgrounds/midnight-meadow-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Minecraft Japanese Summer",
+    "src": "/backgrounds/minecraft-japanese-summer-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Minecraft Misty Forest",
+    "src": "/backgrounds/minecraft-misty-forest-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Neverness to Everness Sports Car",
+    "src": "/backgrounds/neverness-to-everness-sports-car-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Night Vibe Assetto Corsa",
+    "src": "/backgrounds/night-vibe-assetto-corsa-animated-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Red Anime Eye Close Up",
+    "src": "/backgrounds/red-anime-eye-close-up-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Where Winds Meet Ink Style Wuxia Warrior Silhouette",
+    "src": "/backgrounds/where-winds-meet-ink-style-wuxia-warrior-silhouette-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  },
+  {
+    "name": "Yuji Itadori Blue Flame",
+    "src": "/backgrounds/yuji-itadori-blue-flame-live-wallpaper.mp4",
+    "type": "video",
+    "poster": ""
+  }
+]
+

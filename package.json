@@ -5,7 +5,15 @@
     "@mercuryworkshop/wisp-js": "0.4.1"
   },
   "scripts": {
-    "build": "node scripts/check-systems.mjs",
-    "start:transport": "node scripts/patch-wisp.mjs && node server/search-wisp.mjs"
+    "build": "node scripts/build-connection.mjs && node scripts/check-systems.mjs",
+    "start:transport": "node scripts/patch-wisp.mjs && node server/search-wisp.mjs",
+    "start": "node server.mjs",
+    "test:connection": "node --test tests/connection.test.mjs"
+  },
+  "devDependencies": {
+    "@mercuryworkshop/scramjet": "2.0.67-alpha.2",
+    "@mercuryworkshop/scramjet-controller": "0.0.14",
+    "@mercuryworkshop/scramjet-utils": "0.0.3",
+    "@mercuryworkshop/libcurl-transport": "2.0.5"
   }
 }

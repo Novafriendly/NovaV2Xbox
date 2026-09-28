@@ -3,8 +3,36 @@
   "functions": {
     "api/ai-chat.js": {
       "maxDuration": 30
+    },
+    "api/wisp.js": {
+      "maxDuration": 300,
+      "excludeFiles": "{Public,curl-master,curl-curl-8_22_0,scramjet-2.0.67-alpha.2,html-main,tests}/**"
     }
   },
   "outputDirectory": "Public",
-  "installCommand": "npm ci --ignore-scripts"
+  "installCommand": "npm ci --ignore-scripts",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cross-Origin-Embedder-Policy",
+          "value": "credentialless"
+        }
+      ]
+    },
+    {
+      "source": "/~/sj/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    }
+  ]
 }

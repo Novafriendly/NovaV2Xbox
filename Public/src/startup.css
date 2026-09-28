@@ -16,3 +16,5 @@
 .startup-progress i{width:100%;transform:scaleX(0);transform-origin:left;will-change:transform}
 .startup.video-fallback .startup-video{display:none}
 .startup.video-fallback:not(.setup) .startup-brand,.startup.video-fallback:not(.setup) .startup-halo{display:flex}
+/* Continue directly from the account flow, with a quiet fade into Home. */
+.startup.account-arrival{background:#070709;transition:opacity .6s ease;transform:none}.startup.account-arrival:not(.setup)>*{display:none!important}.startup.account-arrival.leaving{transform:none;opacity:0}

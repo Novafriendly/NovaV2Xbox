@@ -1,0 +1,11 @@
+import {services} from '../server/voice-service.js';
+const execute=process.argv.includes('--execute');
+if(!process.env.FIREBASE_SERVICE_ACCOUNT_JSON)throw Error('Firebase admin credentials are unavailable. No data has been deleted.');
+const credential=JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);if(credential.project_id!=='nova-chat-43a18')throw Error('Wrong Firebase project. No data deleted.');
+const {db,auth}=await services(false);
+if((await db.ref('novaAccounts').get()).exists())throw Error('New accounts already exist. Review migration scope before deleting legacy data.');
+const roots=['users','friends','friendRequests','directMessages','dms','messages','groups','nicknames','notifications','novaActivity','presence','streaks','typing','unreadMessages','novaSecureAccounts','novaSecureAppeals','novaVoice','novaVoiceInvites'];
+let users=[],pageToken;do{const page=await auth.listUsers(1000,pageToken);users.push(...page.users.map(u=>u.uid));pageToken=page.pageToken}while(pageToken);
+const patch=Object.fromEntries(roots.map(k=>[k,null]));const channels=await db.ref('channels').get();channels.forEach(channel=>{patch['channels/'+channel.key+'/messages']=null});
+console.log(JSON.stringify({project:credential.project_id,authAccounts:users.length,databasePaths:Object.keys(patch),execute},null,2));
+if(execute){for(let i=0;i<users.length;i+=1000){const result=await auth.deleteUsers(users.slice(i,i+1000));if(result.failureCount)throw Error('Some Auth accounts could not be deleted. Database reset stopped.')}await db.ref().update(patch);console.log('Legacy account and listed user-data reset completed.');}else console.log('Dry run only. Run with --execute to permanently delete the listed legacy data.');

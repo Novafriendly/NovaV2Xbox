@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+import {webcrypto} from 'node:crypto';
+const code=readFileSync(new URL('../Public/src/pin-lock.js',import.meta.url),'utf8');
+function fixture(){const values=new Map([['nova_user','test-only-user']]);let now=1000000;const localStorage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,String(v)),removeItem:k=>values.delete(k)};const window={};vm.runInNewContext(code,{window,localStorage,crypto:webcrypto,TextEncoder,Uint8Array,Date:{now:()=>now}});return {pin:window.NovaPin,values,advance:ms=>now+=ms,localStorage}}
+test('PIN is hashed, validates, and cannot be changed or removed without the old PIN',async()=>{const f=fixture();await assert.rejects(f.pin.set('123'),/six digits/);await f.pin.set('193746');assert.equal(f.pin.enabled(),true);assert.ok(!f.values.get('nova-pin-v2-test-only-user').includes('193746'));await f.pin.verify('193746');await assert.rejects(f.pin.set('765432','000000'),/Incorrect/);await assert.rejects(f.pin.remove('000000'),/Incorrect/);await f.pin.set('765432','193746');await f.pin.verify('765432');await f.pin.remove('765432');assert.equal(f.pin.enabled(),false)});
+test('seven failures persist a five minute lock, including across reloads',async()=>{const f=fixture();await f.pin.set('193746');for(let i=0;i<7;i++)await assert.rejects(f.pin.verify('000000'));const saved=JSON.parse(f.values.get('nova-pin-v2-test-only-user'));assert.equal(saved.lockUntil,1300000);await assert.rejects(f.pin.verify('193746'),/locked/);const window={};vm.runInNewContext(code,{window,localStorage:f.localStorage,crypto:webcrypto,TextEncoder,Uint8Array,Date:{now:()=>1000001}});await assert.rejects(window.NovaPin.verify('193746'),/locked/);f.advance(300001);assert.equal(await f.pin.verify('193746'),true);assert.equal(JSON.parse(f.values.get('nova-pin-v2-test-only-user')).attempts,0)});
+test('PIN data is scoped to the signed-in user',async()=>{const f=fixture();await f.pin.set('193746');f.localStorage.setItem('nova_user','another-test-user');assert.equal(f.pin.enabled(),false)});
