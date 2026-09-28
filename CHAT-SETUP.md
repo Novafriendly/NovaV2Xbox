@@ -37,7 +37,7 @@ Links and Leaks are under Start here and remain staff-only for posting. Staff Re
 The signed-in permission error cannot be resolved by the local preview. Firebase rules must be published by the project owner; no live rules deployment was performed here. Existing profile joined timestamps are preserved during initialization to avoid immutable-field write failures.
 
 ## New Staff Panel
-Owners and admins can open **Xbox menu → Staff Panel**. Access follows `novaChatV2/roles/<Firebase UID>`, not the old `users` records. The directory lists only `novaAccounts` (100 per page); it does not expose emails or saved preferences. The owner can assign member/moderator/admin roles. Staff can ban or restore ordinary members' Chat access, publish Nova Server announcements/updates/leaks/links, and reply to reports and suggestions.
+Owners and admins can open **Chat → Staff Panel**, which opens as an overlay above the current conversation. Access follows `novaChatV2/roles/<Firebase UID>`, not the old `users` records. The directory lists only `novaAccounts` (100 per page); it does not expose emails or saved preferences. The owner can assign member/moderator/admin roles. Staff can ban or restore ordinary members' Chat access, publish Nova Server announcements/updates/leaks/links, and reply to reports and suggestions.
 
 `/api/staff-users` requires `FIREBASE_SERVICE_ACCOUNT_JSON`, the same server credential used for owner setup. Redeploy after adding the new API; restart the local server to register its route. Existing supplied Firebase rules enforce mutations; the panel does not grant owner roles or remove accounts. Chat bans apply to Chat, not the entire website. No live accounts are migrated or changed by installing the panel.
 
