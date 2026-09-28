@@ -157,6 +157,9 @@
           ".validate": "newData.isBoolean()"
         },
         "preferences": {
+          "nova_wallpaper": {
+            ".validate": "newData.isString() && newData.val().length < 500 && newData.val().beginsWith('/backgrounds/')"
+          },
           "nova_grad": {
             ".validate": "newData.isString() && newData.val().length < 500"
           },
