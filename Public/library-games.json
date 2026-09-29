@@ -7497,6 +7497,24 @@
     ]
   },
   {
+    "id": 869,
+    "name": "Tung sahur Horror",
+    "art": "content/covers/869.png",
+    "url": "content/games/869.html",
+    "genres": [
+      "Horror"
+    ]
+  },
+   {
+    "id": 870,
+    "name": "COD Nazi Zombies Portable",
+    "art": "content/covers/870.png",
+    "url": "content/games/870.html",
+    "genres": [
+      "Action"
+    ]
+  },
+  {
     "id": 87,
     "name": "Emulator.JS",
     "art": "content/covers/87.png",
