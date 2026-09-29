@@ -1,0 +1,2 @@
+import {auth} from './account-firebase.js';
+export async function control(action,data={}){await auth.authStateReady();if(!auth.currentUser)throw Error('Sign in to Nova first.');const response=await fetch('/api/owner-control',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await auth.currentUser.getIdToken()},body:JSON.stringify({action,...data})});const body=await response.json();if(!response.ok)throw Error(body.error||'Request failed.');return body}

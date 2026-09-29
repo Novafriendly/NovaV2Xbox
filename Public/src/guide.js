@@ -47,7 +47,8 @@ const avatar=node('div');avatar.className='xg-account-avatar';
 const source=document.querySelector('.profile .avatar');
 if(source)avatar.append(...Array.from(source.childNodes,n=>n.cloneNode(true)));else avatar.textContent=name[0].toUpperCase();
 hero.append(avatar);body.append(hero);
-row('My profile',icons.home,()=>go('settings'));
+row('My profile',icons.home,async()=>{await d.close();window.NovaProgress?.open()});
+row((window.NovaAccounts?.slots().length===2?'Switch account':'Add another account'),icons.settings,async()=>{await d.close();if(window.NovaAccounts?.slots().length===2){const other=window.NovaAccounts.slots().findIndex(p=>p.uid!==account());await window.NovaAccounts.switchAccount(other)}else await window.NovaAccounts?.addAccount()});
 row('My account',icons.settings,()=>go('settings'));
 row('My subscriptions',icons.library,async()=>{await d.close();window.openNovaSubscriptions();animatePage()});
 }else if(view==='people'){

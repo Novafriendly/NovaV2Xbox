@@ -1,0 +1,11 @@
+export function attachTyping({api,path,uid,input,form,name}){
+ const host=document.createElement('div');host.className='chat-typing';host.hidden=true;host.setAttribute('role','status');host.setAttribute('aria-live','polite');
+ const dots=document.createElement('span');dots.className='typing-dots';dots.setAttribute('aria-hidden','true');for(let i=0;i<3;i++)dots.append(document.createElement('i'));const label=document.createElement('span');host.append(dots,label);form.before(host);
+ let records={},lastWrite=-Infinity,idle,disposed=false,chain=Promise.resolve(),signature='';const target='typing/'+path+'/'+uid;
+ function write(active){chain=chain.catch(()=>{}).then(()=>api.write(target,active?{at:Date.now()}:null)).catch(()=>{});}
+ function clear(){clearTimeout(idle);lastWrite=-Infinity;write(false)}
+ function inputChanged(){if(disposed)return;if(input.disabled||!input.value.trim()||document.hidden){clear();return}if(Date.now()-lastWrite>2500){lastWrite=Date.now();write(true)}clearTimeout(idle);idle=setTimeout(clear,5000)}
+ function paint(){const people=Object.entries(records).filter(([id,v])=>id!==uid&&Number.isFinite(v?.at)&&Date.now()-v.at<7000&&v.at<Date.now()+10000).map(([id])=>name(id));const text=people.length===1?people[0]+' is typing…':people.length===2?people.join(' and ')+' are typing…':people.length>2?people.slice(0,2).join(', ')+' and '+(people.length-2)+' others are typing…':'';if(text!==signature){signature=text;label.textContent=text;host.hidden=!text}}
+ const stop=api.watch('typing/'+path,v=>{records=v;paint()},()=>{records={};paint()});const timer=setInterval(paint,1000);const visibility=()=>{if(document.hidden)clear()};input.addEventListener('input',inputChanged);input.addEventListener('blur',clear);form.addEventListener('submit',clear);document.addEventListener('visibilitychange',visibility);window.addEventListener('pagehide',clear);
+ return ()=>{disposed=true;clear();clearInterval(timer);stop();host.remove();input.removeEventListener('input',inputChanged);input.removeEventListener('blur',clear);form.removeEventListener('submit',clear);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',clear)};
+}
