@@ -1,10 +1,6 @@
-<!-- This is an Ultimate game stash file -->
-<!-- for regular updating go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/edit?usp=sharing -->
-
 <!doctype html>
 <html lang="en">
 <head>
-    <base href="https://cdn.jsdelivr.net/gh/larpinguser/HelloWorldScriptBasicFunctionCSharpIsCool@main/">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GTA III</title>
@@ -63,13 +59,42 @@
     };
     async function loadDataParts() {
       var parts = [];
+      var totalBytes = 0;
+      var loading = document.getElementById('loading');
       for (var i = 0; ; i++) {
-        var resp = await ORIG_FETCH.call(window, 're3.chunk.' + i);
+        if (loading) loading.textContent = "Fetching chunk " + (i + 1) + "... (" + (totalBytes / (1024*1024)).toFixed(1) + " MB)";
+        var resp = await ORIG_FETCH.call(window, 'https://cdn.jsdelivr.net/gh/larpinguser/HelloWorldScriptBasicFunctionCSharpIsCool@main/re3.chunk.' + i);
         if (!resp.ok) break;
-        parts.push(await resp.arrayBuffer());
+        
+        var contentLength = resp.headers.get('content-length');
+        var expectedBytes = contentLength ? parseInt(contentLength, 10) : 0;
+        var loadedBytes = 0;
+        
+        // Use a stream reader to track exact download progress within the chunk
+        var reader = resp.body.getReader();
+        var chunks = [];
+        while(true) {
+          var {done, value} = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          loadedBytes += value.byteLength;
+          var overallMB = ((totalBytes + loadedBytes) / (1024*1024)).toFixed(1);
+          if (loading) loading.textContent = "Downloading... " + overallMB + " MB";
+        }
+        
+        // Reassemble the stream chunks into an ArrayBuffer
+        var chunkBuffer = new Uint8Array(loadedBytes);
+        var offset = 0;
+        for(var j = 0; j < chunks.length; j++) {
+           chunkBuffer.set(chunks[j], offset);
+           offset += chunks[j].byteLength;
+        }
+        parts.push(chunkBuffer.buffer);
+        totalBytes += chunkBuffer.byteLength;
       }
-      var total = parts.reduce(function(s, p) { return s + p.byteLength; }, 0);
-      var combined = new Uint8Array(total);
+      if (loading) loading.textContent = "Unpacking... please wait.";
+      
+      var combined = new Uint8Array(totalBytes);
       var offset = 0;
       for (var pi = 0; pi < parts.length; pi++) {
         combined.set(new Uint8Array(parts[pi]), offset);
@@ -158,6 +183,7 @@
   };
   Module.setStatus('Loading...');
 </script>
-<script src="re3.js"></script>
-</body>
+<!-- Load the main re3.js engine directly from the jsDelivr CDN -->
+<script src="https://cdn.jsdelivr.net/gh/larpinguser/HelloWorldScriptBasicFunctionCSharpIsCool@main/re3.js"></script>
+<style>.noah-wmk{position:fixed;bottom:20px;right:20px;z-index:999999;display:flex;flex-direction:column;align-items:center;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}.noah-wmk .wm-prefix{font-size:11px;font-weight:600;color:#d4d4d4;letter-spacing:0.02em;text-shadow:0 1px 3px rgba(0,0,0,0.8);margin-bottom:3px;white-space:nowrap;transition:color 0.2s}.noah-wmk img{display:block;height:34px;width:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6))}.noah-wmk:hover .wm-prefix{color:#f7931e}</style><a class="noah-wmk" href="https://noahstutoring.academy" target="_blank" rel="noopener"><span class="wm-prefix">Downloaded from</span><img src="https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/images/logo.png" alt="Noah's Tutoring Hub"></a></body>
 </html>
