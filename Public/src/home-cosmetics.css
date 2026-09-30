@@ -1,0 +1,31 @@
+/* The same equipped cosmetics across Home, the guide, and friends. */
+.nova-home-name{background:linear-gradient(100deg,var(--role-from,#a7afc4),var(--role-to,#eeeeff));background-clip:text;-webkit-background-clip:text;color:transparent!important;font-weight:750!important}
+.nova-home-coins{white-space:nowrap;color:#e3dfbd;opacity:1;font-variant-numeric:tabular-nums}
+.nova-home-avatar{position:relative!important;isolation:isolate;overflow:visible!important;flex-shrink:0}
+.nova-home-face{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:#303537;z-index:0}
+.nova-home-avatar img.nova-home-photo{position:absolute!important;inset:0;width:100%!important;height:100%!important;border-radius:50%;object-fit:cover}
+.nova-home-avatar img.nova-home-decoration{position:absolute!important;inset:-19%;width:138%!important;height:138%!important;max-width:none;object-fit:contain;z-index:3;pointer-events:none}
+.nova-home-avatar img.nova-home-avatar-effect{position:absolute!important;inset:0;width:100%!important;height:100%!important;object-fit:cover;border-radius:50%;opacity:.4;z-index:2;pointer-events:none}
+.nova-home-presence{position:absolute;right:0;bottom:0;z-index:5;width:7px;height:7px;border:2px solid #101210;border-radius:50%;background:#80848e;box-sizing:content-box}
+.nova-home-presence[data-status=online]{background:#43bd88}.nova-home-presence[data-status=idle]{background:#f1b34b}.nova-home-presence[data-status=dnd]{background:#ef555d}
+.nova-home-avatar[data-nitro=orbit]::after,.nova-home-avatar[data-nitro=shimmer]::after{content:'';position:absolute;inset:-6%;border-radius:50%;border:2px solid #c5a5ff;pointer-events:none;z-index:1;animation:home-nitro-glow 3s ease-in-out infinite}
+.nova-home-avatar[data-nitro=orbit]::after{border-color:#ce91ff transparent #8cf6e3 transparent;animation:home-nitro-orbit 5s linear infinite}
+.nova-home-surface{position:relative;isolation:isolate;overflow:hidden}
+.nova-home-surface>.nova-home-effect{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.24;z-index:-1;pointer-events:none}
+.nova-home-surface>.nova-home-banner{position:absolute;inset:0 0 auto;width:100%;height:180px;object-fit:cover;opacity:.8;z-index:-2;pointer-events:none;mask-image:linear-gradient(#000 60%,transparent)}
+.nova-home-surface[data-profile-theme=aurora]{background:linear-gradient(140deg,#123c42f0,#24213bf2 70%)}
+.nova-home-surface[data-profile-theme=sunset]{background:linear-gradient(145deg,#4d253ff0,#241d30f2 70%)}
+.nova-home-surface[data-profile-theme=ocean]{background:linear-gradient(135deg,#163b56f0,#141c30f2 70%)}
+.xg-top .xg-profile.nova-home-avatar{overflow:visible!important;border-radius:50%}
+.xg-account-hero.nova-home-has-banner{padding-top:52px}.xg-account-hero .nova-home-name{position:relative;text-shadow:none}.xg-account-avatar.nova-home-avatar{margin:20px auto 8px}
+.xg-friend.nova-home-surface{padding:16px 12px!important;min-height:78px;gap:14px!important;align-items:center!important;border:1px solid #ffffff12!important;border-radius:10px!important;background:#1a1b21!important;transition:border-color .18s,background .18s,transform .18s}
+.xg-friend.nova-home-surface:hover{border-color:#b3a4d95c!important;transform:translateY(-1px)}
+.xg-friend>.nova-home-banner{height:100%;opacity:.45;mask-image:linear-gradient(90deg,#000,transparent 100%);z-index:-1}
+.xg-friend>.nova-home-effect{z-index:-1;opacity:.17}.xg-friend .friend-avatar{width:36px;height:36px;margin:0 3px}
+.xg-friend.nova-home-surface .nova-home-name{font-size:13px;line-height:1.4}.xg-friend.nova-home-surface small{color:#ddd;text-shadow:0 1px 3px #000}
+.xg-friend.online .friend-avatar{box-shadow:none}.xg-people-columns .xg-friend>div{flex:1}
+.nova-profile-page.nova-home-surface{overflow:auto}.nova-profile-page>.nova-home-effect{position:fixed;opacity:.2}.nova-profile-page>.nova-home-banner{height:230px}.np-hero,.np-layout{position:relative;z-index:1}.nova-profile-page .profile-close{z-index:4;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-size:23px;background:#10111480;transition:background .18s,transform .18s}.nova-profile-page .profile-close:hover{background:#ffffff24;transform:rotate(90deg)}
+.nova-profile-page.nova-home-has-banner .np-hero{padding-top:60px}.np-hero .np-avatar{flex:0 0 100px;margin-right:6px}
+@keyframes home-nitro-orbit{to{transform:rotate(360deg)}}@keyframes home-nitro-glow{50%{box-shadow:0 0 18px #b998ff88;opacity:.5}}
+@media(max-width:850px){header .profile>span+span{display:block!important}header .profile{max-width:55vw}header .profile b{display:block;max-width:38vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}header .profile small{font-size:10px}.nova-home-coins{display:inline}}
+@media(prefers-reduced-motion:reduce){.nova-home-avatar::after{animation:none!important}.xg-friend.nova-home-surface,.nova-profile-page .profile-close{transition:none}}
