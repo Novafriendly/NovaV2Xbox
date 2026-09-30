@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {isMention} from '../Public/src/chat-mentions.js';
+test('mentions match users, everyone and exact roles',()=>{assert.equal(isMention('hello @<alice>','alice','member'),true);assert.equal(isMention('@everyone hello','alice','member'),true);assert.equal(isMention('hi @admin!','alice','admin'),true);assert.equal(isMention('@administrator','alice','admin'),false);assert.equal(isMention('@owner','alice','member'),false);assert.equal(isMention('@<alice2>','alice','member'),false)});

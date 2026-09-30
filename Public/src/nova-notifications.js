@@ -19,11 +19,12 @@ function next(kind){
  const dismiss=()=>{clearTimeout(timer);box.classList.remove('visible');clearTimeout(removal);removal=setTimeout(()=>{box.remove();if(active[kind]===box){active[kind]=null;next(kind)}},280)};
  const paint=()=>{avatar.replaceChildren();const fallback=()=>{const initial=document.createElement('span');initial.className='nova-notice-mark';initial.textContent=kind==='reward'?'🏆':Array.from(item.title?.trim()||'N')[0].toUpperCase();avatar.replaceChildren(initial)};
  if(item.art){const img=new Image();img.src=item.art;img.alt='';img.onerror=fallback;avatar.append(img)}else fallback();
- copy.replaceChildren();for(const [tag,value]of [['small',item.label],['strong',item.title],['p',item.text],['small',item.action?'Click to reply':'']]){const n=document.createElement(tag);n.textContent=value||'';copy.append(n)}};
+ copy.replaceChildren();for(const [tag,value]of [['small',item.label],['strong',item.title],['p',item.text],['small',item.action?(item.hint||'Click to open'):'']]){const n=document.createElement(tag);n.textContent=value||'';copy.append(n)}};
  box.update=updated=>{item=updated;clearTimeout(removal);clearTimeout(timer);paint();box.classList.add('visible');timer=setTimeout(dismiss,kind==='chat'?8000:6000)};
  main.onclick=()=>{item.action?.();dismiss()};close.onclick=dismiss;box.append(main,close);document.body.append(box);paint();try{box.showPopover()}catch{}
  requestAnimationFrame(()=>requestAnimationFrame(()=>box.classList.add('visible')));timer=setTimeout(dismiss,kind==='chat'?8000:6000);
 }
+window.NovaNotice=show;
 let baseline=null,progressUid=null;
 const level=x=>{let l=1;while(l<2000&&x>=500*l+125*l*(l-1))l++;return l};
 addEventListener('nova-server-progress',e=>{const uid=localStorage.getItem('nova_user'),p=e.detail;if(!p)return;if(progressUid!==uid){baseline=null;progressUid=uid}if(baseline){const before=level(baseline.xp||0),after=level(p.xp||0);if(after>before){const game=window.NovaRecent?.list()?.find(g=>g.kind==='game');show('reward',{label:'Achievement unlocked',title:'Level '+after+' reached',text:'Keep playing. Your next level awaits.',art:game?.art})}for(const c of p.challenges||[]){const old=(baseline.challenges||[]).find(v=>v.id===c.id);if(c.claimed&&old&&!old.claimed&&baseline.challengeVersion===p.challengeVersion)show('reward',{label:'Achievement unlocked',title:'Quest complete',text:c.name+' · +'+c.reward+' Nova Coins',art:c.art})}}baseline=structuredClone(p)});
