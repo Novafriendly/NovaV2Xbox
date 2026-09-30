@@ -56,3 +56,11 @@ body[data-theme=aurora] #view{background:linear-gradient(135deg,#0d2229,#221c37,
 body[data-theme=aurora] .messages,body[data-theme=sunset] .messages,body[data-theme=ocean] .messages{background:transparent!important}body[data-theme=aurora] .member-list,body[data-theme=sunset] .member-list,body[data-theme=ocean] .member-list{background:#09090dcc!important}
 @media(max-width:700px){.settings-modal>.modal-head{left:140px!important}.settings-body{padding-top:75px!important}}
 .settings-layout nav button[data-section]{background:transparent!important}.settings-layout nav button[data-section]:hover{background:#ffffff08!important}.settings-layout nav button[data-section].selected{background:#ffffff12!important}
+/* Keep message controls anchored, including narrow and touch laptop layouts. */
+.message{container-type:inline-size}
+.chat-message-social{box-sizing:border-box;width:max-content;max-width:calc(100% - 20px);flex-wrap:nowrap;right:10px;top:-12px;z-index:5}
+.chat-message-social button{flex:0 0 30px}
+@container(max-width:420px){.chat-message-social{position:static;max-width:100%;width:fit-content;flex-wrap:wrap;opacity:1;pointer-events:auto;transform:none;margin:8px 0 0}.chat-message-social button{flex:0 0 28px;width:28px;height:28px}}
+@media(any-hover:hover) and (min-width:701px){.chat-message-social{position:absolute;margin:0;opacity:0;pointer-events:none;transform:translateY(4px)}.message:hover .chat-message-social,.message:focus-within .chat-message-social{opacity:1;pointer-events:auto;transform:none}}
+@media(any-hover:none){.chat-message-social{position:static;width:fit-content;max-width:100%;flex-wrap:wrap;opacity:1;pointer-events:auto;transform:none;margin:8px 0 0}}
+@container(max-width:420px){.message .chat-message-social{position:static;max-width:100%;width:fit-content;flex-wrap:wrap;opacity:1;pointer-events:auto;transform:none;margin:8px 0 0}}

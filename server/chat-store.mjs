@@ -16,15 +16,17 @@ export async function storeAction({db,uid,account,action,b,now,initial}){
  const items=await catalog(),cost=action==='buyNitro'?5000:prices[b.kind]?.[b.count];if(!cost)throw Error('Choose a valid case bundle.');const rewards=action==='openCase'?draw(items,b.kind,Number(b.count)):[];
  let failure;
  const result=await db.ref('novaControl').transaction(root=>{
-  root=root||{};failure=null;root.purchases=root.purchases||{};root.purchases[uid]=root.purchases[uid]||{};
+  // Returning the current value allows Firebase to resolve a cold or stale
+  // cache against the server. Aborting here would reject real balances.
+  failure=null;if(root===null)return null;root.purchases=root.purchases||{};root.purchases[uid]=root.purchases[uid]||{};
   if(root.purchases[uid][b.requestId])return root;
-  if(action==='buyNitro'&&root.boosters?.[uid]){failure='You already own Nitro.';return}
-  root.progress=root.progress||{};const p=root.progress[uid]=root.progress[uid]||initial();if(p.coins<cost){failure='You need '+cost.toLocaleString()+' Nova Coins.';return}p.coins-=cost;
+  if(action==='buyNitro'&&root.boosters?.[uid]){failure='You already own Nitro.';return root}
+  root.progress=root.progress||{};const p=root.progress[uid]=root.progress[uid]||initial();if(p.coins<cost){failure='You need '+cost.toLocaleString()+' Nova Coins.';return root}p.coins-=cost;
   if(action==='buyNitro'){root.nitro=root.nitro||{};root.nitro[uid]=true;root.boosters=root.boosters||{};root.boosters[uid]={at:now,name:account.name}}
   else{root.inventory=root.inventory||{};const inventory=root.inventory[uid]=root.inventory[uid]||{};for(const item of rewards)inventory[item.id]={count:(inventory[item.id]?.count||0)+1,unlockedAt:now}}
   root.purchases[uid][b.requestId]={action,cost,rewards:rewards.map(a=>a.id),at:now};return root;
  });
- if(!result.committed)throw Error(failure||'Purchase could not complete.');const root=result.snapshot.val(),receipt=root.purchases[uid][b.requestId];if(receipt.action!==action)throw Error('Purchase ID was already used.');
+ if(!result.committed)throw Error(failure||'Purchase could not complete.');const root=result.snapshot.val(),receipt=root?.purchases?.[uid]?.[b.requestId];if(!receipt)throw Error(failure||'You need '+cost.toLocaleString()+' Nova Coins.');if(receipt.action!==action)throw Error('Purchase ID was already used.');
  if(receipt.action==='buyNitro'){await db.ref('novaChatV2/profiles/'+uid).update({nitroBooster:true});await db.ref('novaChatV2/server').update({boosts:Object.keys(root.boosters||{}).length});await db.ref('novaChatV2/channels/general/messages/nitro-'+b.requestId).set({author:'nova-bot',text:account.name+' bought Nova Nitro and boosted the server! ✨',createdAt:receipt.at})}
  return {ok:true,coins:root.progress[uid].coins,rewards:receipt.rewards.map(id=>items.find(a=>a.id===id)),nitro:receipt.action==='buyNitro',boosts:Object.keys(root.boosters||{}).length};
 }
