@@ -89,3 +89,4 @@ body:has(#panel.full-library:not([hidden])){overflow:hidden}
 .full-library .library-tools #collection-search:focus-within{border-color:#ffffff50;box-shadow:0 0 0 3px #ffffff08;background:#ffffff08}
 .full-library #collection-search:focus-within .collection-search-icon{color:#e5e7ec}
 .library-view button.active{color:#f3f3f6;background:#ffffff0a!important;border-radius:7px;padding:5px 10px!important}
+.hack-apply{width:calc(100% - 20px);margin:10px;padding:12px;border:1px solid #ed455955;border-radius:10px;color:#ff8492;background:#d8344915;cursor:pointer;font-weight:700}.hack-apply:hover{background:#d8344930;box-shadow:0 0 22px #ed455922}
