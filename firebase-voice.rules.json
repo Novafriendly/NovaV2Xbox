@@ -215,6 +215,12 @@
           },
           "$other": {
             ".validate": false
+          },
+          "status": {
+            ".validate": "newData.isString() && (newData.val() === 'online' || newData.val() === 'offline' || newData.val() === 'dnd')"
+          },
+          "novaTag": {
+            ".validate": "newData.isBoolean()"
           }
         }
       },
