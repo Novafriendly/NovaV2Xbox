@@ -7,7 +7,7 @@
   const identity=g=>kind(g)+':'+g.id;
   function list(){try{const rows=JSON.parse(localStorage.getItem(key())||'[]');return Array.isArray(rows)?rows.filter(g=>g&&g.id!=null&&typeof g.name==='string').slice(0,12):[]}catch{return []}}
   function record(g){const item={id:g.id,name:g.name,art:g.art,kind:kind(g),playedAt:Date.now()};const rows=[item,...list().filter(x=>identity(x)!==identity(item))].slice(0,12);localStorage.setItem(key(),JSON.stringify(rows));render();window.novaGuideRender?.('home');}
-  function freshFrame(){const el=document.createElement('iframe');el.id='system';el.title='Nova';el.allow='microphone; autoplay; fullscreen';el.hidden=true;document.getElementById('panel-content').before(el);return el;}
+  function freshFrame(){const el=document.createElement('iframe');el.id='system';el.title='Nova';el.allow='microphone; autoplay; fullscreen; display-capture';el.hidden=true;document.getElementById('panel-content').before(el);return el;}
   function park(){if(frame.dataset.session!=='true')return;frame.hidden=true;frame.removeAttribute('id');frame=freshFrame();}
   function launch(g){
     cancelAIMotion();window.NovaMusic?.hide();const id=account()+':'+identity(g);
