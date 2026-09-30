@@ -15,10 +15,18 @@ export function screenAssistant({send, onChange, getMessages, getBusy}) {
     if (starting) return;
     if (!navigator.mediaDevices?.getDisplayMedia) throw Error('Screen sharing needs a supported desktop browser on HTTPS or localhost.');
     starting = true;
-    let captured;
+    let captured, floatingRequest;
     try {
       // The browser picker is always opened by an explicit button click.
-      captured = await navigator.mediaDevices.getDisplayMedia({video: {frameRate: {ideal: 5, max: 10}}, audio: false});
+      hostDoc = document;
+      try { if (parent !== window && parent.location.origin === origin) hostDoc = parent.document; } catch {}
+      // Start both browser requests during the Share screen button's user activation.
+      const captureRequest = navigator.mediaDevices.getDisplayMedia({video: {frameRate: {ideal: 5, max: 10}}, audio: false});
+      const pip = hostDoc.defaultView.documentPictureInPicture;
+      if (pip?.requestWindow) {
+        try { floatingRequest = pip.requestWindow({width: 390, height: 620}).catch(() => null); } catch {}
+      }
+      captured = await captureRequest;
       stream = captured;
       stream.getVideoTracks()[0].addEventListener('ended', stop, {once: true});
       hostDoc = document;
@@ -54,6 +62,7 @@ export function screenAssistant({send, onChange, getMessages, getBusy}) {
       footer.append(popout, full, end); body.append(preview, notice, reply, form, status, footer); panel.append(bar, body); hostDoc.body.append(panel);
       await video.play();
       onChange(true); update();
+      if (floatingRequest) { const floating = await floatingRequest; if (floating) await floatPanel(floating); }
       if (hostDoc !== document) parent.postMessage({novaAction: 'closeAI'}, origin);
       bar.onpointerdown = e => {
         if (floatingWindow || e.target.closest('button')) return;
@@ -68,11 +77,13 @@ export function screenAssistant({send, onChange, getMessages, getBusy}) {
       };
     } catch (e) {
       captured?.getTracks().forEach(t => t.stop()); stop();
+      if (floatingRequest) (await floatingRequest)?.close();
       if (e.name !== 'NotAllowedError' && e.name !== 'AbortError') throw e;
     } finally { starting = false; }
   }
-  async function floatPanel() {
-    if (!panel) return;
+  async function floatPanel(reservedWindow) {
+    if (!(reservedWindow?.document)) reservedWindow = null;
+    if (!panel) { reservedWindow?.close(); return; }
     if (floatingWindow) { floatingWindow.focus(); return; }
     const hostWindow = hostDoc.defaultView;
     if (!hostWindow.documentPictureInPicture?.requestWindow) {
@@ -80,7 +91,7 @@ export function screenAssistant({send, onChange, getMessages, getBusy}) {
       return;
     }
     try {
-      const floating = await hostWindow.documentPictureInPicture.requestWindow({width: 390, height: 620});
+      const floating = reservedWindow || await hostWindow.documentPictureInPicture.requestWindow({width: 390, height: 620});
       if (!panel || !stream) { floating.close(); return; }
       floatingWindow = floating;
       const style = floating.document.createElement('link'); style.rel = 'stylesheet'; style.href = new URL('nova-ai-screen.css', location.href).href; floating.document.head.append(style);
