@@ -1,7 +1,8 @@
 import {glyph,emojiPicker} from './chat-controls.js';
 export function formatMessage(host,text){
  host.replaceChildren();
- function inline(parent,value){const pattern=/(\*\*(.+?)\*\*|__(.+?)__|~~(.+?)~~|`([^`]+)`|\*([^*]+)\*)/g;let start=0,m;while((m=pattern.exec(value))){parent.append(document.createTextNode(value.slice(start,m.index)));const tag=m[2]?'strong':m[3]?'u':m[4]?'s':m[5]?'code':'em';const node=document.createElement(tag);node.textContent=m[2]||m[3]||m[4]||m[5]||m[6];parent.append(node);start=pattern.lastIndex}parent.append(document.createTextNode(value.slice(start)))}
+ function appendText(parent,value){const pattern=/https?:\/\/[^\s<>]+|www\.[^\s<>]+/gi;let start=0,m;while((m=pattern.exec(value))){parent.append(document.createTextNode(value.slice(start,m.index)));const clean=m[0].replace(/[.,!?;:)]+$/,'');const a=document.createElement('a');a.href=clean.startsWith('www.')?'https://'+clean:clean;a.textContent=clean;a.target='_blank';a.rel='noopener noreferrer';parent.append(a,document.createTextNode(m[0].slice(clean.length)));start=pattern.lastIndex}parent.append(document.createTextNode(value.slice(start)))}
+ function inline(parent,value){const pattern=/(\*\*(.+?)\*\*|__(.+?)__|~~(.+?)~~|`([^`]+)`|\*([^*]+)\*)/g;let start=0,m;while((m=pattern.exec(value))){appendText(parent,value.slice(start,m.index));const tag=m[2]?'strong':m[3]?'u':m[4]?'s':m[5]?'code':'em';const node=document.createElement(tag);if(tag==='code')node.textContent=m[5];else appendText(node,m[2]||m[3]||m[4]||m[6]);parent.append(node);start=pattern.lastIndex}appendText(parent,value.slice(start))}
  for(const line of String(text||'').split('\n')){const m=/^(#{1,2} |> )(.*)$/.exec(line);const node=document.createElement(m?(m[1]==='> '?'blockquote':m[1]==='# '?'h3':'h4'):'div');inline(node,m?m[2]:line);if(!line)node.append(document.createElement('br'));host.append(node)}
 }
 export function addFormatting(form,input,send){
