@@ -7515,6 +7515,15 @@
     ]
   },
   {
+    "id": 871,
+    "name": "Drive Mad",
+    "art": "content/covers/871.png",
+    "url": "https://drivegame.io/play/drive-mad/",
+    "genres": [
+      "Racing"
+    ]
+  },
+  {
     "id": 87,
     "name": "Emulator.JS",
     "art": "content/covers/87.png",
