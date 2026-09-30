@@ -191,7 +191,7 @@
         ".read": "(auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists()) && !root.child('novaControl/siteBans').child(auth.uid).exists()",
         "$uid": {
           ".write": "(auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && auth.uid === $uid) && !root.child('novaControl/siteBans').child(auth.uid).exists()",
-          ".validate": "newData.hasChildren(['name','joined']) && newData.child('nitroBooster').val() === data.child('nitroBooster').val() && newData.child('nitroAnimation').val() === data.child('nitroAnimation').val() && newData.child('decoration').val() === data.child('decoration').val() && newData.child('effect').val() === data.child('effect').val() && newData.child('banner').val() === data.child('banner').val()",
+          ".validate": "newData.hasChildren(['name','joined']) && newData.child('nitroBooster').val() === data.child('nitroBooster').val() && newData.child('nitroAnimation').val() === data.child('nitroAnimation').val() && newData.child('decoration').val() === data.child('decoration').val() && newData.child('effect').val() === data.child('effect').val() && newData.child('banner').val() === data.child('banner').val() && newData.child('chatBanner').val() === data.child('chatBanner').val() && newData.child('usernameFont').val() === data.child('usernameFont').val()",
           "name": {
             ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 24"
           },
@@ -226,6 +226,12 @@
             ".validate": "newData.val() === data.val()"
           },
           "nitroAnimation": {
+            ".validate": "newData.val() === data.val()"
+          },
+          "chatBanner": {
+            ".validate": "newData.val() === data.val()"
+          },
+          "usernameFont": {
             ".validate": "newData.val() === data.val()"
           }
         }
