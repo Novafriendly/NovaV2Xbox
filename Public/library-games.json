@@ -7518,7 +7518,34 @@
     "id": 871,
     "name": "Drive Mad",
     "art": "content/covers/871.png",
-    "url": "https://drivegame.io/play/drive-mad/",
+    "url": "https://play.fancade.com/5F084A0BCE06B710?max_w=999999&max_h=9999999&istart=1",
+    "genres": [
+      "Racing"
+    ]
+  },
+   {
+    "id": 872,
+    "name": "Monster truck ",
+    "art": "content/covers/872.png",
+    "url": "https://play.fancade.com/60851784770864E1?max_w=999999&max_h=9999999&istart=1",
+    "genres": [
+      "Racing"
+    ]
+  },
+  {
+    "id": 873,
+    "name": "Drive Mad Winter",
+    "art": "content/covers/873.png",
+    "url": "https://play.fancade.com/5DECAAB70F71EA92?max_w=999999&max_h=9999999&istart=1",
+    "genres": [
+      "Racing"
+    ]
+  },
+  {
+    "id": 874,
+    "name": "Drive Fun 2",
+    "art": "content/covers/874.png",
+    "url": "https://play.fancade.com/605B9B73B0122DA1?max_w=999999&max_h=9999999&istart=1",
     "genres": [
       "Racing"
     ]

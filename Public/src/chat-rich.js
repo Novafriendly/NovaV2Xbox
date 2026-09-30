@@ -17,9 +17,10 @@ export function decorateMessage(copy,m,id,{messages,name,reply,save,react,reacti
  if(valid(m.media)){const wrap=make('div',null,'chat-attachment');wrap.append(media(m.media));if(m.media.type==='image'){const favorite=make('button','♡ Save','chat-save-media');favorite.type='button';favorite.onclick=()=>save(m.media);wrap.append(favorite)}copy.append(wrap)}
  const bar=make('div',null,'chat-message-social');
  function act(label,icon,fn){const b=make('button');b.type='button';b.title=label;b.setAttribute('aria-label',label);if(icon)b.append(glyph(icon));b.onclick=fn;bar.append(b);return b}
- for(const emoji of ['✅','🔥','❤️']){const b=act('React '+emoji,null,()=>react(id,reactions?.[uid]===emoji?null:emoji));b.textContent=emoji}
- const add=act('Add reaction','smile',()=>emojiPicker(add,emoji=>react(id,reactions?.[uid]===emoji?null:emoji)));
+ const list=v=>typeof v==='string'?[v]:Object.values(v||{}),has=emoji=>list(reactions?.[uid]).includes(emoji);
+ for(const emoji of ['✅','🔥','❤️']){const b=act('React '+emoji,null,()=>react(id,emoji));b.textContent=emoji}
+ const add=act('Add reaction','smile',()=>emojiPicker(add,emoji=>react(id,emoji)));
  act('Reply','reply',()=>reply(id,name(m.author)));
  const more=act('More message actions','more',()=>{const d=popover(more,'Message actions');d.classList.add('chat-message-menu');for(const [label,fn]of [['Reply',()=>reply(id,name(m.author))],['Copy text',()=>navigator.clipboard.writeText(m.text||'').catch(()=>{})],['Copy message ID',()=>navigator.clipboard.writeText(id).catch(()=>{})]]){const b=make('button',label);b.type='button';b.onclick=()=>{fn();d.close()};d.append(b)}if(valid(m.media)&&m.media.type==='image'){const b=make('button','Save image to favorites');b.onclick=()=>{save(m.media);d.close()};d.append(b)}});
- copy.append(bar);const chips=make('div',null,'chat-reaction-chips');for(const emoji of new Set(Object.values(reactions||{}))){const b=make('button',emoji+' '+Object.values(reactions).filter(v=>v===emoji).length);b.type='button';b.setAttribute('aria-label','React '+emoji);b.setAttribute('aria-pressed',String(reactions[uid]===emoji));b.onclick=()=>react(id,reactions[uid]===emoji?null:emoji);chips.append(b)}copy.append(chips);
+ copy.append(bar);const chips=make('div',null,'chat-reaction-chips');for(const emoji of new Set(Object.values(reactions||{}).flatMap(list))){const b=make('button',emoji+' '+Object.values(reactions).filter(v=>list(v).includes(emoji)).length);b.type='button';b.setAttribute('aria-label','React '+emoji);b.setAttribute('aria-pressed',String(has(emoji)));b.onclick=()=>react(id,emoji);chips.append(b)}copy.append(chips);
 }

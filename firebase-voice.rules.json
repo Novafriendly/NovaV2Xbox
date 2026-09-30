@@ -546,7 +546,10 @@
               "$message": {
                 "$uid": {
                   ".write": "(((auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && (($channel === 'owner-lounge' && (root.child('novaChatV2/roles').child(auth.uid).val() === 'owner' || root.child('novaChatV2/roles').child(auth.uid).val() === 'admin' || root.child('novaChatV2/roles').child(auth.uid).val() === 'moderator')) || $channel === 'welcome' || $channel === 'announcements' || $channel === 'updates' || $channel === 'leaks' || $channel === 'links' || $channel === 'general' || $channel === 'community-links' || $channel === 'ai-assistance' || $channel === 'report' || $channel === 'suggestions')) && $channel !== 'report' && $channel !== 'suggestions') && auth.uid === $uid && root.child('novaChatV2/channels/' + $channel + '/messages').child($message).exists()) && !root.child('novaControl/siteBans').child(auth.uid).exists()",
-                  ".validate": "newData.isString() && (newData.val() === '✅' || newData.val() === '🔥' || newData.val() === '⬇️' || newData.val() === '❤️' || newData.val() === '👍' || newData.val() === '👎' || newData.val() === '😂' || newData.val() === '😭' || newData.val() === '👀' || newData.val() === '🎉' || newData.val() === '😀' || newData.val() === '🥳' || newData.val() === '💀' || newData.val() === '🤔' || newData.val() === '😎' || newData.val() === '🙌' || newData.val() === '💯' || newData.val() === '🎮' || newData.val() === '🚀' || newData.val() === '✨' || newData.val() === '💜' || newData.val() === '😴' || newData.val() === '😮' || newData.val() === '🍿')"
+                  ".validate": "(newData.isString() && (newData.val() === '✅' || newData.val() === '🔥' || newData.val() === '⬇️' || newData.val() === '❤️' || newData.val() === '👍' || newData.val() === '👎' || newData.val() === '😂' || newData.val() === '😭' || newData.val() === '👀' || newData.val() === '🎉' || newData.val() === '😀' || newData.val() === '🥳' || newData.val() === '💀' || newData.val() === '🤔' || newData.val() === '😎' || newData.val() === '🙌' || newData.val() === '💯' || newData.val() === '🎮' || newData.val() === '🚀' || newData.val() === '✨' || newData.val() === '💜' || newData.val() === '😴' || newData.val() === '😮' || newData.val() === '🍿')) || newData.hasChildren()",
+                  "$emoji": {
+                    ".validate": "newData.isString() && (($emoji === '2705' && newData.val() === '✅') || ($emoji === '1f525' && newData.val() === '🔥') || ($emoji === '2b07-fe0f' && newData.val() === '⬇️') || ($emoji === '2764-fe0f' && newData.val() === '❤️') || ($emoji === '1f44d' && newData.val() === '👍') || ($emoji === '1f44e' && newData.val() === '👎') || ($emoji === '1f602' && newData.val() === '😂') || ($emoji === '1f62d' && newData.val() === '😭') || ($emoji === '1f440' && newData.val() === '👀') || ($emoji === '1f389' && newData.val() === '🎉') || ($emoji === '1f600' && newData.val() === '😀') || ($emoji === '1f973' && newData.val() === '🥳') || ($emoji === '1f480' && newData.val() === '💀') || ($emoji === '1f914' && newData.val() === '🤔') || ($emoji === '1f60e' && newData.val() === '😎') || ($emoji === '1f64c' && newData.val() === '🙌') || ($emoji === '1f4af' && newData.val() === '💯') || ($emoji === '1f3ae' && newData.val() === '🎮') || ($emoji === '1f680' && newData.val() === '🚀') || ($emoji === '2728' && newData.val() === '✨') || ($emoji === '1f49c' && newData.val() === '💜') || ($emoji === '1f634' && newData.val() === '😴') || ($emoji === '1f62e' && newData.val() === '😮') || ($emoji === '1f37f' && newData.val() === '🍿'))"
+                  }
                 }
               }
             }
@@ -560,7 +563,10 @@
                 "$message": {
                   "$uid": {
                     ".write": "((auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && (auth.uid === $a || auth.uid === $b)) && auth.uid === $uid && root.child('novaChatV2/dms/' + $a + '/' + $b + '/messages').child($message).exists()) && !root.child('novaControl/siteBans').child(auth.uid).exists()",
-                    ".validate": "newData.isString() && (newData.val() === '✅' || newData.val() === '🔥' || newData.val() === '⬇️' || newData.val() === '❤️' || newData.val() === '👍' || newData.val() === '👎' || newData.val() === '😂' || newData.val() === '😭' || newData.val() === '👀' || newData.val() === '🎉' || newData.val() === '😀' || newData.val() === '🥳' || newData.val() === '💀' || newData.val() === '🤔' || newData.val() === '😎' || newData.val() === '🙌' || newData.val() === '💯' || newData.val() === '🎮' || newData.val() === '🚀' || newData.val() === '✨' || newData.val() === '💜' || newData.val() === '😴' || newData.val() === '😮' || newData.val() === '🍿')"
+                    ".validate": "(newData.isString() && (newData.val() === '✅' || newData.val() === '🔥' || newData.val() === '⬇️' || newData.val() === '❤️' || newData.val() === '👍' || newData.val() === '👎' || newData.val() === '😂' || newData.val() === '😭' || newData.val() === '👀' || newData.val() === '🎉' || newData.val() === '😀' || newData.val() === '🥳' || newData.val() === '💀' || newData.val() === '🤔' || newData.val() === '😎' || newData.val() === '🙌' || newData.val() === '💯' || newData.val() === '🎮' || newData.val() === '🚀' || newData.val() === '✨' || newData.val() === '💜' || newData.val() === '😴' || newData.val() === '😮' || newData.val() === '🍿')) || newData.hasChildren()",
+                    "$emoji": {
+                      ".validate": "newData.isString() && (($emoji === '2705' && newData.val() === '✅') || ($emoji === '1f525' && newData.val() === '🔥') || ($emoji === '2b07-fe0f' && newData.val() === '⬇️') || ($emoji === '2764-fe0f' && newData.val() === '❤️') || ($emoji === '1f44d' && newData.val() === '👍') || ($emoji === '1f44e' && newData.val() === '👎') || ($emoji === '1f602' && newData.val() === '😂') || ($emoji === '1f62d' && newData.val() === '😭') || ($emoji === '1f440' && newData.val() === '👀') || ($emoji === '1f389' && newData.val() === '🎉') || ($emoji === '1f600' && newData.val() === '😀') || ($emoji === '1f973' && newData.val() === '🥳') || ($emoji === '1f480' && newData.val() === '💀') || ($emoji === '1f914' && newData.val() === '🤔') || ($emoji === '1f60e' && newData.val() === '😎') || ($emoji === '1f64c' && newData.val() === '🙌') || ($emoji === '1f4af' && newData.val() === '💯') || ($emoji === '1f3ae' && newData.val() === '🎮') || ($emoji === '1f680' && newData.val() === '🚀') || ($emoji === '2728' && newData.val() === '✨') || ($emoji === '1f49c' && newData.val() === '💜') || ($emoji === '1f634' && newData.val() === '😴') || ($emoji === '1f62e' && newData.val() === '😮') || ($emoji === '1f37f' && newData.val() === '🍿'))"
+                    }
                   }
                 }
               }
@@ -573,7 +579,10 @@
             "$message": {
               "$uid": {
                 ".write": "((auth != null && auth.token.firebase.sign_in_provider !== 'anonymous' && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaChatV2/bans').child(auth.uid).exists() && root.child('novaChatV2/groups').child($group).child('members').child(auth.uid).val() === true) && auth.uid === $uid && root.child('novaChatV2/groupMessages/' + $group + '').child($message).exists()) && !root.child('novaControl/siteBans').child(auth.uid).exists()",
-                ".validate": "newData.isString() && (newData.val() === '✅' || newData.val() === '🔥' || newData.val() === '⬇️' || newData.val() === '❤️' || newData.val() === '👍' || newData.val() === '👎' || newData.val() === '😂' || newData.val() === '😭' || newData.val() === '👀' || newData.val() === '🎉' || newData.val() === '😀' || newData.val() === '🥳' || newData.val() === '💀' || newData.val() === '🤔' || newData.val() === '😎' || newData.val() === '🙌' || newData.val() === '💯' || newData.val() === '🎮' || newData.val() === '🚀' || newData.val() === '✨' || newData.val() === '💜' || newData.val() === '😴' || newData.val() === '😮' || newData.val() === '🍿')"
+                ".validate": "(newData.isString() && (newData.val() === '✅' || newData.val() === '🔥' || newData.val() === '⬇️' || newData.val() === '❤️' || newData.val() === '👍' || newData.val() === '👎' || newData.val() === '😂' || newData.val() === '😭' || newData.val() === '👀' || newData.val() === '🎉' || newData.val() === '😀' || newData.val() === '🥳' || newData.val() === '💀' || newData.val() === '🤔' || newData.val() === '😎' || newData.val() === '🙌' || newData.val() === '💯' || newData.val() === '🎮' || newData.val() === '🚀' || newData.val() === '✨' || newData.val() === '💜' || newData.val() === '😴' || newData.val() === '😮' || newData.val() === '🍿')) || newData.hasChildren()",
+                "$emoji": {
+                  ".validate": "newData.isString() && (($emoji === '2705' && newData.val() === '✅') || ($emoji === '1f525' && newData.val() === '🔥') || ($emoji === '2b07-fe0f' && newData.val() === '⬇️') || ($emoji === '2764-fe0f' && newData.val() === '❤️') || ($emoji === '1f44d' && newData.val() === '👍') || ($emoji === '1f44e' && newData.val() === '👎') || ($emoji === '1f602' && newData.val() === '😂') || ($emoji === '1f62d' && newData.val() === '😭') || ($emoji === '1f440' && newData.val() === '👀') || ($emoji === '1f389' && newData.val() === '🎉') || ($emoji === '1f600' && newData.val() === '😀') || ($emoji === '1f973' && newData.val() === '🥳') || ($emoji === '1f480' && newData.val() === '💀') || ($emoji === '1f914' && newData.val() === '🤔') || ($emoji === '1f60e' && newData.val() === '😎') || ($emoji === '1f64c' && newData.val() === '🙌') || ($emoji === '1f4af' && newData.val() === '💯') || ($emoji === '1f3ae' && newData.val() === '🎮') || ($emoji === '1f680' && newData.val() === '🚀') || ($emoji === '2728' && newData.val() === '✨') || ($emoji === '1f49c' && newData.val() === '💜') || ($emoji === '1f634' && newData.val() === '😴') || ($emoji === '1f62e' && newData.val() === '😮') || ($emoji === '1f37f' && newData.val() === '🍿'))"
+                }
               }
             }
           }
@@ -635,6 +644,18 @@
       "mutes": {
         ".read": false,
         ".write": false
+      },
+      "botMessages": {
+        "$uid": {
+          ".read": "auth != null && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaControl/siteBans').child(auth.uid).exists() && auth.uid === $uid",
+          ".write": false
+        }
+      },
+      "preferences": {
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid && !root.child('novaControl/siteBans').child(auth.uid).exists()",
+          ".write": false
+        }
       }
     },
     "novaControl": {
