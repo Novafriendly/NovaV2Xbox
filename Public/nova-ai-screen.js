@@ -1,12 +1,13 @@
 import {renderMarkdown} from './nova-ai-markdown.js';
 
 export function screenAssistant({send, onChange, getMessages, getBusy}) {
-  let stream, panel, video, reply, input, submit, status, hostDoc, starting = false;
+  let stream, panel, video, reply, input, submit, status, hostDoc, floatingWindow, starting = false;
   const origin = location.origin;
   function stop() {
     const old = stream; stream = null;
     old?.getTracks().forEach(track => track.stop());
     panel?.remove(); panel = null; video = null;
+    const floating = floatingWindow; floatingWindow = null; floating?.close();
     onChange(false);
   }
   async function start() {
@@ -49,12 +50,13 @@ export function screenAssistant({send, onChange, getMessages, getBusy}) {
       input.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); } };
       const footer = make('div', null, 'screen-assistant-footer'), full = make('button', 'Open full chat'), end = make('button', 'Stop sharing'); full.type = end.type = 'button'; end.onclick = stop;
       full.onclick = () => { if (hostDoc !== document) hostDoc.querySelector('nav [data-page="ai"]')?.click(); else panel.classList.add('minimized'); };
-      footer.append(full, end); body.append(preview, notice, reply, form, status, footer); panel.append(bar, body); hostDoc.body.append(panel);
+      const popout = make('button', 'Float over websites'); popout.type = 'button'; popout.onclick = floatPanel;
+      footer.append(popout, full, end); body.append(preview, notice, reply, form, status, footer); panel.append(bar, body); hostDoc.body.append(panel);
       await video.play();
       onChange(true); update();
       if (hostDoc !== document) parent.postMessage({novaAction: 'closeAI'}, origin);
       bar.onpointerdown = e => {
-        if (e.target.closest('button')) return;
+        if (floatingWindow || e.target.closest('button')) return;
         const bounds = panel.getBoundingClientRect(), x = e.clientX, y = e.clientY; bar.setPointerCapture(e.pointerId);
         const win = hostDoc.defaultView;
         bar.onpointermove = move => {
@@ -68,6 +70,32 @@ export function screenAssistant({send, onChange, getMessages, getBusy}) {
       captured?.getTracks().forEach(t => t.stop()); stop();
       if (e.name !== 'NotAllowedError' && e.name !== 'AbortError') throw e;
     } finally { starting = false; }
+  }
+  async function floatPanel() {
+    if (!panel) return;
+    if (floatingWindow) { floatingWindow.focus(); return; }
+    const hostWindow = hostDoc.defaultView;
+    if (!hostWindow.documentPictureInPicture?.requestWindow) {
+      status.textContent = 'Floating chat needs a browser with Document Picture-in-Picture support. Try Chrome or Edge.';
+      return;
+    }
+    try {
+      const floating = await hostWindow.documentPictureInPicture.requestWindow({width: 390, height: 620});
+      if (!panel || !stream) { floating.close(); return; }
+      floatingWindow = floating;
+      const style = floating.document.createElement('link'); style.rel = 'stylesheet'; style.href = new URL('nova-ai-screen.css', location.href).href; floating.document.head.append(style);
+      floating.document.documentElement.classList.add('nova-screen-popout');
+      floating.document.title = 'Nova AI · Screen assistant';
+      panel.classList.remove('minimized'); panel.style.left = panel.style.top = panel.style.right = panel.style.bottom = '';
+      floating.document.body.append(panel);
+      floating.addEventListener('pagehide', () => {
+        if (floatingWindow !== floating) return;
+        floatingWindow = null;
+        if (panel && stream) { hostDoc.body.append(panel); video.play().catch(() => {}); }
+      }, {once: true});
+      video.play().catch(() => {});
+      status.textContent = 'Keep Nova open in its tab. Share your entire screen to follow you between websites.';
+    } catch (e) { status.textContent = 'Could not open floating chat: ' + e.message; }
   }
   async function capture() {
     if (!stream || stream.getVideoTracks()[0]?.readyState !== 'live') throw Error('Screen sharing has stopped. Share your screen again.');
