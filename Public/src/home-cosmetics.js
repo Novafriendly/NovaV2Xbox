@@ -25,6 +25,6 @@ function header(){const p=window.novaHomeProfile||{};const n=document.getElement
 window.NovaHomeCosmetics={avatar,name,surface,header,balance};
 addEventListener('nova-profile-changed',header);addEventListener('nova-server-progress',e=>balance(e.detail?.coins));
 addEventListener('storage',()=>balance());
-addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.novaAction!=='novaCoinsChanged')return;const frame=[...document.querySelectorAll('iframe')].find(f=>f.contentWindow===e.source);if(frame)balance(e.data.coins)});
+addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.novaAction!=='novaCoinsChanged')return;const frame=[...document.querySelectorAll('iframe')].find(f=>f.contentWindow===e.source);if(frame&&Number.isSafeInteger(e.data.coins)&&e.data.coins>=0)dispatchEvent(new CustomEvent('nova-server-progress',{detail:{coins:e.data.coins}}))});
 fetch('/profile-assets/catalog.json').then(r=>{if(!r.ok)throw Error('Catalog unavailable');return r.json()}).then(items=>{for(const item of items)assets.set(item.id,item);dispatchEvent(new Event('nova-profile-changed'));dispatchEvent(new Event('nova-guide-data'))}).catch(()=>{});
 })();
