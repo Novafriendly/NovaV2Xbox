@@ -83,3 +83,17 @@ test('another owner cannot ban, mute, or demote either named owner account', asy
     assert.equal(s.get('novaChatV2/mutes/' + uid), null);
   }
 });
+
+
+test('permanent protected UIDs ignore name or role changes and clear old bans', async () => {
+ const s = setup();
+ for (const uid of ['FR37Ekbg1iYz8jVbbiQvHXHSUNQ2','Te5tfn6BjZaZ3hbqD46oO0hOETo2']) {
+  s.set('novaAccounts/'+uid,{name:'Renamed account'});s.set('novaChatV2/roles/'+uid,'member');
+  for(const body of [{kind:'chatBan',value:true},{kind:'siteBan',value:true},{kind:'role',value:'member'},{kind:'mute',minutes:30}])assert.equal((await s.call('user',{uid,...body})).status,400);
+  assert.equal((await s.call('staffCommand',{uid,command:'ban',scope:'nova'})).status,400);
+  s.set('novaChatV2/bans/'+uid,true);s.set('novaControl/siteBans/'+uid,{reason:'old'});s.set('novaChatV2/mutes/'+uid,9999999999999);
+  s.as(uid);const result=await s.call('status');assert.equal(result.status,200);assert.equal(result.owner,true);assert.equal(result.ban,null);
+  assert.equal(s.get('novaChatV2/roles/'+uid),'owner');for(const path of ['novaChatV2/bans/','novaChatV2/mutes/','novaControl/siteBans/'])assert.equal(s.get(path+uid),null);s.as('owner');
+ }
+});
+test('copying the owner name does not grant protection or owner access',async()=>{const s=setup();s.set('novaAccounts/member',{name:'NovaOfficalacc'});s.as('member');assert.equal((await s.call('dashboard')).status,403);assert.equal((await s.call('status')).owner,false)});

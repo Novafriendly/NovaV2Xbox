@@ -2,6 +2,7 @@ import { cloudHistory, recordCloudGame } from './cloud-history.js';
 const $ = id => document.getElementById(id);
 const el = (tag, text, cls) => { const node = document.createElement(tag); if (text) node.textContent = text; if (cls) node.className = cls; return node; };
 const storageKey = () => 'nova_cloud_favorites_' + (localStorage.getItem('nova_user') || localStorage.getItem('nova_username') || 'guest');
+const providerLabel = game => game.providers?.astra && game.providers?.gsn ? 'Astra + Nova Cloud' : game.providers?.gsn ? 'Nova Cloud' : 'Astra';
 let games = [], filter = 'all', selected, searchTimer, activeTab = 'explore';
 const saved = () => { try { const rows = JSON.parse(localStorage.getItem(storageKey()) || '[]'); return Array.isArray(rows) ? rows : []; } catch { return []; } };
 const motion = () => matchMedia('(prefers-reduced-motion:reduce)').matches || localStorage.getItem('nova_reduce_motion') === 'true' ? 'instant' : 'smooth';
@@ -24,7 +25,7 @@ function card(game, recent = false) {
   cover.append(artwork(game), overlay); cover.onclick = () => details(game);
   const heart = el('button', null, 'favorite'); heart.dataset.gameId = game.id; heart.type = 'button'; paintFavorite(heart, game); heart.onclick = () => favorite(game);
   const title = el('h3', game.name); title.title = game.name;
-  article.append(cover, heart, title, el('small', game.users ? game.users.toLocaleString() + (game.users === 1 ? ' user picked this' : ' users picked this') : recent ? playedLabel(game.playedAt) : 'Cloud play · Astra')); if (game.rank) article.append(el('span', String(game.rank).padStart(2, '0'), 'cloud-rank')); return article;
+  article.append(cover, heart, title, el('small', game.users ? game.users.toLocaleString() + (game.users === 1 ? ' user picked this' : ' users picked this') : recent ? playedLabel(game.playedAt) : 'Cloud play · ' + providerLabel(game))); if (game.rank) article.append(el('span', String(game.rank).padStart(2, '0'), 'cloud-rank')); return article;
 }
 function playedLabel(time) {
   const days = Math.floor(Math.max(0, Date.now() - time) / 86400000);
@@ -50,7 +51,7 @@ function render() {
   const active = query ? 'browse' : filter === 'favorites' ? 'my-library' : filter === 'recent' ? 'recent' : ['explore', 'browse'].includes(activeTab) ? activeTab : 'explore';
   document.querySelectorAll('.cloud-nav button').forEach(button => { const yes = button.id === active; button.classList.toggle('active', yes); if (yes) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current'); });
 }
-function details(game) { selected = game; $('details-art').src = game.art; $('details-name').textContent = game.name; paintFavorite($('details-favorite'), game, true); $('game-details').showModal(); }
+function details(game) { selected = game; $('details-art').src = game.art; $('details-name').textContent = game.name; $('details-provider').textContent = game.providers?.astra && game.providers?.gsn ? 'Available on Astra and Nova Cloud. Pick your cloud when you launch.' : 'Launch through Nova and connect to ' + providerLabel(game) + '. Follow the provider’s connection or sign-in prompts.'; paintFavorite($('details-favorite'), game, true); $('game-details').showModal(); }
 function launch(game) {
   $('game-details').close(); recordCloudGame(game); refreshPersonal();
   let novaParent = false; try { novaParent = parent !== window && !!parent.NovaRecent && !parent.NovaSplit?.owns(window); } catch {}
@@ -92,7 +93,7 @@ addEventListener('storage', sync); addEventListener('pageshow', sync); document.
 addEventListener('message', event => { if (event.origin === location.origin && event.source === parent && event.data?.novaAction === 'cloudLaunchError') { $('error').hidden = false; $('error').textContent = event.data.message; } });
 try {
   const response = await fetch('library-cloud.json'); if (!response.ok) throw Error('Cloud library unavailable. Please try again.'); games = await response.json();
-  $('catalog-count').textContent = games.length + ' games to discover'; $('source-count').textContent = games.length + ' catalog entries from Astra';
+  $('catalog-count').textContent = games.length + ' games to discover'; $('source-count').textContent = games.length + ' games · Astra + Nova Cloud';
   const byName = name => games.find(game => game.name === name);
   fill($('spotlight'), ['Grand Theft Auto V', 'Fortnite', 'Hogwarts Legacy', 'Cyberpunk 2077', 'Elden Ring', 'Roblox', 'Forza Horizon 4', 'Marvel’s Spider-Man Remastered'].map(byName).filter(Boolean));
   fill($('discover-shelf'), ['Stardew Valley', 'Hades', 'Cuphead', 'Among Us', 'Stray', 'It Takes Two', 'Hollow Knight', 'Dead Cells', 'Rocket League Sideswipe', 'Clash Royale', "Baldur's Gate 3", 'The Witcher 3'].map(byName).filter(Boolean));

@@ -29,3 +29,37 @@ body.leaving .ship{animation-duration:.24s}
 body.leaving .loading-copy{transition:opacity .12s}
 .stars{animation-duration:.6s}
 .track.waiting::after{animation-duration:.8s}
+
+/* A neutral glass choice pauses the launch until a provider is selected. */
+body.picking-cloud #loader{background:#07090c}
+body.picking-cloud .flight,body.picking-cloud .loading-copy{opacity:.3}
+body.picking-cloud #loader *{animation-play-state:paused!important}
+#cloud-picker{color:#f8f9fc;background:linear-gradient(135deg,#ffffff12,#ffffff06);border:1px solid #ffffff30;border-radius:26px;padding:32px;width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;box-shadow:0 30px 100px #0008,inset 0 1px #ffffff15;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);animation:cloud-choice-in .2s ease-out}
+#cloud-picker::backdrop{background:#03050966}
+#cloud-cancel{position:absolute;right:18px;top:18px;border-radius:50%;padding:0;width:32px;height:32px;font-size:21px;background:#ffffff06}
+.cloud-choice-game{display:flex;align-items:center;gap:14px;padding-right:28px;margin-bottom:30px}
+.cloud-choice-game img{width:70px;height:58px;object-fit:cover;border-radius:12px;border:1px solid #ffffff20}
+.cloud-choice-game small{display:block;font-size:9px;letter-spacing:2px;color:#aeb2c0}
+.cloud-choice-game h2{font-size:16px;letter-spacing:-.3px;margin:6px 0 0;line-height:1.3}
+#cloud-picker-title{font-size:32px;letter-spacing:-1px;margin:0 0 12px}
+#cloud-picker-description{color:#bcc0cc;line-height:1.6;margin:0 0 24px;font-size:14px}
+#cloud-options{display:grid;gap:10px}
+.cloud-option{display:flex;align-items:center;text-align:left;gap:15px;border:1px solid #ffffff24;background:#ffffff08;padding:17px;border-radius:16px;min-height:84px}
+.cloud-option:hover{background:#ffffff14;border-color:#ffffff50;transform:translateY(-2px)}
+.cloud-option:focus-visible,#cloud-cancel:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.cloud-provider-mark{display:grid;place-items:center;width:43px;height:43px;background:linear-gradient(140deg,#ffffff20,#ffffff05);border:1px solid #ffffff24;border-radius:12px;font-size:23px;font-weight:800}
+.cloud-option>span:nth-child(2){flex:1}
+.cloud-option strong{display:block;font-size:16px}
+.cloud-option small{display:block;color:#aeb2c0;font-size:12px;margin-top:5px}
+.cloud-option>span:last-child{font-size:21px;color:#d8dbe4}
+.cloud-choice-note{font-size:11px;text-align:center;color:#9da2b0;margin:22px 0 0}
+@keyframes cloud-choice-in{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:420px){#cloud-picker{padding:24px}.cloud-choice-game{margin-bottom:24px}#cloud-picker-title{font-size:28px}}
+#cloud-controls{position:fixed;z-index:3;top:12px;right:12px;display:none;gap:6px;padding:5px;border-radius:13px;background:#14151bc9;border:1px solid #ffffff25;backdrop-filter:blur(12px)}
+body.ready #cloud-controls:not([hidden]),body.cloud-loading #cloud-controls:not([hidden]){display:flex}
+#cloud-controls button{padding:7px 10px;font-size:11px;border:0;border-radius:8px;background:#ffffff08}
+#cloud-controls button[hidden]{display:none}
+#cloud-controls button:focus-visible{outline-color:#fff}
+body.cloud-loading:not(.picking-cloud) #message{position:static;width:auto;height:auto;margin:16px 0;overflow:visible;clip-path:none;white-space:normal;font-size:13px;color:#c3c8d2}
+body.cloud-loading:not(.picking-cloud) #title{display:block;font-size:23px;margin:6px 0 16px}
+body.cloud-loading #back{display:block}

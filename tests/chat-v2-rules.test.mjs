@@ -12,3 +12,6 @@ test('only staff reads the full feedback inbox',()=>{assert.equal(evaluate(rules
 test('only owner can customize server; preview cosmetics cannot be newly equipped',()=>{assert.equal(evaluate(rules.server['.write']),false);assert.equal(evaluate(rules.server['.write'],{role:'owner'}),true);assert.equal(evaluate(rules.profiles.$uid.effect['.validate'],{data:'old',next:'new'}),false)});
 test('support replies are visible only to their sender or staff',()=>{const read=rules.feedbackReplies.$uid['.read'];assert.equal(evaluate(read),true);assert.equal(evaluate(read,{extra:{$uid:'bob'}}),false);assert.equal(evaluate(read,{role:'moderator',extra:{$uid:'bob'}}),true)});
 test('links and leaks prohibit member posting',()=>{for(const channel of ['links','leaks']){const clock={at:9900,key:'m1',path:'channels/'+channel+'/messages'};assert.equal(evaluate(write,{channel,clock}),false);assert.equal(evaluate(write,{channel,clock,role:'admin'}),true)}});
+
+
+test('direct writes cannot ban or change roles of permanent owner UIDs',()=>{for(const uid of ['FR37Ekbg1iYz8jVbbiQvHXHSUNQ2','Te5tfn6BjZaZ3hbqD46oO0hOETo2']){assert.equal(evaluate(rules.roles.$uid['.write'],{role:'owner',data:'member',next:'member',extra:{$uid:uid}}),false);assert.equal(evaluate(rules.bans.$uid['.write'],{role:'owner',next:true,extra:{$uid:uid}}),false)}});

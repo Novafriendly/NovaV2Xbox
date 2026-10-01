@@ -21,7 +21,21 @@ function documentFixture(){
  };
 }
 
-test('every catalog entry has a unique identity, source attribution and optimized local cover',async()=>{const games=JSON.parse(await readFile(new URL('Public/library-cloud.json',root),'utf8'));assert.equal(games.length,275);assert.equal(new Set(games.map(g=>g.id)).size,275);const occurrences=new Map();for(const g of games){assert.equal(g.kind,'cloud');assert.equal(g.url,'https://astra-education.top/lite');assert.equal(g.sourceOccurrence,occurrences.get(g.name)||0);occurrences.set(g.name,g.sourceOccurrence+1);assert.match(g.sourceArt,/^https:\/\/astra-education\.top\/cg\//);assert.match(g.art,/^cloud-covers\/[a-zA-Z0-9_-]+\.webp$/);const bytes=await readFile(new URL('Public/'+g.art,root));assert.equal(bytes.subarray(0,4).toString(),'RIFF');assert.equal(bytes.subarray(8,12).toString(),'WEBP');assert.ok((await stat(new URL('Public/'+g.art,root))).size<150000)}});
+test('every merged catalog entry retains its identity, source attribution and optimized cover',async()=>{
+ const games=JSON.parse(await readFile(new URL('Public/library-cloud.json',root),'utf8'));
+ assert.equal(games.length,304);assert.equal(new Set(games.map(g=>g.id)).size,304);
+ const astra=games.filter(g=>g.providers.astra),gsn=games.filter(g=>g.providers.gsn);
+ assert.equal(astra.length,275);assert.equal(new Set(gsn.map(g=>g.providers.gsn.sourceId)).size,209);
+ assert.equal(games.filter(g=>!g.providers.astra).length,29);
+ const occurrences=new Map();
+ for(const g of games){
+  assert.equal(g.kind,'cloud');
+  if(g.providers.astra){assert.equal(g.url,'https://astra-education.top/lite');assert.equal(g.sourceOccurrence,occurrences.get(g.name)||0);occurrences.set(g.name,g.sourceOccurrence+1);assert.match(g.sourceArt,/^https:\/\/astra-education\.top\/cg\//)}
+  if(g.providers.gsn){const url=new URL(g.providers.gsn.url);assert.equal(url.origin,'https://gsnproxy.b-cdn.net');assert.equal(url.searchParams.get('game'),g.providers.gsn.sourceId);assert.equal(url.pathname,'/releases/browser-20261001-1/apps/cloud/index.html')}
+  assert.match(g.art,/^cloud-covers\/[a-zA-Z0-9_-]+\.webp$/);const bytes=await readFile(new URL('Public/'+g.art,root));assert.equal(bytes.subarray(0,4).toString(),'RIFF');assert.equal(bytes.subarray(8,12).toString(),'WEBP');assert.ok((await stat(new URL('Public/'+g.art,root))).size<150000)
+ }
+});
+
 test('selects the correct duplicate only after the remote library hydrates, once per document',()=>{const api=runtime(),fixture=documentFixture();api.attach(fixture.doc,{name:'NBA 2K23',sourceOccurrence:1});fixture.add('Other game','other');fixture.add('NBA 2K23','first');fixture.notify();assert.deepEqual(fixture.clicks,[]);fixture.add('NBA 2K23','second');fixture.notify();fixture.notify();api.attach(fixture.doc,{name:'NBA 2K23'});assert.deepEqual(fixture.clicks,['second']);assert.equal(fixture.disconnected,0);fixture.hide();assert.equal(fixture.disconnected,1)});
 test('unavailable titles release the observer and never open a different game',()=>{const api=runtime(),fixture=documentFixture();fixture.add('Other game','other');api.attach(fixture.doc,{name:'Unavailable'});fixture.timeout();assert.equal(fixture.disconnected,1);assert.deepEqual(fixture.clicks,[])});
 test('auto launches only the selected panel once its launch button becomes enabled',()=>{
