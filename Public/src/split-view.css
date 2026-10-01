@@ -25,3 +25,5 @@
 #panel.nova-split[hidden]{display:none!important}
 
 #panel.nova-split>[data-split-primary],#panel.nova-split>.split-secondary-frame{align-self:start;justify-self:start;transform-origin:top left;transition:none!important}
+
+#panel.nova-split{background:#050508!important}
