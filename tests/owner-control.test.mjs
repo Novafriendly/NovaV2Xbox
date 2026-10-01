@@ -65,3 +65,21 @@ test('cloud rankings sort real counts, omit unknown titles and have no fabricate
   s.set('novaControl/cloudPopular', { jy0108: { count: 3, users: { private: true } }, unknown: { count: 999 }, jy0001: { count: -2 } });
   assert.deepEqual((await s.call('cloudPopular')).rankings, [{ id: 'jy0108', users: 3 }]);
 });
+
+
+test('another owner cannot ban, mute, or demote either named owner account', async () => {
+  const s = setup();
+  for (const [uid, name] of [['official-owner', 'NovaOfficalacc'], ['william-owner', 'WilliamXOwner']]) {
+    s.set('novaAccounts/' + uid, { name }); s.set('novaChatV2/roles/' + uid, 'owner');
+    for (const body of [{ kind: 'chatBan', value: true }, { kind: 'siteBan', value: true }, { kind: 'role', value: 'member' }, { kind: 'mute', minutes: 30 }]) {
+      assert.equal((await s.call('user', { uid, ...body })).status, 400);
+    }
+    for (const body of [{ command: 'ban', scope: 'chat' }, { command: 'ban', scope: 'nova' }, { command: 'mute', minutes: 30 }]) {
+      assert.equal((await s.call('staffCommand', { uid, ...body })).status, 400);
+    }
+    assert.equal(s.get('novaChatV2/roles/' + uid), 'owner');
+    assert.equal(s.get('novaChatV2/bans/' + uid), null);
+    assert.equal(s.get('novaControl/siteBans/' + uid), null);
+    assert.equal(s.get('novaChatV2/mutes/' + uid), null);
+  }
+});
