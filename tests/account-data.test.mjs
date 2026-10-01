@@ -1,13 +1,13 @@
 import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {readFileSync} from 'node:fs';
-function client(seed={},cloud={}){
- const store=new Map(Object.entries(seed)),auth={currentUser:null},events=[],calls=[];
+function client(seed={},cloud={},options={}){
+ const store=new Map(Object.entries(seed)),auth={currentUser:null},events=[],calls=[],cache=new Map();
  let source=readFileSync('Public/src/account-data.js','utf8').replace(/^import .*;$/gm,'').replace(/export /g,'');
- const storage={getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
+ const storage={getItem:k=>store.get(k)??null,setItem:(k,v)=>{if(k.startsWith('nova-account-data:')||k.startsWith('nova-account-cookies:'))throw Object.assign(Error('Storage quota exceeded'),{name:'QuotaExceededError'});if(options.limit&&[...store].filter(([key])=>key!==k).reduce((n,[key,value])=>n+key.length+value.length,0)+k.length+String(v).length>options.limit)throw Object.assign(Error('Storage quota exceeded'),{name:'QuotaExceededError'});store.set(k,String(v))},removeItem:k=>store.delete(k)};
  const localStorage=new Proxy(storage,{ownKeys:()=>[...store.keys()],getOwnPropertyDescriptor:()=>({enumerable:true,configurable:true})});
- const context={auth,localStorage,compactSlots:async()=>{},archived:async()=>null,captureGames:async()=>{},restoreGames:async()=>{},captureWebSession:async()=>{},restoreWebSession:async()=>{},setInterval(){},setTimeout(){},clearTimeout(){},addEventListener(){},document:{hidden:false,addEventListener(){}},dispatchEvent:e=>events.push(e),Event:class{constructor(type){this.type=type}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},fetch:async(_,options)=>{const body=JSON.parse(options.body);const user=options.headers.Authorization.slice(7);calls.push({user,...body});if(body.operation==='load')return {ok:true,json:async()=>({entries:Object.entries(cloud[user]||{}).map(([key,value])=>({key,value}))})};cloud[user]??={};for(const row of body.entries){if(row.value===null)delete cloud[user][row.key];else cloud[user][row.key]=row.value;}return {ok:true,json:async()=>({ok:true})};}};
+ const context={auth,localStorage,readCache:async key=>structuredClone(cache.get(key)),writeCache:async(key,value)=>cache.set(key,structuredClone(value)),migrateAccountCaches:async()=>{for(const [key,value]of store)if(/^(nova-account-data:|nova-account-cookies:)/.test(key)){if(!cache.has(key))cache.set(key,JSON.parse(value));store.delete(key)}},compactSlots:async()=>{},archived:async()=>null,captureGames:async()=>{},restoreGames:async()=>{},captureWebSession:async()=>{},restoreWebSession:async()=>{},setInterval(){},setTimeout(){},clearTimeout(){},addEventListener(){},document:{hidden:false,addEventListener(){}},dispatchEvent:e=>events.push(e),Event:class{constructor(type){this.type=type}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},fetch:async(_,options)=>{const body=JSON.parse(options.body);const user=options.headers.Authorization.slice(7);calls.push({user,...body});if(body.operation==='load')return {ok:true,json:async()=>({entries:Object.entries(cloud[user]||{}).map(([key,value])=>({key,value}))})};cloud[user]??={};for(const row of body.entries){if(row.value===null)delete cloud[user][row.key];else cloud[user][row.key]=row.value;}return {ok:true,json:async()=>({ok:true})};}};
  context.window=context;context.parent=context;vm.createContext(context);vm.runInContext(source,context);
  const login=async(uid,options)=>{auth.currentUser={uid,getIdToken:async()=>uid};await context.NovaAccountData.activate(auth.currentUser,options);};
- return {context,store,cloud,calls,login,localStorage};
+ return {context,store,cache,events,cloud,calls,login,localStorage};
 }
 test('new accounts start fresh and returning accounts restore their separate settings and game saves',async()=>{
  const c=client({nova_user:'one',nova_wallpaper:'one.jpg','nova-content.invalid@save':'one-save'});
@@ -22,7 +22,28 @@ test('another computer restores account data and excludes authentication credent
  await c.login('one');assert.equal(c.store.get('nova_wallpaper'),'cloud.jpg');assert.equal(c.store.get('nova-content.invalid@save'),'cloud-save');assert.equal(c.store.has('site@access_token'),false);
 });
 test('offline login keeps local backup and pending changes for retry',async()=>{
- const c=client({nova_user:'one',nova_wallpaper:'local.jpg'});c.context.fetch=async()=>{throw Error('offline')};await c.login('one');assert.equal(c.store.get('nova_wallpaper'),'local.jpg');assert(c.store.has('nova-account-data:one'));
+ const c=client({nova_user:'one',nova_wallpaper:'local.jpg'});c.context.fetch=async()=>{throw Error('offline')};await c.login('one');assert.equal(c.store.get('nova_wallpaper'),'local.jpg');assert(c.cache.has('nova-account-data:one'));assert.equal(c.store.has('nova-account-data:one'),false);
 });
 
 test('a large or unavailable game backup does not block the current account',async()=>{const c=client({nova_user:'one',nova_wallpaper:'keep.jpg'});c.context.captureGames=async()=>{throw Error('Game saves exceed the current cloud backup limit.')};await c.login('one');assert.equal(c.store.get('nova_wallpaper'),'keep.jpg');});
+
+
+test('full localStorage login migrates legacy snapshots and keeps offline account changes',async()=>{
+ const values={nova_wallpaper:'x'.repeat(3500),'nova-content.invalid@save':'save-one'};
+ const legacy=JSON.stringify({values,pending:values,localPin:'1234'});
+ const c=client({nova_user:'one',...values,'nova-account-data:one':legacy},{},{limit:4000});
+ c.context.fetch=async()=>{throw Error('offline')};await c.login('one');
+ assert.equal(c.store.get('nova_wallpaper'),values.nova_wallpaper);assert.equal(c.store.get('nova_pin'),'1234');
+ assert.equal(c.store.has('nova-account-data:one'),false);assert.equal(c.cache.get('nova-account-data:one').pending.nova_wallpaper,values.nova_wallpaper);
+ await c.login('two',{fresh:true});assert.equal(c.store.has('nova_wallpaper'),false);
+ c.localStorage.setItem('nova_wallpaper','two.jpg');await c.context.NovaAccountData.flush().catch(()=>{});
+ await c.login('one');assert.equal(c.store.get('nova_wallpaper'),values.nova_wallpaper);assert.equal(c.store.get('nova-content.invalid@save'),'save-one');
+});
+test('pending changes in IndexedDB survive offline retries and clear after cloud save',async()=>{
+ const c=client({nova_user:'one',nova_wallpaper:'one.jpg'});await c.login('one');
+ c.localStorage.setItem('nova_wallpaper','changed.jpg');const fetch=c.context.fetch;c.context.fetch=async()=>{throw Error('offline')};
+ await assert.rejects(c.context.NovaAccountData.flush(),/offline/);
+ assert.equal(c.cache.get('nova-account-data:one').pending.nova_wallpaper,'changed.jpg');
+ c.context.fetch=fetch;await c.context.NovaAccountData.flush();assert.equal(c.cloud.one.nova_wallpaper,'changed.jpg');
+ assert.deepEqual(c.cache.get('nova-account-data:one').pending,{});
+});

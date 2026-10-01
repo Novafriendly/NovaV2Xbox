@@ -1,0 +1,68 @@
+// Open the selected game and start its normal provider session once ready.
+(()=>{
+ const attached=new WeakSet();
+ function attach(doc,item,{onExit}={}){
+  if(attached.has(doc)||!item?.name)return;
+  const win=doc.defaultView;if(!win)return;attached.add(doc);
+  let observer,timer,chosen=false,launched=false,stopped=false,exitRequested=false;
+  function dialog(){
+   const title=doc.getElementById('launch-session-title');
+   return title?.textContent.trim()===item.name?title.closest('[role="dialog"]'):null;
+  }
+  function dismissButton(button){
+   return button.querySelector('path[d="M1 1l12 12M13 1L1 13"]')||/^(close|dismiss)(?:\b|$)/i.test(button.getAttribute('aria-label')||'');
+  }
+  function preventDismiss(event){
+   const panel=dialog();if(!panel)return;
+   const button=event.target?.closest?.('button');
+   if((event.type==='keydown'&&event.key==='Escape')||
+      (event.type==='click'&&(event.target===panel.parentElement||(button&&panel.contains(button)&&dismissButton(button))))){
+    event.preventDefault();event.stopImmediatePropagation();
+   }
+  }
+  function streamExit(event){
+   const button=event.target?.closest?.('button');
+   if(button?.closest('.astra-hud-bar')&&button.textContent.trim()==='Exit'&&doc.querySelector('[aria-label="Game stream"]'))exitRequested=true;
+   // Do not cancel the provider handler: it stops the remote session before
+   // removing the stream. Only then should Nova navigate away.
+  }
+  function pageHidden(){if(stopped)return;stop();if(exitRequested)onExit?.()}
+  function stop(){
+   if(stopped)return;stopped=true;observer?.disconnect();win.clearTimeout(timer);
+   doc.removeEventListener('click',preventDismiss,true);doc.removeEventListener('keydown',preventDismiss,true);doc.removeEventListener('click',streamExit,true);
+   win.removeEventListener('pagehide',pageHidden);
+  }
+  function advance(){
+   if(stopped)return;
+   if(exitRequested){if(!doc.querySelector('[aria-label="Game stream"]')){stop();onExit?.()}return;}
+   if(!chosen){
+    const matches=[...doc.querySelectorAll('button.mp-row[aria-label]')].filter(b=>b.getAttribute('aria-label')===item.name);
+    const button=matches[item.sourceOccurrence||0];if(!button)return;
+    chosen=true;button.click();
+   }
+   const panel=dialog();if(!panel)return;
+   const buttons=[...panel.querySelectorAll('button')];
+   for(const button of buttons)if(dismissButton(button)){
+    button.hidden=true;button.style.setProperty('display','none','important');
+    button.setAttribute('aria-hidden','true');button.tabIndex=-1;
+   }
+   const launch=buttons.find(b=>/^(play now|launch(?: game)?|start game)$/i.test(b.textContent.trim()));
+   if(!launched&&launch&&!launch.disabled&&launch.getAttribute('aria-disabled')!=='true'){
+    // Set before clicking: React can synchronously update the same panel.
+    launched=true;win.clearTimeout(timer);launch.click();
+   }
+  }
+  observer=new win.MutationObserver(advance);
+  observer.observe(doc.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','aria-disabled']});
+  doc.addEventListener('click',preventDismiss,true);doc.addEventListener('keydown',preventDismiss,true);doc.addEventListener('click',streamExit,true);
+  timer=win.setTimeout(stop,30000);win.addEventListener('pagehide',pageHidden,{once:true});advance();
+ }
+ async function patchRouter(response){
+  const text=await new Response(response.body).text();
+  // React Router initializes history with two arguments. Scramjet currently
+  // rewrites its omitted URL to /undefined; supplying the current URL preserves it.
+  const body=text.replace(/(\w+\.replaceState\(\{\.\.\.\w+\.state,idx:\w+\},"")\)/g,'$1,location.href)');
+  return {...response,body,headers:[...response.headers].filter(([name])=>!['content-length','content-encoding'].includes(name.toLowerCase()))};
+ }
+ window.NovaAstraCloud={attach,patchRouter};
+})();

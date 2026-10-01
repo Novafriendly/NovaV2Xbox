@@ -3,7 +3,7 @@
   const pages=new Map();const sessions=new Map();let defaults=[];
   const account=()=>localStorage.getItem('nova_user')||localStorage.getItem('nova_username')||'guest';
   const key=()=> 'nova-v2-recent-'+account();
-  const kind=g=>g.kind==='app'||g._kind==='apps'?'app':'game';
+  const kind=g=>g.kind==='cloud'?'cloud':g.kind==='app'||g._kind==='apps'?'app':'game';
   const identity=g=>kind(g)+':'+g.id;
   function list(){try{const rows=JSON.parse(localStorage.getItem(key())||'[]');return Array.isArray(rows)?rows.filter(g=>g&&g.id!=null&&typeof g.name==='string').slice(0,12):[]}catch{return []}}
   function record(g){const item={id:g.id,name:g.name,art:g.art,kind:kind(g),playedAt:Date.now()};const rows=[item,...list().filter(x=>identity(x)!==identity(item))].slice(0,12);localStorage.setItem(key(),JSON.stringify(rows));render();window.novaGuideRender?.('home');}
@@ -43,7 +43,7 @@
     });
   }
   function openSystem(page){
-    if(!['search','ai','novatube'].includes(page)){park();return;}
+    if(!['search','ai','novatube','cloudgaming'].includes(page)){park();return;}
     const key=account()+':'+page;
     if(frame.dataset.session==='true'){frame.hidden=true;frame.removeAttribute('id');}else frame.remove();
     if(!pages.has(key)){const el=freshFrame();el.dataset.session='true';pages.set(key,el);}
