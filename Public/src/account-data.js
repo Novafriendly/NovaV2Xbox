@@ -22,7 +22,8 @@ export async function activate(user,{fresh=false}={}){
  if(parent!==window&&parent.NovaAccountData){await parent.NovaAccountData.activate(user);return;}
  if(uid===user.uid)return;restoring=true;
  const previous=localStorage.getItem(OWNER)||localStorage.getItem('nova_user');
- if(previous)try{await capture();await captureWebSession(previous)}catch(error){restoring=false;throw error;}
+ const originalGameManifest=localStorage.getItem('nova_game_save_manifest');
+ if(previous)try{await capture();await captureWebSession(previous)}catch(error){restoring=false;if(previous===user.uid){uid=user.uid;baseline=snapshot();pending=read(uid).pending||{};dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'limited',message:error.message}}));return;}throw error;}
  if(previous&&previous!==user.uid){const prior=read(previous),values=snapshot(),queued={...(prior.pending||{})};for(const key of new Set([...Object.keys(prior.values||{}),...Object.keys(values)]))if(prior.values?.[key]!==values[key])queued[key]=values[key]??null;localStorage.setItem(META+previous,JSON.stringify({values,pending:queued,localPin:localStorage.getItem('nova_pin')}));}
  const local=read(user.uid);let values=local.values||{};pending=local.pending||{};
  if(previous===user.uid&&local.values){const current=snapshot();for(const key of new Set([...Object.keys(local.values),...Object.keys(current)]))if(local.values[key]!==current[key])pending[key]=current[key]??null;values=current;}
@@ -32,7 +33,7 @@ export async function activate(user,{fresh=false}={}){
  let cloudError;
  try{const cloud=await request(user,'load');values=Object.fromEntries((cloud.entries||[]).filter(e=>managed(e.key)&&typeof e.value==='string').map(e=>[e.key,e.value]));for(const [key,value]of Object.entries(pending)){if(value===null)delete values[key];else values[key]=value;}}
  catch(error){cloudError=error;}
- try{for(const key of Object.keys(localStorage).filter(managed))localStorage.removeItem(key);for(const [key,value]of Object.entries(values))if(managed(key))localStorage.setItem(key,value);uid=user.uid;localStorage.removeItem('nova_pin');if(!fresh&&local.localPin)localStorage.setItem('nova_pin',local.localPin);localStorage.setItem(OWNER,uid);baseline=snapshot();saveLocal();await restoreGames();if(previous!==user.uid)await restoreWebSession(user.uid);}
+ try{for(const key of Object.keys(localStorage).filter(managed))localStorage.removeItem(key);for(const [key,value]of Object.entries(values))if(managed(key))localStorage.setItem(key,value);uid=user.uid;localStorage.removeItem('nova_pin');if(!fresh&&local.localPin)localStorage.setItem('nova_pin',local.localPin);localStorage.setItem(OWNER,uid);baseline=snapshot();saveLocal();if(previous!==user.uid||(!cloudError&&originalGameManifest!==localStorage.getItem('nova_game_save_manifest')))await restoreGames();if(previous!==user.uid)await restoreWebSession(user.uid);}
  finally{restoring=false;}
  dispatchEvent(new Event('storage'));dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:cloudError?'offline':'ready',message:cloudError?.message}}));
  if(!cloudError&&Object.keys(pending).length)flush().catch(()=>{});

@@ -24,3 +24,5 @@ test('another computer restores account data and excludes authentication credent
 test('offline login keeps local backup and pending changes for retry',async()=>{
  const c=client({nova_user:'one',nova_wallpaper:'local.jpg'});c.context.fetch=async()=>{throw Error('offline')};await c.login('one');assert.equal(c.store.get('nova_wallpaper'),'local.jpg');assert(c.store.has('nova-account-data:one'));
 });
+
+test('a large or unavailable game backup does not block the current account',async()=>{const c=client({nova_user:'one',nova_wallpaper:'keep.jpg'});c.context.captureGames=async()=>{throw Error('Game saves exceed the current cloud backup limit.')};await c.login('one');assert.equal(c.store.get('nova_wallpaper'),'keep.jpg');});
