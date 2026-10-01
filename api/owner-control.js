@@ -1,6 +1,6 @@
 import {accountData} from '../server/account-data.mjs';
 import {manageServer} from '../server/chat-server.mjs';
-import {storeAction} from '../server/chat-store.mjs';
+import {catalog,storeAction} from '../server/chat-store.mjs';
 import {services} from '../server/voice-service.js';
 import {createHash,randomUUID} from 'node:crypto';
 const total=l=>500*(l-1)+125*(l-1)*(l-2),level=x=>{let l=1;while(l<2000&&x>=total(l+1))l++;return l};
@@ -15,6 +15,7 @@ if(action==='status')return reply(200,{owner,ban:ban.val(),progress:(await db.re
 if(action==='appeal'){const reason=text(b.reason,2000);if(reason.length<10)throw Error('Explain your appeal in at least 10 characters.');await db.ref('novaControl/appeals/'+who.uid).set({uid:who.uid,name:account.name,reason,scope:b.scope==='chat'?'chat':'nova',at:now,status:'pending'});return reply(200,{ok:true})}
 if(ban.exists())return reply(403,{error:'Your Nova access is suspended.'});
 if(action==='accountData')return reply(200,await accountData(db,who.uid,b));
+if(action==='giveAllCosmetics'){if(!owner)return reply(403,{error:'Only owners can grant shop items.'});if(!valid(b.uid)||!(await db.ref('novaAccounts/'+b.uid).get()).exists())throw Error('Choose a valid user.');const items=await catalog();await db.ref('novaControl/inventory/'+b.uid).transaction(inventory=>{inventory=inventory||{};for(const item of items)if(!inventory[item.id]?.count)inventory[item.id]={count:1,unlockedAt:now};return inventory});await db.ref('novaControl/audit').push({action:'giveAllCosmetics',actor:who.uid,target:b.uid,count:items.length,at:now});return reply(200,{ok:true,count:items.length})}
 if(action==='serverManage')return reply(200,await manageServer(db,who.uid,b));
 const progress=db.ref('novaControl/progress/'+who.uid);
 if(['storeStatus','buyNitro','openCase','equipCosmetic','nitroAnimation','giftNitro','ackNitroGift','usernameFont','profileTheme','unequipCosmetic'].includes(action))return reply(200,await storeAction({db,uid:who.uid,account,action,b,now,initial}));
