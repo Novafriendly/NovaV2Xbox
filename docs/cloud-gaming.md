@@ -44,3 +44,10 @@ The stream HUD's Exit keeps Astra's original session-stop handler. After the
 stream is removed, the Nova player routes to Home. Embedded players send a
 same-origin message to their owning Nova frame; primary and secondary split
 players close the split layout and show Home. Standalone players load home.html.
+
+
+The library uses Nova’s navy glass styling, optimized local cover art, hover/focus titles, token-based search and quick title searches. Recently played stores only IDs and launch timestamps (up to 24) in `nova_cloud_recent_<account>`. It merges existing cloud entries from Nova Home history and refreshes on storage, visibility and page restore events. Standalone, Home and split-screen cloud launches are recorded; failed history writes never prevent launching. No timers, background video or additional remote cover requests are used for the library.
+
+The cloud page uses black neutral glass over the account’s chosen image, video or gradient (black when none is selected). The header and profile dialog reuse Nova cosmetics, role name gradients and live/cached coin balance. Hero covers move in CSS transform-only columns; they pause on hover, focus or hidden pages and stop in reduced-motion/performance modes.
+
+Most Played uses authenticated `cloudPick`/`cloudPopular` actions on the existing owner-control API. Each account is counted once per catalog ID with a transaction; counts are shared across devices/users. Responses expose counts only, not user IDs. Rankings require the existing Firebase server configuration and show an unavailable/empty state when live data cannot load. Guest/local history is never presented as a global user count.

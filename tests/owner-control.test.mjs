@@ -44,3 +44,24 @@ test('profile gradients require Nitro and client rules protect custom privileges
  test('account backups are private to the authenticated user and do not change economy state',async()=>{const s=setup();s.as('member');assert.equal((await s.call('accountData',{operation:'save',uid:'owner',entries:[{key:'nova_wallpaper',value:'member.jpg'},{key:'nova-content.invalid@save',value:'save-data'}]})).status,200);s.as('owner');assert.equal((await s.call('accountData',{operation:'load'})).entries.length,0);s.as('member');assert.equal((await s.call('accountData',{operation:'load'})).entries.length,2);assert.equal((await s.call('accountData',{operation:'save',entries:[{key:'bad',value:{coins:999}}]})).status,400);});
 
 test('giveall requires an owner and grants every cosmetic once without taking coins',async()=>{const s=setup();s.as('member');assert.equal((await s.call('giveAllCosmetics',{uid:'member'})).status,403);s.as('owner');const result=await s.call('giveAllCosmetics',{uid:'member'});assert.equal(result.status,200);assert(result.count>100);const before=s.get('novaControl/inventory/member');assert.equal(Object.keys(before).length,result.count);await s.call('giveAllCosmetics',{uid:'member'});assert.deepEqual(s.get('novaControl/inventory/member'),before);assert.equal((await s.call('giveAllCosmetics',{uid:'missing'})).status,400);});
+
+
+test('cloud picks count unique authenticated users and ignore caller-supplied identity', async () => {
+  const s = setup(); s.as('member');
+  assert.equal((await s.call('cloudPick', { id: 'jy0108', uid: 'owner' })).count, 1);
+  assert.equal((await s.call('cloudPick', { id: 'jy0108' })).count, 1);
+  s.as('owner'); assert.equal((await s.call('cloudPick', { id: 'jy0108' })).count, 2);
+  const ranking = await s.call('cloudPopular'); assert.equal(ranking.status, 200); assert.deepEqual(ranking.rankings, [{ id: 'jy0108', users: 2 }]);
+  assert.equal(JSON.stringify(ranking).includes('member'), false);
+});
+test('cloud rankings reject unknown titles, invalid authentication and suspended users', async () => {
+  const s = setup(); s.as('member'); assert.equal((await s.call('cloudPick', { id: '../../other' })).status, 400);
+  assert.equal((await s.call('cloudPick', { id: 'jy0108' }, 'invalid')).status, 401);
+  s.set('novaControl/siteBans/member', { reason: 'test' }); assert.equal((await s.call('cloudPick', { id: 'jy0108' })).status, 403);
+  assert.equal(s.get('novaControl/cloudPopular'), null);
+});
+test('cloud rankings sort real counts, omit unknown titles and have no fabricated defaults', async () => {
+  const s = setup(); assert.deepEqual((await s.call('cloudPopular')).rankings, []);
+  s.set('novaControl/cloudPopular', { jy0108: { count: 3, users: { private: true } }, unknown: { count: 999 }, jy0001: { count: -2 } });
+  assert.deepEqual((await s.call('cloudPopular')).rankings, [{ id: 'jy0108', users: 3 }]);
+});
