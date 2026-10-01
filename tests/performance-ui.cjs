@@ -1,0 +1,21 @@
+const {chromium}=require('C:/Users/willi/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('node:fs'),assert=require('node:assert/strict');
+(async()=>{const browser=await chromium.launch({channel:'msedge',headless:true});try{
+ const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));let loads=0;
+ await page.addInitScript(()=>{localStorage.setItem('nova_user','performance-test');localStorage.setItem('nova-search-tabs-performance-test',JSON.stringify({active:0,tabs:Array.from({length:20},(_,i)=>({url:'https://example.com/'+i,title:'Saved '+i}))}));const original=Storage.prototype.setItem;window.__writes=0;Storage.prototype.setItem=function(k,v){if(k.startsWith('nova-search-tabs-'))window.__writes++;return original.call(this,k,v)}});
+ await page.route('**/src/connection.js',r=>r.fulfill({contentType:'text/javascript',body:`window.NovaConnection={ensure:async c=>c,create:async()=>({createFrame(){const element=document.createElement('iframe');return {element,prefix:'/~/sj/p/mock?url=',go(url){element.src='/~/sj/p/mock?url='+encodeURIComponent(url)}}}})}` }));
+ await page.route('**/~/sj/p/mock?*',r=>{loads++;return r.fulfill({contentType:'text/html',body:'<title>Loaded tab</title><h1>Ready</h1>',headers:{'Cross-Origin-Embedder-Policy':'credentialless','Cross-Origin-Resource-Policy':'same-origin'}})});
+ await page.goto('http://127.0.0.1:8780/search.html');await page.frameLocator('#frames iframe').getByText('Ready').waitFor();
+ assert.equal(await page.locator('.tab').count(),20);assert.equal(loads,1,'Only the selected saved tab loads');
+ await page.locator('.tab-name').nth(1).click();await page.waitForFunction(()=>document.querySelectorAll('#frames iframe').length===2);assert.equal(loads,2);
+ await page.locator('.tab-name').first().click();assert.equal(loads,2,'Loaded tab resumes without reloading');
+ await page.locator('.tab-name').nth(1).click();await page.locator('.tab.active button').last().click();assert.equal(await page.locator('.tab').count(),19);
+ const writes=await page.evaluate(()=>window.__writes);await page.waitForTimeout(2300);assert.ok(await page.evaluate(()=>window.__writes)<=writes+1,'Unchanged tab state does not write storage every second');
+ await page.locator('#home').click();assert.equal(await page.locator('#frames iframe').count(),0,'Returning a tab home releases its old page');
+ await page.route('**/performance-fixture',r=>r.fulfill({contentType:'text/html',body:`<video id="bg-video" muted></video><img id="bg-img"><div id="bg"></div><div class="time"></div><section id="panel" hidden></section><script>window.frame={contentWindow:null};window.sync=()=>{};let plays=0;HTMLMediaElement.prototype.play=function(){plays++;return Promise.resolve()};HTMLMediaElement.prototype.pause=function(){window.pauses=(window.pauses||0)+1};let loops=0;window.requestAnimationFrame=()=>{loops++;return loops};window.cancelAnimationFrame=()=>{};window.loopCount=()=>loops;window.playCount=()=>plays</script><script src="/src/performance-runtime.js"></script><script src="/src/settings-runtime.js"></script>`}));
+ await page.goto('http://127.0.0.1:8780/performance-fixture');assert.equal(await page.evaluate(()=>window.loopCount()),0,'Disabled FPS meter schedules no animation loop');
+ await page.evaluate(()=>document.getElementById('panel').hidden=false);await page.waitForFunction(()=>document.body.classList.contains('nova-content-active'));assert.ok(await page.evaluate(()=>window.pauses)>0);
+ const plays=await page.evaluate(()=>window.playCount());await page.evaluate(()=>document.getElementById('panel').hidden=true);await page.waitForFunction(n=>window.playCount()>n,plays);
+ await page.evaluate(()=>{localStorage.setItem('nova_show_fps','true');dispatchEvent(new Event('storage'))});assert.equal(await page.evaluate(()=>window.loopCount()),1,'FPS feature can still be enabled');
+ assert.deepEqual(errors,[]);console.log('Passed 20 restored tabs with one loaded page, on-demand tab loading, retained live tabs, storage deduplication, wallpaper pause/resume, and optional FPS loop.');
+}finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});
