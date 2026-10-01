@@ -23,3 +23,5 @@
 @media(prefers-reduced-motion:reduce){.split-picker button{transition:none!important}.split-picker button:hover{transform:none!important}}
 
 #panel.nova-split[hidden]{display:none!important}
+
+#panel.nova-split>[data-split-primary],#panel.nova-split>.split-secondary-frame{align-self:start;justify-self:start;transform-origin:top left;transition:none!important}
