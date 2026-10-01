@@ -97,3 +97,10 @@ test('permanent protected UIDs ignore name or role changes and clear old bans', 
  }
 });
 test('copying the owner name does not grant protection or owner access',async()=>{const s=setup();s.set('novaAccounts/member',{name:'NovaOfficalacc'});s.as('member');assert.equal((await s.call('dashboard')).status,403);assert.equal((await s.call('status')).owner,false)});
+
+test('the owner Players directory includes every account and its saved coins and XP level',async()=>{
+ const s=setup();s.set('novaControl/progress/member',{coins:95111,xp:5382});
+ const dashboard=await s.call('dashboard');assert.equal(dashboard.status,200);assert.equal(dashboard.users.length,2);
+ assert.deepEqual(dashboard.users.find(u=>u.uid==='member'),{uid:'member',name:'Member',coins:95111,level:6});
+ assert.deepEqual(dashboard.users.find(u=>u.uid==='owner'),{uid:'owner',name:'Owner',coins:0,level:1});
+});

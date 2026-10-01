@@ -1,3 +1,4 @@
+import {playerProgress} from '../server/player-progress.mjs';
 import {services} from '../server/voice-service.js';
 export const createHandler=(getServices=services)=>async(req,res)=>{
  const reply=(status,data)=>{res.statusCode=status;res.setHeader('Content-Type','application/json');res.setHeader('Cache-Control','no-store');res.end(JSON.stringify(data));};
@@ -11,7 +12,10 @@ export const createHandler=(getServices=services)=>async(req,res)=>{
   if(cursor&&(cursor.length>128||/[.#$\[\]/]/.test(cursor)))return reply(400,{error:'Invalid page.'});
   let query=db.ref('novaAccounts').orderByKey();if(cursor)query=query.startAfter(cursor);
   const snapshot=await query.limitToFirst(101).get();const rows=[];snapshot.forEach(s=>rows.push({uid:s.key,name:s.val().name||'Nova member',createdAt:s.val().createdAt||null}));
-  const more=rows.length>100;const users=rows.slice(0,100);return reply(200,{users,next:more?users.at(-1).uid:null});
+  const more=rows.length>100;const users=rows.slice(0,100);
+  // Fetch progress only for this account page, never the entire economy tree.
+  if(users.length){const progress=(await db.ref('novaControl/progress').orderByKey().startAt(users[0].uid).endAt(users.at(-1).uid).get()).val()||{};for(const user of users)Object.assign(user,playerProgress(progress[user.uid]));}
+  return reply(200,{users,next:more?users.at(-1).uid:null});
  }catch{return reply(503,{error:'Account directory unavailable. Check FIREBASE_SERVICE_ACCOUNT_JSON on the server.'});}
 };
 export default createHandler();
