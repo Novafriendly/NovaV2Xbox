@@ -1,3 +1,4 @@
+import {compactSlots,archived} from './account-slot-cache.js';
 import {captureGames,restoreGames,captureWebSession,restoreWebSession} from './account-game-data.js';
 import {auth} from './account-firebase.js';
 const META='nova-account-data:',OWNER='nova-data-owner';
@@ -20,12 +21,12 @@ export async function flush(){clearTimeout(timer);if(saving){await saving;return
 function changedWithoutScheduling(){const now=snapshot();for(const key of new Set([...Object.keys(baseline),...Object.keys(now)]))if(baseline[key]!==now[key])pending[key]=now[key]??null;baseline=now;saveLocal();}
 export async function activate(user,{fresh=false}={}){
  if(parent!==window&&parent.NovaAccountData){await parent.NovaAccountData.activate(user);return;}
- if(uid===user.uid)return;restoring=true;
+ if(uid===user.uid)return;await compactSlots();restoring=true;
  const previous=localStorage.getItem(OWNER)||localStorage.getItem('nova_user');
  const originalGameManifest=localStorage.getItem('nova_game_save_manifest');
  if(previous)try{await capture();await captureWebSession(previous)}catch(error){restoring=false;if(previous===user.uid){uid=user.uid;baseline=snapshot();pending=read(uid).pending||{};dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'limited',message:error.message}}));return;}throw error;}
  if(previous&&previous!==user.uid){const prior=read(previous),values=snapshot(),queued={...(prior.pending||{})};for(const key of new Set([...Object.keys(prior.values||{}),...Object.keys(values)]))if(prior.values?.[key]!==values[key])queued[key]=values[key]??null;localStorage.setItem(META+previous,JSON.stringify({values,pending:queued,localPin:localStorage.getItem('nova_pin')}));}
- const local=read(user.uid);let values=local.values||{};pending=local.pending||{};
+ const local=read(user.uid);if(!local.values){const legacy=await archived(user.uid);if(legacy)local.values=legacy;}let values=local.values||{};pending=local.pending||{};
  if(previous===user.uid&&local.values){const current=snapshot();for(const key of new Set([...Object.keys(local.values),...Object.keys(current)]))if(local.values[key]!==current[key])pending[key]=current[key]??null;values=current;}
  // Adopt existing browser data only for its established owner, never a new account.
  if(!fresh&&!local.values&&previous===user.uid){values=snapshot();pending={...values,...pending};}
