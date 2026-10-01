@@ -1,4 +1,4 @@
-import {readCache,writeCache,migrateAccountCaches} from './account-cache.js';
+import {readCache,writeCache,migrateAccountCaches,isUnreadableRecord} from './account-cache.js';
 import {compactSlots,archived} from './account-slot-cache.js';
 import {captureGames,restoreGames,captureWebSession,restoreWebSession} from './account-game-data.js';
 import {auth} from './account-firebase.js';
@@ -25,11 +25,14 @@ export async function activate(user,{fresh=false}={}){
  if(parent!==window&&parent.NovaAccountData){await parent.NovaAccountData.activate(user);return;}
  if(uid===user.uid)return;await migrateAccountCaches();await compactSlots();restoring=true;
  try{
+ const storageErrors=[];
+ const recoverRead=async readValue=>{try{return await readValue()}catch(error){if(!isUnreadableRecord(error))throw error;storageErrors.push(error);return {};}};
  const previous=localStorage.getItem(OWNER)||localStorage.getItem('nova_user');
  const originalGameManifest=localStorage.getItem('nova_game_save_manifest');
- if(previous)try{await capture();await captureWebSession(previous)}catch(error){restoring=false;if(previous===user.uid){uid=user.uid;baseline=snapshot();pending=(await read(uid)).pending||{};dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'limited',message:error.message}}));return;}throw error;}
- if(previous&&previous!==user.uid){const prior=await read(previous),values=snapshot(),queued={...(prior.pending||{})};for(const key of new Set([...Object.keys(prior.values||{}),...Object.keys(values)]))if(prior.values?.[key]!==values[key])queued[key]=values[key]??null;await writeCache(META+previous,{values,pending:queued,localPin:localStorage.getItem('nova_pin')});}
- const local=await read(user.uid);if(!local.values){const legacy=await archived(user.uid);if(legacy)local.values=legacy;}let values=local.values||{};pending=local.pending||{};
+ if(previous)try{await capture();await captureWebSession(previous)}catch(error){restoring=false;if(previous===user.uid){uid=user.uid;baseline=snapshot();pending=(await recoverRead(()=>read(uid))).pending||{};if(storageErrors.length)pending={...baseline,...pending};localStorage.setItem(OWNER,uid);await saveLocal();dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'limited',message:error.message}}));return;}throw error;}
+ if(previous&&previous!==user.uid){const prior=await recoverRead(()=>read(previous)),values=snapshot(),queued={...(prior.pending||{})};for(const key of new Set([...Object.keys(prior.values||{}),...Object.keys(values)]))if(prior.values?.[key]!==values[key])queued[key]=values[key]??null;await writeCache(META+previous,{values,pending:queued,localPin:localStorage.getItem('nova_pin')});}
+ const targetReadStart=storageErrors.length;
+ const local=await recoverRead(()=>read(user.uid));if(!local.values){const legacy=await recoverRead(()=>archived(user.uid));if(Object.keys(legacy||{}).length)local.values=legacy;}const targetUnreadable=storageErrors.length>targetReadStart;if(!fresh&&previous===user.uid&&localStorage.getItem('nova_pin'))local.localPin=localStorage.getItem('nova_pin');let values=local.values||{};pending=local.pending||{};
  if(previous===user.uid&&local.values){const current=snapshot();for(const key of new Set([...Object.keys(local.values),...Object.keys(current)]))if(local.values[key]!==current[key])pending[key]=current[key]??null;values=current;}
  // Adopt existing browser data only for its established owner, never a new account.
  if(!fresh&&!local.values&&previous===user.uid){values=snapshot();pending={...values,...pending};}
@@ -37,9 +40,12 @@ export async function activate(user,{fresh=false}={}){
  let cloudError;
  try{const cloud=await request(user,'load');values=Object.fromEntries((cloud.entries||[]).filter(e=>managed(e.key)&&typeof e.value==='string').map(e=>[e.key,e.value]));for(const [key,value]of Object.entries(pending)){if(value===null)delete values[key];else values[key]=value;}}
  catch(error){cloudError=error;}
+ // Never clear the previous user's data when the target backup is unreadable
+ // and its cloud copy is unavailable. The current owner can keep using live data.
+ if(cloudError&&targetUnreadable&&previous!==user.uid&&!fresh&&!local.values)throw Error('Your local account backup could not be read, and cloud recovery is unavailable. Reconnect and try again; your current saves have been kept.');
  try{for(const key of Object.keys(localStorage).filter(managed))localStorage.removeItem(key);for(const [key,value]of Object.entries(values))if(managed(key))localStorage.setItem(key,value);uid=user.uid;localStorage.removeItem('nova_pin');if(!fresh&&local.localPin)localStorage.setItem('nova_pin',local.localPin);localStorage.setItem(OWNER,uid);baseline=snapshot();await saveLocal();if(previous!==user.uid||(!cloudError&&originalGameManifest!==localStorage.getItem('nova_game_save_manifest')))await restoreGames();if(previous!==user.uid)await restoreWebSession(user.uid);}
  finally{restoring=false;}
- dispatchEvent(new Event('storage'));dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:cloudError?'offline':'ready',message:cloudError?.message}}));
+ dispatchEvent(new Event('storage'));dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:cloudError?'offline':storageErrors.length?'limited':'ready',message:cloudError?.message||(storageErrors.length?'An unreadable local backup was rebuilt from available account data. Any unsynced data stored only in that damaged backup may be unavailable.':undefined)}}));
  if(!cloudError&&Object.keys(pending).length)flush().catch(()=>{});
  }finally{restoring=false;}
 }
