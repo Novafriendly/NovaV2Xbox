@@ -1,0 +1,17 @@
+/* Shared lightweight startup screens for Nova media. */
+.nova-media-loading{--media-accent:#ff3f57;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#fff;background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--media-accent) 12%,transparent),transparent 55%),rgba(9,10,16,.94)!important;overflow:hidden}
+.nova-media-loading[hidden]{display:none!important}
+.nova-media-loading.music-loading{--media-accent:#1ed760}
+.nova-media-mark{width:88px;height:88px;display:grid;place-items:center;filter:drop-shadow(0 0 24px color-mix(in srgb,var(--media-accent) 25%,transparent));animation:nova-media-spin 2.8s cubic-bezier(.65,0,.35,1) infinite}
+.nova-media-mark svg{width:100%;height:100%;overflow:visible}
+.nova-media-loading h1{margin:0;font:900 clamp(30px,5vw,48px)/1.1 system-ui,sans-serif;letter-spacing:-1.8px;text-shadow:0 4px 28px #ffffff15}
+.nova-media-loading p{margin:0;max-width:330px;padding:0 20px;font:500 13px/1.6 system-ui,sans-serif;color:#b0b1bd}
+.nova-media-loader{width:150px;height:4px;border-radius:20px;background:#ffffff12;overflow:hidden;margin:5px 0 0}
+.nova-media-loader::after{content:"";display:block;width:45%;height:100%;border-radius:inherit;background:var(--media-accent);animation:nova-media-progress 1.3s ease-in-out infinite}
+.nova-media-loading button{padding:11px 22px;border-radius:12px;background:#ffffff12;color:white;border:1px solid #ffffff25;font-weight:700;cursor:pointer;transition:background .2s,transform .2s}
+.nova-media-loading button:hover{background:#ffffff20;transform:translateY(-2px)}
+.nova-media-loading:has(button:not([hidden])) .nova-media-mark,.nova-media-loading:has(button:not([hidden])) .nova-media-loader::after{animation-play-state:paused}
+#nova-music[hidden] .nova-media-mark,#nova-music[hidden] .nova-media-loader::after,#panel[hidden] .nova-media-mark,#panel[hidden] .nova-media-loader::after{animation-play-state:paused}
+@keyframes nova-media-spin{0%,15%{transform:rotate(0deg)}85%,100%{transform:rotate(360deg)}}
+@keyframes nova-media-progress{0%{transform:translateX(-110%)}100%{transform:translateX(330%)}}
+@media(prefers-reduced-motion:reduce){.nova-media-mark,.nova-media-loader::after{animation:none}.nova-media-loader::after{width:100%;opacity:.65}.nova-media-loading button{transition:none}}

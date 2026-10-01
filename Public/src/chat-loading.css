@@ -1,0 +1,20 @@
+/* Decorative startup UI; existing account readiness controls dismissal. */
+#loading.loading{gap:16px;padding:28px;background:radial-gradient(ellipse at 50% 38%,#7779ef18,transparent 48%),#0b0c12;color:#f5f5fc;overflow:hidden}
+#loading .chat-loading-art{position:relative;width:140px;height:140px;display:grid;place-items:center;margin-bottom:8px}
+#loading .chat-loading-mark{width:94px;height:94px;display:grid;place-items:center;border-radius:28px;background:linear-gradient(145deg,#aaa6ff24,#717bd008);border:1px solid #d1cdff35;box-shadow:0 12px 45px #6866cf18,inset 0 1px #ffffff18;color:#c8c2ff;animation:chat-loading-float 2.8s ease-in-out infinite}
+#loading .chat-loading-mark svg{width:54px;height:54px}
+#loading .chat-loading-orbit{position:absolute;inset:0;border:1px solid #b8acff16;border-radius:50%}
+#loading .chat-loading-spark{position:absolute;top:8px;right:10px;font-size:25px;color:#ded7ff;animation:chat-loading-float 2.8s ease-in-out -.8s infinite}
+#loading .chat-loading-eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;color:#9b9aad}
+#loading h1{font:900 clamp(32px,6vw,48px)/1.1 system-ui,sans-serif;letter-spacing:-1.7px;margin:0}
+#loading h1 span{color:#afa3ff}
+#loading #load-label{font-size:13px;margin:0;min-height:22px;color:#aeadc0}
+#loading #load-progress{appearance:none;-webkit-appearance:none;width:min(240px,70vw);height:4px;border:0;border-radius:20px;overflow:hidden;background:#ffffff0b;margin-top:9px;color:#b3a5ff;accent-color:#b3a5ff}
+#loading #load-progress::-webkit-progress-bar{background:#ffffff0b;border-radius:20px}
+#loading #load-progress::-webkit-progress-value{background:linear-gradient(90deg,#7d86e7,#cab2ff);border-radius:20px;transition:width .18s ease}
+#loading #load-progress::-moz-progress-bar{background:linear-gradient(90deg,#7d86e7,#cab2ff);border-radius:20px}
+#loading #retry{margin-top:8px;border-radius:12px;border:1px solid #ffffff25;background:#ffffff0c;color:#fff;padding:11px 22px;font-weight:700}
+#loading #retry:hover{background:#ffffff18}
+#loading:has(#retry:not([hidden])) .chat-loading-mark,#loading:has(#retry:not([hidden])) .chat-loading-spark{animation-play-state:paused}
+@keyframes chat-loading-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media(prefers-reduced-motion:reduce){#loading .chat-loading-mark,#loading .chat-loading-spark{animation:none}#loading #load-progress::-webkit-progress-value{transition:none}}

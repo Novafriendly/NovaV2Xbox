@@ -3,14 +3,16 @@
   const url = 'https://6ab87f0e6a91203ed89fa447--neoostesting.netlify.app/neo-os/music-v2/index.html?v=20260919-scholarnook-v1&theme=system-v1&widgets=live-v1&runtime=20260908-audio-performance-v1';
   const panel = document.getElementById('panel');
   const host = document.createElement('div'); host.id = 'nova-music'; host.hidden = true;
-  const status = document.createElement('div'); status.className = 'music-loading';
+  const status = document.createElement('div'); status.className = 'music-loading nova-media-loading';
+  status.innerHTML = '<span class="nova-media-mark" aria-hidden="true"><svg viewBox="0 0 88 88"><circle cx="44" cy="44" r="40" fill="#1ed760"/><g fill="none" stroke="#07170c" stroke-linecap="round"><path d="M23 33Q45 25 67 37" stroke-width="7"/><path d="M26 45Q45 38 63 49" stroke-width="6"/><path d="M29 57Q45 51 59 60" stroke-width="5"/></g></svg></span><h1>Nova Music</h1><div class="nova-media-loader" aria-hidden="true"></div>';
+
   const note = document.createElement('p'); note.textContent = 'Connecting Nova Music…';
   const retry = document.createElement('button'); retry.textContent = 'Try again'; retry.hidden = true;
   status.append(note, retry); host.append(status); panel.append(host);
   let view, controller, starting, timer, ready = false;
   const paths = {previous:'M6 5v14M19 5 8 12l11 7Z',next:'M18 5v14M5 5l11 7-11 7Z',play:'m8 5 11 7-11 7Z',pause:'M8 5v14M16 5v14',volume:'M3 9h4l5-4v14l-5-4H3ZM16 8q4 4 0 8'};
   const icon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="'+paths[name]+'"/></svg>';
-  const card = document.createElement('section'); card.className = 'xg-music'; card.setAttribute('aria-label','Nova Music player');
+  const card = document.createElement('section'); card.className = 'xg-music'; card.hidden = true; card.setAttribute('aria-label','Nova Music player');
   const info = document.createElement('button'); info.className = 'music-track'; info.title = 'Open Nova Music';
   const cover = document.createElement('img'); cover.src = 'Nova12.png'; cover.alt = '';
   const meta = document.createElement('span'), title = document.createElement('b'), artist = document.createElement('small');
@@ -49,9 +51,18 @@
     try {const p=player(); if(!p)throw Error('Open Nova Music to connect.'); await p[action](value); update();}
     catch {artist.textContent='Open Music to resume playback';}
   }
+  const watchedMedia = new WeakSet();
+  let hasPlayedMusic = false;
   function update() {
-    const p=player(); if(!p)return;
+    const p=player(); if(!p){card.hidden=!hasPlayedMusic;return;}
     const track=p.track(), media=p.media();
+    if(media?.addEventListener&&!watchedMedia.has(media)){
+      watchedMedia.add(media);
+      for(const event of ['playing','play','pause','ended','emptied'])media.addEventListener(event,()=>{
+        if(event==='play'||event==='playing')hasPlayedMusic=true;
+        update();
+      });
+    }
     title.textContent=track?.name || track?.title || 'Nova Music';
     artist.textContent=track?.artist || track?.author || (track ? 'Now playing' : 'Choose a song');
     try {
@@ -68,6 +79,8 @@
     Object.values(buttons).forEach(b=>b.disabled=!track); volume.disabled=!media;
     const playing=media&&!media.paused&&!media.ended;
     buttons.toggle.innerHTML=icon(playing?'pause':'play'); buttons.toggle.setAttribute('aria-label',playing?'Pause music':'Play music');
+    if(playing)hasPlayedMusic=true;
+    card.hidden=!hasPlayedMusic;
     card.classList.toggle('playing',!!playing);
     if(media && document.activeElement!==volume)volume.value=Math.round(media.volume*100);
   }

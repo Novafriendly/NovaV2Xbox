@@ -12,3 +12,5 @@ body:has(#panel[data-view=novatube]:not([hidden]))>header,body:has(#panel[data-v
 #panel[data-view=novatube]>iframe{background:transparent;color-scheme:normal}
 
 .music-progress{display:flex;align-items:center;gap:8px;margin-top:10px}.music-progress small{font-size:10px;color:#aeb8b2;font-variant-numeric:tabular-nums}.music-progress input{min-width:0;flex:1;width:100%;height:4px;accent-color:#86df5b;cursor:pointer}.music-progress input:disabled{opacity:.35;cursor:default}
+
+.xg-music[hidden]{display:none!important}

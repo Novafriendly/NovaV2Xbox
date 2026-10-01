@@ -142,6 +142,7 @@
       ".read": false,
       ".write": false
     },
+    "novaPrivateData": {".read": false, ".write": false},
     "novaAccounts": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",

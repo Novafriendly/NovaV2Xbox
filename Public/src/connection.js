@@ -8,8 +8,9 @@ async function prepare(){
  await Promise.all([load('scram/scramjet.js'),load('clients/index.js')]);await load('controller/controller.api.js');await load('scram/scramjet-utils.js');
 
 }
+function preload(){return resources??=prepare().catch(e=>{resources=null;throw e})}
 async function create(options={}){
- resources??=prepare().catch(e=>{resources=null;throw e});await resources;
+ await preload();
  const registration=await navigator.serviceWorker.register(base+'sw.js',{scope:base,updateViaCache:'none'});
  const worker=await deadline(new Promise(resolve=>{const check=()=>{if(registration.active?.state==='activated')resolve(registration.active)};const watch=()=>{registration.installing?.addEventListener('statechange',check);registration.waiting?.addEventListener('statechange',check);check()};registration.addEventListener('updatefound',watch);watch()}),15000,'The connection worker did not start. Try again.');
  const url=new URL('/api/wisp/',location.origin);url.protocol=location.protocol==='https:'?'wss:':'ws:';
@@ -24,11 +25,11 @@ async function create(options={}){
    return {body:response.body,headers:[...response.headers],status:response.status,statusText:response.statusText};
   }
   // Retry a transient connection failure once, only for reads. Never replay forms.
-  for(let attempt=0;;attempt++)try{return await remote.request(target,method,body,headers,signal)}catch(error){if(attempt||!['GET','HEAD'].includes(method)||signal?.aborted||!/connect|code 35|code 56|socket|network|fetch|closed|reset|timeout/i.test(String(error))){options.onRequestError?.(target.href,error);throw error;}try{await recover()}catch(recoveryError){options.onRequestError?.(target.href,recoveryError);throw recoveryError}await new Promise(r=>setTimeout(r,250))}
+  for(let attempt=0;;attempt++)try{return await remote.request(target,method,body,headers,signal)}catch(error){if(attempt||!['GET','HEAD'].includes(method)||signal?.aborted||!/connect|code 18|code 35|code 56|code 92|partial file|HTTP\/2|socket|network|fetch|closed|reset|timeout/i.test(String(error))){options.onRequestError?.(target.href,error);throw error;}try{if(!/code 18|code 92|partial file|HTTP\/2/i.test(String(error)))await recover()}catch(recoveryError){options.onRequestError?.(target.href,recoveryError);throw recoveryError}await new Promise(r=>setTimeout(r,250))}
  }};
  const controller=new $scramjetController.Controller({serviceworker:worker,transport,config:{prefix:base+'p/',injectPath:base+'controller/controller.inject.js',wasmPath:base+'scram/scramjet.wasm',scramjetPath:base+'scram/scramjet.js'}});
  await deadline(controller.wait(),20000,'The connection could not start. Check the transport server in Search settings.');workers.set(controller,worker);controller.novaOptions=options;return controller;
 }
 async function ensure(controller){const registration=await navigator.serviceWorker.getRegistration(base);return registration?.active?.state==='activated'&&registration.active===workers.get(controller)?controller:create(controller.novaOptions||{})}
-window.NovaConnection={create,ensure};
+window.NovaConnection={create,ensure,prepare:preload};
 })();
