@@ -31,17 +31,24 @@ export async function captureGames(){
    stores.push({name,keyPath:store.keyPath,autoIncrement:store.autoIncrement,indexes,rows:await Promise.all(keys.map(async(key,i)=>[await pack(key),await pack(values[i])]))});
   }result.push({name:db.name,version:db.version,stores});}finally{db.close();}
  }
- const text=JSON.stringify(result);if(text.length>950000)throw Error('Game saves exceed the current cloud backup limit.');
+ const text=JSON.stringify(result);
  const hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(v=>v.toString(16).padStart(2,'0')).join('');
+ if(text.length>950000){
+  const db=await openArchive();try{await new Promise((resolve,reject)=>{const tx=db.transaction('snapshots','readwrite');tx.objectStore('snapshots').put(text,hash);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}
+  localStorage.setItem('nova_game_save_manifest',JSON.stringify({parts:0,version:hash,localOnly:true}));
+  for(const key of Object.keys(localStorage))if(key.startsWith('nova_game_save_part_'))localStorage.removeItem(key);
+  return;
+ }
  const count=Math.ceil(text.length/100000),prefix='nova_game_save_part_'+hash+'_';
  for(let i=0;i<count;i++)localStorage.setItem(prefix+i,text.slice(i*100000,(i+1)*100000));
  localStorage.setItem('nova_game_save_manifest',JSON.stringify({parts:count,version:hash}));
  for(const key of Object.keys(localStorage))if(key.startsWith('nova_game_save_part_')&&!key.startsWith(prefix))localStorage.removeItem(key);
 }
+function openArchive(){const req=indexedDB.open('__nova_account_game_archive',1);req.onupgradeneeded=()=>req.result.createObjectStore('snapshots');return request(req);}
 async function remove(name){const req=indexedDB.deleteDatabase(name);return new Promise((resolve,reject)=>{req.onsuccess=resolve;req.onerror=()=>reject(req.error);req.onblocked=()=>reject(Error('Close other Nova tabs before switching accounts to protect your game saves.'));});}
 export async function restoreGames(){
  let manifest;try{manifest=JSON.parse(localStorage.getItem('nova_game_save_manifest')||'null')}catch{}
- let saved=[];if(manifest){let text='';for(let i=0;i<manifest.parts;i++){const part=localStorage.getItem('nova_game_save_part_'+(manifest.version?manifest.version+'_':'')+i);if(part===null)throw Error('Your game backup is incomplete.');text+=part;}if(manifest.version){const actual=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(v=>v.toString(16).padStart(2,'0')).join('');if(actual!==manifest.version)throw Error('Your game backup is incomplete. Please retry syncing on the original device.');}saved=JSON.parse(text);}
+ let saved=[];if(manifest){let text='';if(manifest.localOnly){const db=await openArchive();try{text=await request(db.transaction('snapshots').objectStore('snapshots').get(manifest.version));if(typeof text!=='string')throw Error('Your local game backup could not be found.');}finally{db.close();}}for(let i=0;i<manifest.parts;i++){const part=localStorage.getItem('nova_game_save_part_'+(manifest.version?manifest.version+'_':'')+i);if(part===null)throw Error('Your game backup is incomplete.');text+=part;}if(manifest.version){const actual=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(v=>v.toString(16).padStart(2,'0')).join('');if(actual!==manifest.version)throw Error('Your game backup is incomplete. Please retry syncing on the original device.');}saved=JSON.parse(text);}
  for(const db of await list())await remove(db.name);
  for(const entry of saved){if(!saveDatabase(entry.name))continue;const req=indexedDB.open(entry.name,entry.version);
   req.onupgradeneeded=()=>{for(const schema of entry.stores){const store=req.result.createObjectStore(schema.name,{keyPath:schema.keyPath,autoIncrement:schema.autoIncrement});for(const index of schema.indexes)store.createIndex(index.name,index.keyPath,{unique:index.unique,multiEntry:index.multiEntry});}};
