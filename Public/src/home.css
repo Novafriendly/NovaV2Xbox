@@ -3,3 +3,7 @@
 .time .clock-seconds,.xg-status time .clock-seconds{font-size:.55em;opacity:.8;font-weight:400} .time,.xg-status time{font-variant-numeric:tabular-nums}
 
 body.nova-content-active .tile,body.nova-content-active .feature,body.nova-content-active #bg *{animation-play-state:paused!important}body.nova-content-active .open-space,body.nova-content-active main{visibility:hidden}
+
+/* Hidden Home decorations must not consume animation/compositing time behind a live frame. */
+body.nova-content-active main *,body.nova-content-active .open-space *,body.nova-content-active .profile *{animation-play-state:paused!important}
+body.nova-content-active #panel{backdrop-filter:none;-webkit-backdrop-filter:none}

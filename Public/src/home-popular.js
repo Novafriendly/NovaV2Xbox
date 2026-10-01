@@ -4,7 +4,9 @@ import {selectActivity} from '../community-activity.js';
 const host=document.getElementById('home-discover');
 host.innerHTML=`<section class="popular-section"><div class="popular-heading"><h2>Popular games</h2><span data-status="game">Loading community favorites…</span></div><div class="popular-grid" data-grid="game"></div></section><section class="popular-section"><div class="popular-heading"><h2>Popular apps</h2><span data-status="app">Loading community favorites…</span></div><div class="popular-grid" data-grid="app"></div></section><section class="nova-personal-home"><div><span class="personal-kicker">NOVA PERSONAL</span><h2>Your world. Our community.</h2><p>A place to play, explore, and come together.</p></div><div class="nova-stat"><strong id="nova-visits">—</strong><span>Nova visits</span></div><div class="nova-stat"><strong id="nova-active">—</strong><span><i></i> Active users</span></div></section>`;
 const catalogs={},counts={},failed={};
+const dirty=new Set();
 function render(kind){
+ if(window.NovaPerformance&&!NovaPerformance.backgroundVisible()){dirty.add(kind);return;}dirty.delete(kind);
  const grid=host.querySelector(`[data-grid="${kind}"]`);grid.replaceChildren();
  const rows=(catalogs[kind]||[]).slice().sort((a,b)=>(Number(counts[kind]?.[b.id])||0)-(Number(counts[kind]?.[a.id])||0));
  const ranked=rows.some(g=>Number(counts[kind]?.[g.id])>0);
@@ -30,5 +32,6 @@ onValue(ref(db,'novaStats/homeVisits'),snap=>{document.getElementById('nova-visi
 runTransaction(ref(db,'novaStats/homeVisits'),value=>(Number.isSafeInteger(value)&&value>=0?value:0)+1).catch(()=>{});
 let activity={},ready=false,offset=0;
 onValue(ref(db,'.info/serverTimeOffset'),s=>{offset=Number(s.val())||0});
-function active(){if(ready)document.getElementById('nova-active').textContent=Object.values(activity).filter(records=>selectActivity(records,Date.now()+offset)).length.toLocaleString()}
+addEventListener('nova-background-visibility',e=>{if(e.detail.visible){for(const kind of [...dirty])render(kind);active()}});
+function active(){if(ready&&(window.NovaPerformance?.backgroundVisible()??!document.hidden))document.getElementById('nova-active').textContent=Object.values(activity).filter(records=>selectActivity(records,Date.now()+offset)).length.toLocaleString()}
 onValue(ref(db,'novaActivity'),snap=>{activity=snap.val()||{};ready=true;active()},()=>{ready=false;document.getElementById('nova-active').textContent='Unavailable'});setInterval(active,10000);

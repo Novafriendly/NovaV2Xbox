@@ -1,14 +1,14 @@
 import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {readFileSync} from 'node:fs';
 function client(seed={},cloud={},options={}){
- const store=new Map(Object.entries(seed)),auth={currentUser:null},events=[],calls=[],cache=new Map();
+ const store=new Map(Object.entries(seed)),auth={currentUser:null},events=[],calls=[],cache=new Map(),intervals=new Map(),listeners=new Map();
  let source=readFileSync('Public/src/account-data.js','utf8').replace(/^import .*;$/gm,'').replace(/export /g,'');
  const storage={getItem:k=>store.get(k)??null,setItem:(k,v)=>{if(k.startsWith('nova-account-data:')||k.startsWith('nova-account-cookies:'))throw Object.assign(Error('Storage quota exceeded'),{name:'QuotaExceededError'});if(options.limit&&[...store].filter(([key])=>key!==k).reduce((n,[key,value])=>n+key.length+value.length,0)+k.length+String(v).length>options.limit)throw Object.assign(Error('Storage quota exceeded'),{name:'QuotaExceededError'});store.set(k,String(v))},removeItem:k=>store.delete(k)};
  const localStorage=new Proxy(storage,{ownKeys:()=>[...store.keys()],getOwnPropertyDescriptor:()=>({enumerable:true,configurable:true})});
  const isUnreadableRecord=error=>error?.code==='NOVA_CACHE_UNREADABLE'||/failed to read large indexeddb value|data lost due to missing file/i.test(error?.message||'');
- const context={auth,localStorage,isUnreadableRecord,readCache:async key=>structuredClone(cache.get(key)),writeCache:async(key,value)=>cache.set(key,structuredClone(value)),migrateAccountCaches:async()=>{for(const [key,value]of store)if(/^(nova-account-data:|nova-account-cookies:)/.test(key)){if(!cache.has(key))cache.set(key,JSON.parse(value));store.delete(key)}},compactSlots:async()=>{},archived:async()=>null,captureGames:async()=>{},restoreGames:async()=>{},captureWebSession:async()=>{},restoreWebSession:async()=>{},setInterval(){},setTimeout(){},clearTimeout(){},addEventListener(){},document:{hidden:false,addEventListener(){}},dispatchEvent:e=>events.push(e),Event:class{constructor(type){this.type=type}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},fetch:async(_,options)=>{const body=JSON.parse(options.body);const user=options.headers.Authorization.slice(7);calls.push({user,...body});if(body.operation==='load')return {ok:true,json:async()=>({entries:Object.entries(cloud[user]||{}).map(([key,value])=>({key,value}))})};cloud[user]??={};for(const row of body.entries){if(row.value===null)delete cloud[user][row.key];else cloud[user][row.key]=row.value;}return {ok:true,json:async()=>({ok:true})};}};
+ const context={auth,localStorage,isUnreadableRecord,readCache:async key=>structuredClone(cache.get(key)),writeCache:async(key,value)=>cache.set(key,structuredClone(value)),migrateAccountCaches:async()=>{for(const [key,value]of store)if(/^(nova-account-data:|nova-account-cookies:)/.test(key)){if(!cache.has(key))cache.set(key,JSON.parse(value));store.delete(key)}},compactSlots:async()=>{},archived:async()=>null,captureGames:async()=>{},restoreGames:async()=>{},captureWebSession:async()=>{},restoreWebSession:async()=>{},setInterval(fn,ms){intervals.set(ms,fn)},setTimeout(){},clearTimeout(){},addEventListener(type,fn){listeners.set(type,fn)},document:{hidden:false,addEventListener(){}},dispatchEvent:e=>events.push(e),Event:class{constructor(type){this.type=type}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},fetch:async(_,options)=>{const body=JSON.parse(options.body);const user=options.headers.Authorization.slice(7);calls.push({user,...body});if(body.operation==='load')return {ok:true,json:async()=>({entries:Object.entries(cloud[user]||{}).map(([key,value])=>({key,value}))})};cloud[user]??={};for(const row of body.entries){if(row.value===null)delete cloud[user][row.key];else cloud[user][row.key]=row.value;}return {ok:true,json:async()=>({ok:true})};}};
  context.window=context;context.parent=context;vm.createContext(context);vm.runInContext(source,context);
  const login=async(uid,options)=>{auth.currentUser={uid,getIdToken:async()=>uid};await context.NovaAccountData.activate(auth.currentUser,options);};
- return {context,store,cache,events,cloud,calls,login,localStorage};
+ return {context,store,cache,events,cloud,calls,login,localStorage,intervals,listeners};
 }
 test('new accounts start fresh and returning accounts restore their separate settings and game saves',async()=>{
  const c=client({nova_user:'one',nova_wallpaper:'one.jpg','nova-content.invalid@save':'one-save'});
@@ -72,4 +72,22 @@ test('failed game capture and an unreadable cache do not trap the current profil
 test('unrelated IndexedDB failures are reported instead of silently treating an account as new',async()=>{
  const c=client({nova_user:'one',nova_wallpaper:'keep.jpg'});c.context.readCache=async()=>{throw Error('Permission denied')};
  await assert.rejects(c.login('one'),/Permission denied/);assert.equal(c.store.get('nova_wallpaper'),'keep.jpg');
+});
+
+
+test('lightweight account sync uploads preferences without scanning binary game saves',async()=>{
+ const c=client({nova_user:'one',nova_wallpaper:'one.jpg'});await c.login('one');let captures=0;c.context.captureGames=async()=>{captures++};
+ c.localStorage.setItem('nova_wallpaper','new.jpg');await c.context.NovaAccountData.flush({captureGameSaves:false});
+ assert.equal(captures,0);assert.equal(c.cloud.one.nova_wallpaper,'new.jpg');
+ await c.context.NovaAccountData.flush();assert.equal(captures,1,'Explicit save still captures game data');
+});
+
+test('active game, app and cloud backups are batched, then capture promptly on Home',async()=>{
+ const c=client({nova_user:'one'});let now=1000000,captures=0;
+ c.context.Date={now:()=>now};c.context.captureGames=async()=>{captures++};await c.login('one');const initial=captures;
+ const panel={hidden:false,dataset:{view:'game'}};c.context.document.getElementById=()=>panel;
+ for(const view of ['game','app','cloud']){panel.dataset.view=view;now+=60000;c.intervals.get(60000)();await new Promise(resolve=>setImmediate(resolve));}
+ assert.equal(captures,initial,'No binary archive scans during the first three active minutes');
+ now+=120000;c.intervals.get(60000)();await new Promise(resolve=>setImmediate(resolve));assert.equal(captures,initial+1,'Long sessions retain periodic backups');
+ panel.hidden=true;c.listeners.get('nova-background-visibility')({detail:{visible:true}});await new Promise(resolve=>setImmediate(resolve));assert.equal(captures,initial+2);
 });

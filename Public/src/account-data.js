@@ -7,14 +7,14 @@ const identity=new Set(['nova_user','nova_username','nova_account_version']);
 export const managed=key=>!identity.has(key)&&!/^nova_(pin|server_progress|server_coins|owner_code)/.test(key)&&!/(?:firebase|password|credential|access.?token|refresh.?token|auth.?token|cookie|session.?token)/i.test(key)&&(key.startsWith('nova_')||/^nova-(ai-chats|v2-favorites|v2-recent-|search)/.test(key)||key.includes('@'));
 const snapshot=()=>Object.fromEntries(Object.keys(localStorage).filter(managed).map(key=>[key,localStorage.getItem(key)]));
 const read=async uid=>(await readCache(META+uid))||{};
-let uid=null,baseline={},pending={},timer,saving,restoring=false,gameCapture;
-async function capture(){if(!gameCapture)gameCapture=captureGames().finally(()=>gameCapture=null);return gameCapture;}
+let uid=null,baseline={},pending={},timer,saving,restoring=false,gameCapture,lastGameCapture=0;
+async function capture(){if(!gameCapture)gameCapture=captureGames().then(value=>{lastGameCapture=Date.now();return value}).finally(()=>gameCapture=null);return gameCapture;}
 async function request(user,operation,entries){const response=await fetch('/api/owner-control',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await user.getIdToken()},body:JSON.stringify({action:'accountData',operation,entries})});const data=await response.json();if(!response.ok)throw Error(data.error||'Account backup is unavailable.');return data;}
 function saveLocal(){return uid?writeCache(META+uid,{values:snapshot(),pending:{...pending},localPin:localStorage.getItem('nova_pin')}):Promise.resolve();}
 function localError(error){dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'offline',message:'Local account backup could not be saved. '+error.message}}));}
-function changed(){if(!uid||restoring)return;const now=snapshot();if(JSON.stringify(now)===JSON.stringify(baseline))return;for(const key of new Set([...Object.keys(baseline),...Object.keys(now)])){if(baseline[key]!==now[key])pending[key]=now[key]??null;}baseline=now;saveLocal().catch(localError);clearTimeout(timer);if(Object.keys(pending).length)timer=setTimeout(()=>flush().catch(()=>{}),1500);}
-export async function flush(){clearTimeout(timer);if(saving){await saving;return flush();}if(!uid||auth.currentUser?.uid!==uid)return;
- await capture();await changedWithoutScheduling();const user=auth.currentUser,owner=uid;
+function changed(){if(!uid||restoring)return;const now=snapshot();const keys=Object.keys(now);if(keys.length===Object.keys(baseline).length&&keys.every(key=>now[key]===baseline[key]))return;for(const key of new Set([...Object.keys(baseline),...Object.keys(now)])){if(baseline[key]!==now[key])pending[key]=now[key]??null;}baseline=now;saveLocal().catch(localError);clearTimeout(timer);if(Object.keys(pending).length)timer=setTimeout(()=>flush({captureGameSaves:false}).catch(()=>{}),1500);}
+export async function flush({captureGameSaves=true}={}){clearTimeout(timer);if(saving){await saving;return flush({captureGameSaves});}if(!uid||auth.currentUser?.uid!==uid)return;
+ if(captureGameSaves)await capture();await changedWithoutScheduling();const user=auth.currentUser,owner=uid;
  saving=(async()=>{let localGameOnly=false;try{localGameOnly=JSON.parse(localStorage.getItem('nova_game_save_manifest')||'{}').localOnly===true}catch{}const rows=Object.entries(pending).sort(([a,av],[b,bv])=>{const priority=(k,v)=>v===null?2:k==='nova_game_save_manifest'?1:0;return priority(a,av)-priority(b,bv)});let batch=[],size=0;
  async function send(){if(!batch.length)return;const sent=batch;await request(user,'save',sent);if(uid===owner)for(const {key,value}of sent)if(pending[key]===value)delete pending[key];batch=[];size=0;await saveLocal();}
  for(const [key,value]of rows){if(localGameOnly&&/^nova_game_save_(manifest|part_)/.test(key))continue;const entry={key,value},length=JSON.stringify(entry).length;if(length>180000){dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'limited',message:'A large local save could not be backed up.'}}));continue;}if(size+length>190000||batch.length>=90)await send();batch.push(entry);size+=length;}
@@ -51,7 +51,11 @@ export async function activate(user,{fresh=false}={}){
 }
 // Polling also observes writes inside proxied frames, which have separate JS realms.
 setInterval(()=>{if(uid&&!document.hidden)changed()},5000);
-setInterval(()=>{if(uid&&!document.hidden)capture().then(changed).catch(error=>dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'limited',message:error.message}})))},60000);
+// Keep lightweight settings sync frequent; batch expensive binary game archives.
+// Active sessions still receive periodic backups, spaced about five minutes apart.
+function periodicGames(){if(!uid||document.hidden||restoring)return;const panel=document.getElementById?.('panel');const busy=panel&&!panel.hidden&&['game','app','cloud'].includes(panel.dataset.view);if(busy&&Date.now()-lastGameCapture<300000)return;capture().then(changed).catch(error=>dispatchEvent(new CustomEvent('nova-sync-status',{detail:{state:'limited',message:error.message}})));}
+setInterval(periodicGames,60000);
+addEventListener('nova-background-visibility',event=>{if(event.detail.visible)periodicGames()});
 addEventListener('storage',event=>{if(event.key===OWNER&&uid&&event.newValue!==uid){uid=null;location.replace('home.html');return;}if(!restoring)changed()});
 addEventListener('pagehide',()=>{if(uid){changedWithoutScheduling();flush().catch(()=>{})}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&uid){changedWithoutScheduling();flush().catch(()=>{})}});
