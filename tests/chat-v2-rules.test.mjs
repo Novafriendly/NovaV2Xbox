@@ -15,3 +15,5 @@ test('links and leaks prohibit member posting',()=>{for(const channel of ['links
 
 
 test('direct writes cannot ban or change roles of permanent owner UIDs',()=>{for(const uid of ['FR37Ekbg1iYz8jVbbiQvHXHSUNQ2','Te5tfn6BjZaZ3hbqD46oO0hOETo2']){assert.equal(evaluate(rules.roles.$uid['.write'],{role:'owner',data:'member',next:'member',extra:{$uid:uid}}),false);assert.equal(evaluate(rules.bans.$uid['.write'],{role:'owner',next:true,extra:{$uid:uid}}),false)}});
+
+test('private bot messages index creation time without granting client writes',()=>{assert.deepEqual(rules.botMessages.$uid['.indexOn'],['createdAt']);assert.equal(rules.botMessages.$uid['.write'],false);assert.equal(evaluate(rules.botMessages.$uid['.read']),true);assert.equal(evaluate(rules.botMessages.$uid['.read'],{extra:{$uid:'bob'}}),false)});

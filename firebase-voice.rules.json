@@ -679,7 +679,10 @@
       "botMessages": {
         "$uid": {
           ".read": "auth != null && root.child('novaAccounts').child(auth.uid).exists() && !root.child('novaControl/siteBans').child(auth.uid).exists() && auth.uid === $uid",
-          ".write": false
+          ".write": false,
+          ".indexOn": [
+            "createdAt"
+          ]
         }
       },
       "preferences": {

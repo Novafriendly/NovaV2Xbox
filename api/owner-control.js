@@ -1,3 +1,4 @@
+import {syncChatProfile} from '../server/chat-profile-sync.mjs';
 import {leaderboard} from '../server/leaderboard.mjs';
 import {nitroThemes,validGradient} from '../Public/src/nitro-themes.js';
 import {playerProgress,totalXP as total,levelForXP as level} from '../server/player-progress.mjs';
@@ -18,6 +19,7 @@ const [baseRole,ban]=await Promise.all(['novaChatV2/roles/'+who.uid,'novaControl
 if(action==='status')return reply(200,{owner,ban:protectedOwner?null:ban.val(),progress:(await db.ref('novaControl/progress/'+who.uid).get()).val()});
 if(action==='appeal'){const reason=text(b.reason,2000);if(reason.length<10)throw Error('Explain your appeal in at least 10 characters.');await db.ref('novaControl/appeals/'+who.uid).set({uid:who.uid,name:account.name,reason,scope:b.scope==='chat'?'chat':'nova',at:now,status:'pending'});return reply(200,{ok:true})}
 if(ban.exists()&&!protectedOwner)return reply(403,{error:'Your Nova access is suspended.'});
+if(action==='syncChatProfile'){if(!protectedOwner&&(await db.ref('novaChatV2/bans/'+who.uid).get()).exists())return reply(403,{error:'Your Chat access is suspended.'});return reply(200,await syncChatProfile(db,who.uid,account,now));}
 if(['leaderboard','leaderboardPulse','leaderboardProfile'].includes(action))return reply(200,await leaderboard(db,who.uid,action,b,now));
 if(['cloudPick','cloudPopular'].includes(action))return reply(200,await cloudPopular(db,who.uid,action,b));
 if(action==='accountData')return reply(200,await accountData(db,who.uid,b));
