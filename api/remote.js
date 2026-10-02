@@ -42,6 +42,11 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
   if(!(await db.ref('novaAccounts/'+uid).get()).exists()||(await db.ref('novaControl/siteBans/'+uid).get()).exists())throw failure('Account access unavailable.',403);
   const browserOnly=()=>{if(agent)throw failure('Use your Nova account for this action.',403)};
   const agentOnly=()=>{if(!agent)throw failure('Only the paired computer can approve this action.',403)};
+  if(action==='registerDevice'){
+   browserOnly();const account=(await db.ref('novaAccounts/'+uid).get()).val();const rows=(await db.ref(root+'devices').orderByChild('uid').equalTo(uid).get()).val()||{};if(Object.keys(rows).length>=20)throw failure('Remove an old computer before adding another.',409);
+   const id='NOVA-'+randomBytes(16).toString('hex').toUpperCase(),credential=secret(),name=clean(b.name,60)||'Windows PC';
+   await write('devices/'+id,{uid,name,os:'Windows',tokenHash:hash(credential),enabled:false,lastSeen:now,createdAt:now});return reply(200,{id,credential,name,profile:{uid,name:clean(account.name,60)||'Nova player',photo:clean(account.photo,2000)}});
+  }
   if(action==='pairClaim'){
    browserOnly();const code=clean(b.code,30).replace(/[\s-]/g,'').toUpperCase();if(!safe(code))throw failure('Invalid pairing code.');const account=(await db.ref('novaAccounts/'+uid).get()).val();
    const result=await db.ref(root+'pairing/'+code).transaction(pair=>pair===null?null:pair&&pair.expires>now&&!pair.finished&&(!pair.uid||pair.uid===uid)?{...pair,uid,owner:clean(account.name,60)}:undefined);
@@ -55,7 +60,7 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
   if(action==='heartbeat'){
    agentOnly();await db.ref(root+'devices/'+device.id).update({lastSeen:now});let session=device.session?await read('sessions/'+device.session):null;
    if(session&&(session.expires<=now||session.status==='ended'||!device.enabled)){await db.ref(root+'devices/'+device.id).update({session:null});session=null;}
-   return reply(200,{device:publicDevice({...device,lastSeen:now}),session:session?{id:device.session,status:session.status,viewer:session.viewer,expires:session.expires}:null});
+   const account=(await db.ref('novaAccounts/'+uid).get()).val();return reply(200,{profile:{uid,name:clean(account.name,60)||'Nova player',photo:clean(account.photo,2000)},device:publicDevice({...device,lastSeen:now}),session:session?{id:device.session,status:session.status,viewer:session.viewer,expires:session.expires}:null});
   }
   if(['rename','remove','disable','enable','connect'].includes(action)){
    if(!agent){if(!safe(b.id))throw failure('Invalid device.');const row=await read('devices/'+b.id);if(!row||row.uid!==uid)throw failure('Computer not found.',404);device={...row,id:b.id};}

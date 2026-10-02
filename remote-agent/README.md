@@ -4,7 +4,7 @@ Nova website: https://novaoffical.vercel.app/computer
 
 ## Use
 
-Install `NovaRemote.exe` on a Windows computer you own or have permission to control. Open the agent, get a pairing code, enter it in Nova → Computer → Add computer, then confirm your account in the Windows agent. Windows encrypts the device credential; the database stores its hash.
+Install `NovaRemote.exe` on a Windows computer you own or have permission to control. Log into an existing Nova account with email or username and password. The computer registers to that account automatically; no pairing code or account-creation form is used. The launcher shows your profile. Passwords and Firebase login tokens are not saved; Windows encrypts the resulting device credential, and the database stores only its hash. Log out to disable this computer and erase its local credential.
 
 Access starts disabled. Click Enable remote access locally. Sign into the same Nova account in another browser and click Connect. On the Windows computer review the request, Allow this session, then Start screen sharing. The agent stays visible. Disconnect immediately or press Ctrl+Shift+F12 to stop. Closing the agent disables access. Each request expires after 45 seconds; an approved session lasts at most one hour. Disable or remove the computer from Nova to revoke access. Lost server contact stops local input and sharing after ten seconds.
 
