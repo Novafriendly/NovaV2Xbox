@@ -1,6 +1,6 @@
 {
   "name": "nova-remote",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Visible, account-authorized Nova Windows remote desktop agent",
   "author": "Nova",
@@ -27,18 +27,22 @@
       "agent.html",
       "agent.css",
       "renderer.js",
-      "input.ps1"
+      "input.ps1",
+      "nova.png"
     ],
     "win": {
       "target": "nsis",
-      "signAndEditExecutable": false
+      "icon": "nova.ico",
+      "signExecutable": false
     },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "artifactName": "NovaRemote.exe",
-      "runAfterFinish": false
+      "runAfterFinish": false,
+      "installerIcon": "nova.ico",
+      "uninstallerIcon": "nova.ico"
     },
     "compression": "maximum"
   }

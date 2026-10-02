@@ -15,6 +15,7 @@ public static class NovaInput {
  static HashSet<int> held=new HashSet<int>(); static HashSet<int> buttons=new HashSet<int>();
  static void Send(INPUT input){SendInput(1,new[]{input},Marshal.SizeOf(typeof(INPUT)));}
  public static void Move(double x,double y){SetCursorPos((int)(x*(GetSystemMetrics(0)-1)),(int)(y*(GetSystemMetrics(1)-1)));}
+ public static void Relative(int x,int y){Send(new INPUT{type=0,data=new UNION{mouse=new MOUSE{dx=x,dy=y,flags=1}}});}
  public static void Key(int vk,bool down){if(down)held.Add(vk);else held.Remove(vk);Send(new INPUT{type=1,data=new UNION{key=new KEY{vk=(ushort)vk,flags=(down?0u:2u)|((vk==163||vk==165||(vk>=33&&vk<=46)||(vk>=91&&vk<=93))?1u:0u)}}});}
  public static void Button(int b,bool down){if(down)buttons.Add(b);else buttons.Remove(b);uint flags=b==0?(down?2u:4u):b==2?(down?8u:16u):(down?32u:64u);Send(new INPUT{type=0,data=new UNION{mouse=new MOUSE{flags=flags}}});}
  public static void Wheel(int delta){Send(new INPUT{type=0,data=new UNION{mouse=new MOUSE{flags=2048,mouseData=unchecked((uint)delta)}}});}
@@ -28,7 +29,8 @@ try {
   $novaPacket = $novaInputLine | ConvertFrom-Json
   switch ($novaPacket.type) {
    'move' {[NovaInput]::Move($novaPacket.x,$novaPacket.y)}
-   'button' {[NovaInput]::Move($novaPacket.x,$novaPacket.y);[NovaInput]::Button($novaPacket.button,$novaPacket.down)}
+   'relative' {[NovaInput]::Relative($novaPacket.dx,$novaPacket.dy)}
+   'button' {if (-not $novaPacket.locked) {[NovaInput]::Move($novaPacket.x,$novaPacket.y)};[NovaInput]::Button($novaPacket.button,$novaPacket.down)}
    'key' {[NovaInput]::Key($novaPacket.vk,$novaPacket.down)}
    'wheel' {[NovaInput]::Wheel($novaPacket.delta)}
    'release' {[NovaInput]::Release()}

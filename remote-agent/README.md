@@ -8,7 +8,7 @@ Install `NovaRemote.exe` on a Windows computer you own or have permission to con
 
 Access starts disabled. Click Enable remote access locally. Sign into the same Nova account in another browser and click Connect. On the Windows computer review the request, Allow this session, then Start screen sharing. The agent stays visible. Disconnect immediately or press Ctrl+Shift+F12 to stop. Closing the agent disables access. Each request expires after 45 seconds; an approved session lasts at most one hour. Disable or remove the computer from Nova to revoke access. Lost server contact stops local input and sharing after ten seconds.
 
-The first version shares the primary Windows display, at up to 1080p/30fps, with keyboard and mouse control. Clipboard, file transfer, unattended access, startup services, and Windows secure-desktop/UAC control are not included. Browsers may reserve some keyboard shortcuts.
+The first version shares the primary Windows display, at up to 1080p/60fps (a target, not a guaranteed frame rate), with keyboard and mouse control. Clipboard, file transfer, unattended access, startup services, and Windows secure-desktop/UAC control are not included. Browsers may reserve some keyboard shortcuts.
 
 ## Build
 
@@ -31,3 +31,5 @@ Device credentials, pairing tokens, and session signaling must not be logged. Pr
 ## Verification scope
 
 Server tests cover pairing possession, ownership, revocation, request locking, expiry, bans, signaling direction/limits, and fail-closed database rules. Native input is constrained to validated coordinates/buttons/known keys and only accepted for the approved session. A full two-computer test and a school-network test require deployment, a running agent on the owner PC, and the TURN service; passing unit tests does not prove those network environments work.
+
+Click the browser desktop to lock the mouse; Esc unlocks it. The first click engages control without clicking anything on the remote desktop. Relative mouse movement is supported for games. The connection fills the Computer page; the Fullscreen button expands it further. Actual FPS is displayed in the toolbar and depends on the host GPU/CPU and network. The video sender uses a 12 Mbps maximum; WebRTC adapts resolution and bandwidth.
