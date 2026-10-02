@@ -336,10 +336,10 @@
               "media": {
                 ".validate": "newData.hasChildren(['url','type','name'])",
                 "url": {
-                  ".validate": "newData.isString() && newData.val().length <= 2800000 && (newData.val().beginsWith('https://') || newData.val().beginsWith('data:image/png;base64,') || newData.val().beginsWith('data:image/jpeg;base64,') || newData.val().beginsWith('data:image/webp;base64,') || newData.val().beginsWith('data:image/gif;base64,') || newData.val().beginsWith('data:video/mp4;base64,') || newData.val().beginsWith('data:video/webm;base64,'))"
+                  ".validate": "newData.isString() && ((newData.parent().child('type').val() === 'file' && ((newData.val().length <= 2048 && newData.val().beginsWith('https://')) || (newData.val().length <= 700000 && newData.val().beginsWith('data:application/octet-stream;base64,')))) || (newData.parent().child('type').val() !== 'file' && newData.val().length <= 2800000 && (newData.val().beginsWith('https://') || newData.val().beginsWith('data:image/png;base64,') || newData.val().beginsWith('data:image/jpeg;base64,') || newData.val().beginsWith('data:image/webp;base64,') || newData.val().beginsWith('data:image/gif;base64,') || newData.val().beginsWith('data:video/mp4;base64,') || newData.val().beginsWith('data:video/webm;base64,'))))"
                 },
                 "type": {
-                  ".validate": "newData.val() === 'image' || newData.val() === 'video'"
+                  ".validate": "newData.val() === 'image' || newData.val() === 'video' || newData.val() === 'file'"
                 },
                 "name": {
                   ".validate": "newData.isString() && newData.val().length <= 100"
@@ -384,10 +384,10 @@
                 "media": {
                   ".validate": "newData.hasChildren(['url','type','name'])",
                   "url": {
-                    ".validate": "newData.isString() && newData.val().length <= 2800000 && (newData.val().beginsWith('https://') || newData.val().beginsWith('data:image/png;base64,') || newData.val().beginsWith('data:image/jpeg;base64,') || newData.val().beginsWith('data:image/webp;base64,') || newData.val().beginsWith('data:image/gif;base64,') || newData.val().beginsWith('data:video/mp4;base64,') || newData.val().beginsWith('data:video/webm;base64,'))"
+                    ".validate": "newData.isString() && ((newData.parent().child('type').val() === 'file' && ((newData.val().length <= 2048 && newData.val().beginsWith('https://')) || (newData.val().length <= 700000 && newData.val().beginsWith('data:application/octet-stream;base64,')))) || (newData.parent().child('type').val() !== 'file' && newData.val().length <= 2800000 && (newData.val().beginsWith('https://') || newData.val().beginsWith('data:image/png;base64,') || newData.val().beginsWith('data:image/jpeg;base64,') || newData.val().beginsWith('data:image/webp;base64,') || newData.val().beginsWith('data:image/gif;base64,') || newData.val().beginsWith('data:video/mp4;base64,') || newData.val().beginsWith('data:video/webm;base64,'))))"
                   },
                   "type": {
-                    ".validate": "newData.val() === 'image' || newData.val() === 'video'"
+                    ".validate": "newData.val() === 'image' || newData.val() === 'video' || newData.val() === 'file'"
                   },
                   "name": {
                     ".validate": "newData.isString() && newData.val().length <= 100"
@@ -455,10 +455,10 @@
             "media": {
               ".validate": "newData.hasChildren(['url','type','name'])",
               "url": {
-                ".validate": "newData.isString() && newData.val().length <= 2800000 && (newData.val().beginsWith('https://') || newData.val().beginsWith('data:image/png;base64,') || newData.val().beginsWith('data:image/jpeg;base64,') || newData.val().beginsWith('data:image/webp;base64,') || newData.val().beginsWith('data:image/gif;base64,') || newData.val().beginsWith('data:video/mp4;base64,') || newData.val().beginsWith('data:video/webm;base64,'))"
+                ".validate": "newData.isString() && ((newData.parent().child('type').val() === 'file' && ((newData.val().length <= 2048 && newData.val().beginsWith('https://')) || (newData.val().length <= 700000 && newData.val().beginsWith('data:application/octet-stream;base64,')))) || (newData.parent().child('type').val() !== 'file' && newData.val().length <= 2800000 && (newData.val().beginsWith('https://') || newData.val().beginsWith('data:image/png;base64,') || newData.val().beginsWith('data:image/jpeg;base64,') || newData.val().beginsWith('data:image/webp;base64,') || newData.val().beginsWith('data:image/gif;base64,') || newData.val().beginsWith('data:video/mp4;base64,') || newData.val().beginsWith('data:video/webm;base64,'))))"
               },
               "type": {
-                ".validate": "newData.val() === 'image' || newData.val() === 'video'"
+                ".validate": "newData.val() === 'image' || newData.val() === 'video' || newData.val() === 'file'"
               },
               "name": {
                 ".validate": "newData.isString() && newData.val().length <= 100"

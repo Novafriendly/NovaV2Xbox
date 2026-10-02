@@ -7,7 +7,8 @@
   "main": "main.cjs",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win nsis --x64"
+    "dist": "electron-builder --win nsis --x64",
+    "dist:msi": "electron-builder --win msi --x64"
   },
   "devDependencies": {
     "electron": "44.5.1",
@@ -44,6 +45,14 @@
       "installerIcon": "nova.ico",
       "uninstallerIcon": "nova.ico"
     },
-    "compression": "maximum"
+    "compression": "maximum",
+    "msi": {
+      "oneClick": false,
+      "perMachine": false,
+      "runAfterFinish": false,
+      "artifactName": "NovaRemote.msi",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
