@@ -1623,7 +1623,7 @@
     "id": 276,
     "name": "Drift Boss",
     "art": "content/covers/276.png",
-    "url": "content/games/276-f.html",
+    "url": "https://driftboss.io/drift-boss.embed",
     "genres": [
       "Racing"
     ]
