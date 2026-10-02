@@ -29,8 +29,8 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
    if(!pair.uid)throw failure('Approve the pairing code in your Nova account first.');
    // Only the local agent holding its private pairing token can finish registration.
    const credential=secret(),id='NOVA-'+randomBytes(16).toString('hex').toUpperCase();
-   const claim=await db.ref(root+'pairing/'+b.code).transaction(value=>value&&!value.finished&&value.expires>now&&value.uid===pair.uid?{...value,finished:true}:undefined);
-   if(!claim.committed)throw failure('This pairing code has already been used.',409);
+   const claim=await db.ref(root+'pairing/'+b.code).transaction(value=>value===null?null:value&&!value.finished&&value.expires>now&&value.uid===pair.uid?{...value,finished:true}:undefined);
+   if(!claim.committed||!claim.snapshot.val()?.finished)throw failure('This pairing code has already been used.',409);
    await write('devices/'+id,{uid:pair.uid,name:pair.name,os:pair.os,tokenHash:hash(credential),enabled:false,lastSeen:now,createdAt:now});
    await write('pairing/'+b.code,null);return reply(200,{id,credential,name:pair.name});
   }
@@ -44,8 +44,8 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
   const agentOnly=()=>{if(!agent)throw failure('Only the paired computer can approve this action.',403)};
   if(action==='pairClaim'){
    browserOnly();const code=clean(b.code,30).replace(/[\s-]/g,'').toUpperCase();if(!safe(code))throw failure('Invalid pairing code.');const account=(await db.ref('novaAccounts/'+uid).get()).val();
-   const result=await db.ref(root+'pairing/'+code).transaction(pair=>pair&&pair.expires>now&&!pair.finished&&(!pair.uid||pair.uid===uid)?{...pair,uid,owner:clean(account.name,60)}:undefined);
-   if(!result.committed)throw failure('Pairing code unavailable or expired.');return reply(200,{ok:true});
+   const result=await db.ref(root+'pairing/'+code).transaction(pair=>pair===null?null:pair&&pair.expires>now&&!pair.finished&&(!pair.uid||pair.uid===uid)?{...pair,uid,owner:clean(account.name,60)}:undefined);
+   if(!result.committed||result.snapshot.val()?.uid!==uid)throw failure('Pairing code unavailable or expired. Generate a fresh code in Nova Remote and try again.');return reply(200,{ok:true});
   }
   const publicDevice=d=>({id:d.id,name:d.name,os:d.os,enabled:d.enabled,lastSeen:d.lastSeen,online:d.enabled&&now-d.lastSeen<30000,session:d.session||null});
   if(action==='list'){browserOnly();
@@ -66,8 +66,8 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
     if(action==='remove')await write('devices/'+device.id,null);else await db.ref(root+'devices/'+device.id).update({enabled:false,session:null});return reply(200,{ok:true});
    }
    browserOnly();if(!device.enabled||now-device.lastSeen>=30000)throw failure('Computer is offline or remote access is disabled.');
-   const id=secret();const lock=await db.ref(root+'devices/'+device.id).transaction(d=>d&&d.uid===uid&&d.enabled&&now-d.lastSeen<30000&&(!d.session||d.sessionUntil<=now)?{...d,session:id,sessionUntil:now+45000}:undefined);
-   if(!lock.committed)throw failure('This computer already has a connection request or session.',409);
+   const id=secret();const lock=await db.ref(root+'devices/'+device.id).transaction(d=>d===null?null:d&&d.uid===uid&&d.enabled&&now-d.lastSeen<30000&&(!d.session||d.sessionUntil<=now)?{...d,session:id,sessionUntil:now+45000}:undefined);
+   if(!lock.committed||lock.snapshot.val()?.session!==id)throw failure('This computer already has a connection request or session.',409);
    await write('sessions/'+id,{uid,device:device.id,status:'requested',viewer:clean(b.viewer,100)||'Nova browser',expires:now+45000,createdAt:now,signals:{}});return reply(200,{session:id,expires:now+45000});
   }
   if(!safe(b.session))throw failure('Invalid session.');const session=await read('sessions/'+b.session);
@@ -77,7 +77,7 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
   if(session.expires<=now||session.status==='ended'||!current.enabled||current.session!==b.session)throw failure('Session ended.',410);
   if(action==='approve'){
    agentOnly();if(session.status!=='requested')throw failure('Session has already been approved.',409);
-   const approved=await db.ref(root+'sessions/'+b.session).transaction(row=>row&&row.status==='requested'&&row.expires>now?{...row,status:'active',expires:now+3600000}:undefined);if(!approved.committed)throw failure('Session ended before approval.',410);await db.ref(root+'devices/'+device.id).update({sessionUntil:now+3600000});return reply(200,{ok:true});
+   const approved=await db.ref(root+'sessions/'+b.session).transaction(row=>row===null?null:row&&row.status==='requested'&&row.expires>now?{...row,status:'active',expires:now+3600000}:undefined);if(!approved.committed||approved.snapshot.val()?.status!=='active')throw failure('Session ended before approval.',410);await db.ref(root+'devices/'+device.id).update({sessionUntil:now+3600000});return reply(200,{ok:true});
   }
   if(!['signal','poll'].includes(action))throw failure('Unknown remote action.');
   const side=agent?'host':'viewer',other=agent?'viewer':'host';
