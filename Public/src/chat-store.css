@@ -82,3 +82,8 @@ body[data-theme=aurora] .messages,body[data-theme=sunset] .messages,body[data-th
 .nova-profile-banner img{display:block;max-width:none;filter:none;opacity:1}
 .nova-profile-card .nova-profile-body,.dm-has-banner .person-label{text-shadow:0 1px 3px #000,0 0 8px #0009}
 .nova-profile-card .nova-private-note{background:#111116b3}
+
+/* Shadows paint over transparent gradient lettering; keep the actual role colors clear. */
+.role-gradient-name{ text-shadow:none!important }
+.nova-profile-card .nova-adopt-tag{display:flex;width:fit-content;max-width:100%;box-sizing:border-box;align-items:center;gap:6px;margin:9px 0 0;padding:5px 10px;line-height:16px;font-size:11px;font-weight:600;color:#fff;text-shadow:none;border-radius:8px;background:linear-gradient(115deg,#24242d,#525260,#24242d);background-size:240% 100%;border:1px solid #ffffff38;box-shadow:inset 0 1px 0 #ffffff14}
+.nova-profile-card .nova-adopt-tag img{display:block;width:14px;height:14px;flex:none;object-fit:contain;opacity:1}
