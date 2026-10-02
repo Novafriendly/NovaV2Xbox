@@ -32,7 +32,7 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
    const claim=await db.ref(root+'pairing/'+b.code).transaction(value=>value===null?null:value&&!value.finished&&value.expires>now&&value.uid===pair.uid?{...value,finished:true}:undefined);
    if(!claim.committed||!claim.snapshot.val()?.finished)throw failure('This pairing code has already been used.',409);
    await write('devices/'+id,{uid:pair.uid,name:pair.name,os:pair.os,tokenHash:hash(credential),enabled:false,lastSeen:now,createdAt:now});
-   await write('pairing/'+b.code,null);return reply(200,{id,credential,name:pair.name});
+   await write('pairing/'+b.code,null);const account=(await db.ref('novaAccounts/'+pair.uid).get()).val()||{};return reply(200,{id,credential,name:pair.name,profile:{uid:pair.uid,name:clean(account.name,60)||'Nova player',photo:clean(account.photo,2000)}});
   }
   let uid,device,agent=false;const bearer=(req.headers.authorization||'').replace(/^Bearer /,'');
   if(bearer.startsWith('device:')){
