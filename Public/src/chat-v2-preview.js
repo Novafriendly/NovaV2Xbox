@@ -15,3 +15,5 @@ export async function resetPassword(){throw Error('Email actions are unavailable
 export async function claimOwner(){throw Error('This is sample data. Real owner setup requires your signed-in account and server configuration.')}
 export const watchGroups=(uid,fn)=>watch('groups',fn);
 export async function createGroup(uid,name,members){const id=crypto.randomUUID();update('groups/'+id,{name,owner:uid,members:Object.fromEntries([uid,...members].map(k=>[k,true]))});return id}
+
+export async function changePassword(){throw Error("Password changes are unavailable in the local preview.")}

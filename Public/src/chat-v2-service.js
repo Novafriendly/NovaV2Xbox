@@ -17,3 +17,5 @@ export const watchGroups=(uid,fn,error)=>watchMemberGroups(db,uid,fn,error);
 export async function createGroup(uid,name,members){const key=push(ref(db,ROOT+'/groups')).key;await write('groups/'+key,{name,owner:uid,members:Object.fromEntries([uid,...members].map(id=>[id,true]))});await patch(Object.fromEntries([uid,...members].map(id=>['userGroups/'+id+'/'+key,true])));return key}
 
 export async function toggleReaction(path,uid,emoji){const key=Array.from(emoji).map(c=>c.codePointAt(0).toString(16)).join('-');await runTransaction(ref(db,ROOT+'/reactions/'+path+'/'+uid),value=>{const next=typeof value==='string'?{[Array.from(value).map(c=>c.codePointAt(0).toString(16)).join('-')]:value}:{...(value||{})};if(next[key])delete next[key];else next[key]=emoji;return Object.keys(next).length?next:null})}
+
+export async function changePassword(password){await auth.authStateReady();if(!auth.currentUser||auth.currentUser.isAnonymous)throw Error("Sign into Nova first.");const {updatePassword}=await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");await updatePassword(auth.currentUser,password)}
