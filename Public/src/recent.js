@@ -10,6 +10,7 @@
   function freshFrame(){const el=document.createElement('iframe');el.id='system';el.title='Nova';el.allow='microphone; autoplay; fullscreen; display-capture';el.hidden=true;document.getElementById('panel-content').before(el);return el;}
   function park(){if(frame.dataset.session!=='true')return;frame.hidden=true;frame.removeAttribute('id');frame=freshFrame();}
   function launch(g){
+    if(panel.dataset.view==='computer')frame.contentWindow?.postMessage({novaAction:'remoteDisconnect'},location.origin);
     cancelAIMotion();window.NovaMusic?.hide();const id=account()+':'+identity(g);
     if(frame.dataset.session==='true'){frame.hidden=true;frame.removeAttribute('id');}else frame.remove();
     let el=sessions.get(id);
@@ -43,7 +44,7 @@
     });
   }
   function openSystem(page){
-    if(!['search','ai','novatube','cloudgaming'].includes(page)){park();return;}
+    if(!['search','ai','computer','novatube','cloudgaming'].includes(page)){park();return;}
     const key=account()+':'+page;
     if(frame.dataset.session==='true'){frame.hidden=true;frame.removeAttribute('id');}else frame.remove();
     if(!pages.has(key)){const el=freshFrame();el.dataset.session='true';pages.set(key,el);}

@@ -7,6 +7,10 @@
     "api/wisp.js": {
       "maxDuration": 300,
       "excludeFiles": "{Public,curl-master,curl-curl-8_22_0,scramjet-2.0.67-alpha.2,html-main,tests}/**"
+    },
+    "api/remote.js": {
+      "maxDuration": 15,
+      "excludeFiles": "{Public,remote-agent,tests}/**"
     }
   },
   "outputDirectory": "Public",
@@ -33,6 +37,12 @@
           "value": "no-cache"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/computer",
+      "destination": "/computer.html"
     }
   ]
 }

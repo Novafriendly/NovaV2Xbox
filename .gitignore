@@ -9,3 +9,5 @@ _migration-backup/
 chat-legacy-backup-*.json
 
 chat-legacy-profiles-backup-*.json
+
+remote-agent/dist/

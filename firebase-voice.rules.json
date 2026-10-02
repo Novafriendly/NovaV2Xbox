@@ -712,6 +712,22 @@
     "novaControl": {
       ".read": false,
       ".write": false
+    },
+    "novaRemote": {
+      ".read": false,
+      ".write": false,
+      "devices": {
+        ".indexOn": "uid"
+      },
+      "pairing": {
+        ".indexOn": "expires"
+      },
+      "sessions": {
+        ".indexOn": "expires"
+      },
+      "limits": {
+        ".indexOn": "until"
+      }
     }
   }
 }

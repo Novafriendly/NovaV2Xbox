@@ -1,0 +1,43 @@
+{
+  "name": "nova-remote",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Visible, account-authorized Nova Windows remote desktop agent",
+  "author": "Nova",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "app.nova.remote",
+    "productName": "Nova Remote",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "agent.html",
+      "agent.css",
+      "renderer.js",
+      "input.ps1"
+    ],
+    "win": {
+      "target": "nsis",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "NovaRemote.exe",
+      "runAfterFinish": false
+    },
+    "compression": "maximum"
+  }
+}
