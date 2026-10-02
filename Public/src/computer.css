@@ -6,3 +6,14 @@ body{background:radial-gradient(ellipse at 80% 0%,#20243255,transparent 55%),#08
 #session:fullscreen .session-bar,#session:fullscreen>small{display:none}#session:fullscreen .desktop{width:100%;height:100%;flex:1}
 
 .session-open main>header,.session-open .intro,.session-open #notice,.session-open #devices,.session-open .setup{display:none}.session-open #session{animation:none}.session-open .desktop{contain:layout paint}.session-open video{display:block}
+
+/* Keep the connected view to the stream and three compact controls. */
+.session-open{background:#000}.session-open main{padding:0;max-width:none}
+#session .session-bar{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:2;min-height:0;display:flex;flex-wrap:nowrap;gap:12px;padding:6px 8px 6px 14px;border:1px solid #ffffff26;border-radius:12px;background:#141518e8;box-shadow:none;max-width:calc(100% - 20px)}
+#session .session-bar [hidden],#unlock{display:none!important}
+#session .session-bar button{padding:8px 12px;font-size:12px;white-space:nowrap}
+#session .desktop{width:100%;height:100%;flex:1;contain:layout paint}
+#session:fullscreen .session-bar{display:flex;opacity:0;pointer-events:none;transition:none}
+#session:fullscreen:focus-within:not(:has(.desktop.locked)) .session-bar,#session:fullscreen:hover:not(:has(.desktop.locked)) .session-bar{opacity:1;pointer-events:auto}
+#stream-stats{white-space:nowrap;font-size:12px;color:#ddd}
+@media(max-width:450px){#session .session-bar{gap:6px;padding:5px 7px}#session .session-bar button{padding:8px}#stream-stats{font-size:10px}}

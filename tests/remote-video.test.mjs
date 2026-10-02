@@ -1,11 +1,19 @@
 import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {readFile} from 'node:fs/promises';
 const source=await readFile(new URL('../remote-agent/renderer.js',import.meta.url),'utf8');
-for(const rejectTuning of [false,true])test('screen sharing sends an offer '+(rejectTuning?'even when optional encoder tuning is unsupported':'with supported encoder settings'),async()=>{
- const elements=new Map(),get=id=>{if(!elements.has(id))elements.set(id,{hidden:false,value:'',textContent:''});return elements.get(id)};let heartbeat,offer=false,attempts=0;
- const track={kind:'video',applyConstraints:async()=>{},getSettings:()=>({width:1920,height:1080,frameRate:60}),stop(){}};
+for(const captureMode of ['normal','quality-unsupported','retry'])for(const rejectTuning of [false,true])test(captureMode+' screen sharing sends an offer '+(rejectTuning?'even when optional encoder tuning is unsupported':'with supported encoder settings'),async()=>{
+ const elements=new Map(),get=id=>{if(!elements.has(id))elements.set(id,{hidden:false,value:'',textContent:''});return elements.get(id)};let heartbeat,offer=false,attempts=0,captureAttempts=0;
+ const track={kind:'video',applyConstraints:async()=>{if(captureMode==='quality-unsupported')throw Error('Unsupported quality')},getSettings:()=>({width:1920,height:1080,frameRate:60}),stop(){}};
  const sender={track,getParameters:()=>({encodings:[{}]}),setParameters:async params=>{attempts++;assert.ok(!params.degradationPreference||['balanced','maintain-resolution','maintain-framerate'].includes(params.degradationPreference));assert.equal(params.encodings[0].maxFramerate,60);if(rejectTuning)throw Error('Unsupported tuning')}};
  const api={state:async()=>({device:{name:'Test',id:'test'},enabled:true}),heartbeat:async()=>({device:{enabled:true},session:{id:'session',status:'requested',viewer:'test'}}),approve:async()=>true,onStop(){},poll:async()=>({iceServers:[],signals:[],offset:0}),signal:async body=>{if(body.signal.type==='offer')offer=true},stop:async()=>{},input(){}};
  class Peer{constructor(){this.localDescription=null}addTrack(){}getSenders(){return [sender]}createDataChannel(){return {}}async createOffer(){return {type:'offer',sdp:'test'}}async setLocalDescription(value){this.localDescription=value}close(){}}
- vm.runInNewContext(source,{window:{novaRemote:api},document:{getElementById:get},navigator:{mediaDevices:{getDisplayMedia:async()=>({getVideoTracks:()=>[track],getTracks:()=>[track]})}},RTCPeerConnection:Peer,setInterval:fn=>{heartbeat=fn},setTimeout:()=>0,clearTimeout(){},console:{warn(){}},confirm:()=>false});
- await new Promise(resolve=>setImmediate(resolve));await heartbeat();await get('approve').onclick();await get('share').onclick();assert.equal(offer,true,get("notice").textContent);assert.equal(attempts,rejectTuning?2:1);assert.equal(get('active').hidden,false);
+ vm.runInNewContext(source,{window:{novaRemote:api},document:{getElementById:get},navigator:{mediaDevices:{getDisplayMedia:async options=>{assert.equal(options.video,true);if(captureMode==='retry'&&++captureAttempts===1){const error=Error('Could not start video source');error.name='NotReadableError';throw error}return {getVideoTracks:()=>[track],getTracks:()=>[track]}}}},RTCPeerConnection:Peer,setInterval:fn=>{heartbeat=fn},setTimeout:()=>0,clearTimeout(){},console:{warn(){}},confirm:()=>false});
+ await new Promise(resolve=>setImmediate(resolve));await heartbeat();await get('approve').onclick();await get('share').onclick();if(captureMode==='retry'){assert.equal(get('active').hidden,false);assert.equal(get('share').hidden,false);assert.match(get('notice').textContent,/Unlock your PC/);await get('share').onclick()}assert.equal(offer,true,get("notice").textContent);assert.equal(attempts,rejectTuning?2:1);assert.equal(get('active').hidden,false);
+});
+
+const main=await readFile(new URL('../remote-agent/main.cjs',import.meta.url),'utf8');
+const captureHandler=main.slice(main.indexOf('session.defaultSession.setDisplayMediaRequestHandler('),main.indexOf("ipcMain.handle('state'"));
+for(const revoked of [false,true])test('fresh primary display capture '+(revoked?'is denied if approval ends during source lookup':'uses the current source'),async()=>{
+ let handler,finish,result;const frame={},fresh={display_id:'42',id:'fresh'};
+ const context={active:'approved',enabled:true,lastProof:Date.now(),win:{webContents:{mainFrame:frame}},screenSource:{id:'stale'},Date,screen:{getPrimaryDisplay:()=>({id:42})},desktopCapturer:{getSources:()=>new Promise(resolve=>{finish=resolve})},session:{defaultSession:{setDisplayMediaRequestHandler:fn=>{handler=fn}}}};
+ vm.runInNewContext(captureHandler,context);const pending=handler({frame},value=>{result=value});if(revoked)context.active=null;finish([fresh]);await pending;assert.equal(result.video,revoked?undefined:fresh);
 });

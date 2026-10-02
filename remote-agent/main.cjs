@@ -25,7 +25,11 @@ app.whenReady().then(()=>{
  win.setMenuBarVisibility(false);win.loadFile('agent.html');win.webContents.setWindowOpenHandler(()=>({action:'deny'}));win.webContents.on('will-navigate',e=>e.preventDefault());
  session.defaultSession.setPermissionCheckHandler((contents,permission,origin,details)=>contents===win.webContents&&!!active&&Date.now()-lastProof<10000&&allowCapturePermission(permission,details)&&details.isMainFrame!==false);
  session.defaultSession.setPermissionRequestHandler((contents,permission,callback,details)=>callback(contents===win.webContents&&!!active&&Date.now()-lastProof<10000&&allowCapturePermission(permission,details)&&details?.isMainFrame!==false));
- session.defaultSession.setDisplayMediaRequestHandler((req,callback)=>{if(active&&Date.now()-lastProof<10000&&req.frame===win.webContents.mainFrame&&screenSource)callback({video:screenSource});else callback({})});
+ session.defaultSession.setDisplayMediaRequestHandler(async(req,callback)=>{
+ const id=active;const allowed=()=>id&&active===id&&enabled&&Date.now()-lastProof<10000&&req.frame===win.webContents.mainFrame;
+ if(!allowed()){callback({});return}
+ try{const sources=await desktopCapturer.getSources({types:['screen'],thumbnailSize:{width:0,height:0}});const source=sources.find(s=>s.display_id===String(screen.getPrimaryDisplay().id));if(!allowed()||!source){callback({});return}screenSource=source;callback({video:source})}catch{callback({})}
+ });
  ipcMain.handle('state',event=>{trusted(event);return {device:device?{id:device.id,name:device.name,profile:device.profile}:null,origin:ORIGIN,enabled}});
  ipcMain.handle('login',async(event,body)=>{trusted(event);const identifier=String(body.identifier||'').trim(),password=String(body.password||'');if(!identifier||!password)throw Error('Enter your email or username and password.');
  const firebaseKey='AIzaSyDV9MRbv7IDXjowddQoXAN1hJPlCGMyxR8';let endpoint='signInWithPassword',payload={email:identifier,password,returnSecureToken:true};
