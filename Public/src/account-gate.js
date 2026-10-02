@@ -5,3 +5,5 @@ window.novaAccountReady=(async()=>{const {auth,db}=await import('./account-fireb
 addEventListener('DOMContentLoaded',()=>{const links=document.querySelector('.guide-links');if(!links)return;const button=document.createElement('button');button.textContent='Log out';button.onclick=()=>location.assign('account.html?logout=1');links.append(button)});
 
 addEventListener('nova-sync-status',event=>{window.novaSyncState=event.detail;const links=document.querySelector('.guide-links');if(!links)return;let status=document.getElementById('nova-account-sync-status');if(!status){status=document.createElement('small');status.id='nova-account-sync-status';status.style.cssText='display:block;padding:8px 14px;line-height:1.5;color:#b8bdcc';links.after(status);}status.textContent=event.detail.state==='offline'?'Saved on this computer · Cloud sync unavailable':event.detail.state==='limited'?'Some saves could not sync':event.detail.state==='saved'?'Account data synced':'Account data restored';status.title=event.detail.message||'';});
+
+if(window===top)import('./leaderboard-tracker.js').catch(()=>{});

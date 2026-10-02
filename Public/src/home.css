@@ -7,3 +7,5 @@ body.nova-content-active .tile,body.nova-content-active .feature,body.nova-conte
 /* Hidden Home decorations must not consume animation/compositing time behind a live frame. */
 body.nova-content-active main *,body.nova-content-active .open-space *,body.nova-content-active .profile *{animation-play-state:paused!important}
 body.nova-content-active #panel{backdrop-filter:none;-webkit-backdrop-filter:none}
+
+#panel[data-view="leaderboard"]{background:#10101545;backdrop-filter:blur(12px)}
