@@ -13,7 +13,12 @@ body{background:radial-gradient(ellipse at 80% 0%,#20243255,transparent 55%),#08
 #session .session-bar [hidden],#unlock{display:none!important}
 #session .session-bar button{padding:8px 12px;font-size:12px;white-space:nowrap}
 #session .desktop{width:100%;height:100%;flex:1;contain:layout paint}
-#session:fullscreen .session-bar{display:flex;opacity:0;pointer-events:none;transition:none}
-#session:fullscreen:focus-within:not(:has(.desktop.locked)) .session-bar,#session:fullscreen:hover:not(:has(.desktop.locked)) .session-bar{opacity:1;pointer-events:auto}
+#session:fullscreen .session-bar{display:none!important}
 #stream-stats{white-space:nowrap;font-size:12px;color:#ddd}
 @media(max-width:450px){#session .session-bar{gap:6px;padding:5px 7px}#session .session-bar button{padding:8px}#stream-stats{font-size:10px}}
+
+.fps-control{position:relative}#session .session-bar #stream-stats{border:0;background:transparent;padding:8px 4px;font-variant-numeric:tabular-nums}
+#stream-stats:hover{color:white;text-decoration:underline;text-underline-offset:4px}
+.fps-menu{position:absolute;bottom:calc(100% + 14px);left:0;width:225px;background:#18191ef5;border:1px solid #ffffff28;border-radius:12px;padding:12px;box-shadow:0 8px 25px #0006}
+.fps-menu p{margin:0 0 10px;color:#cdd0d8;font-size:12px}.fps-menu button{display:block;width:100%;text-align:left;margin:5px 0}
+.fps-menu button[aria-checked=true]{background:#ffffff20;border-color:#ffffff60}.fps-menu small{display:block!important;padding:8px 0 0!important;font-size:11px;color:#aeb2bd;line-height:1.5}
