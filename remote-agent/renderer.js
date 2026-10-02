@@ -1,7 +1,7 @@
 const api=window.novaRemote,$=id=>document.getElementById(id);let device,enabled=false,requested,active,pc,stream,offset=0,pollTimer,busy=false,rejected,remoteCandidates=[],localCandidates=[],offerSent=false;
 function message(text){$('notice').textContent=text}
 function stop(){const old=pc;pc=null;old?.close();stream?.getTracks().forEach(t=>t.stop());stream=null;active=null;clearTimeout(pollTimer);$('active').hidden=true;$('request').hidden=true;}
-api.onStop(stop);
+api.onStop(reason=>{stop();if(reason)message(reason)});
 async function refresh(){const state=await api.state();device=state.device;enabled=state.enabled;$('pairing').hidden=!!device;$('device').hidden=!device;if(device){$('device-name').textContent=device.name;$('device-id').textContent=device.id}$('enable').hidden=enabled;$('disable').hidden=!enabled;$('status').textContent=enabled?'Online · waiting for an approved session':'Remote access disabled';}
 $('start').onclick=async()=>{try{const result=await api.pairStart($('name').value);$('pair-code').textContent=result.code;message('Pairing code expires in ten minutes.')}catch(e){message(e.message)}};
 $('finish').onclick=async()=>{try{const result=await api.pairFinish();if(result){device=result;await refresh();message('Paired. Enable access when you want to connect.')}}catch(e){message(e.message)}};

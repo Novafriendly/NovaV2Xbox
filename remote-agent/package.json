@@ -21,6 +21,8 @@
     },
     "files": [
       "main.cjs",
+      "session-state.cjs",
+      "capture-permission.cjs",
       "preload.cjs",
       "agent.html",
       "agent.css",

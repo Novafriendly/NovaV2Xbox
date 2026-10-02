@@ -22,6 +22,7 @@ public static class NovaInput {
 }
 "@
 [NovaInput]::SetProcessDPIAware() | Out-Null
+[Console]::WriteLine('NOVA_INPUT_READY')
 try {
  while ($null -ne ($novaInputLine = [Console]::ReadLine())) {
   $novaPacket = $novaInputLine | ConvertFrom-Json

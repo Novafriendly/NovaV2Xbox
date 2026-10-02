@@ -1,0 +1,1 @@
+exports.allowCapturePermission=(permission,details={})=>permission==='display-capture'||permission==='media'&&(details.mediaType==='unknown'||Array.isArray(details.mediaTypes)&&details.mediaTypes.length===0);
