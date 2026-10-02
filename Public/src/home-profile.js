@@ -1,4 +1,4 @@
-import {rolesFor} from './chat-server.js';
+import {rolesFor,nameRoleFor} from './chat-server.js';
 import {watchMemberGroups} from './chat-group-list.js';
 import {initializeApp,getApps,getApp} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
 import {getDatabase,ref,onValue,query,orderByChild,equalTo} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
@@ -12,7 +12,7 @@ const app=getApps().length?getApp():initializeApp({
 function paint(value={}){
  const chat=chatProfiles[chatAuth.currentUser?.uid]||{},id=chatAuth.currentUser?.uid;
  const p={...chat,name:chat.name||value.displayName||value.username||'Guest',photo:chat.photo||value.profilePic||''};
- if(id){const list=rolesFor(id,{profiles:chatProfiles,roles:chatRoles,customRoles,memberRoles});p.nameRole=list.find(r=>r.id==='owner')||list.find(r=>customRoles[r.id])||list[0]}
+ if(id){const list=rolesFor(id,{profiles:chatProfiles,roles:chatRoles,customRoles,memberRoles});p.nameRole=nameRoleFor(id,{profiles:chatProfiles,roles:chatRoles,customRoles,memberRoles})}
  p.online=!!id;p.status=chat.status|| (id?'online':'offline');
  const signature=JSON.stringify(p);if(signature===profileSignature)return;profileSignature=signature;window.novaHomeProfile=p;
  dispatchEvent(new Event('nova-profile-changed'));
@@ -25,7 +25,7 @@ const chatAuth=getAuth(app);let chatStops=[],chatFriends={},chatProfiles={},chat
 const emit=()=>dispatchEvent(new Event('nova-guide-data'));
 function paintFriends(){
  paint(accountProfile);
- const friends=Object.keys(chatFriends).map(id=>{const p=chatProfiles[id]||{},online=!!chatPresence[id]?.online&&Date.now()-Number(chatPresence[id]?.updatedAt)<90000,list=rolesFor(id,{profiles:chatProfiles,roles:chatRoles,customRoles,memberRoles});return {...p,key:id,name:p.name||'Nova member',photo:p.photo||'',online,status:online?(p.status||'online'):'offline',activity:chatPresence[id]?.activity||'',nameRole:list.find(r=>r.id==='owner')||list.find(r=>customRoles[r.id])||list[0]}});
+ const friends=Object.keys(chatFriends).map(id=>{const p=chatProfiles[id]||{},online=!!chatPresence[id]?.online&&Date.now()-Number(chatPresence[id]?.updatedAt)<90000,list=rolesFor(id,{profiles:chatProfiles,roles:chatRoles,customRoles,memberRoles});return {...p,key:id,name:p.name||'Nova member',photo:p.photo||'',online,status:online?(p.status||'online'):'offline',activity:chatPresence[id]?.activity||'',nameRole:nameRoleFor(id,{profiles:chatProfiles,roles:chatRoles,customRoles,memberRoles})}});
  const signature=JSON.stringify(friends);if(signature!==friendsSignature){friendsSignature=signature;window.novaGuideFriends=friends;emit()}
 }
 connect();addEventListener('storage',connect);setInterval(connect,1500);

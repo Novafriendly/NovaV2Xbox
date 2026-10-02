@@ -104,3 +104,27 @@ test('the owner Players directory includes every account and its saved coins and
  assert.deepEqual(dashboard.users.find(u=>u.uid==='member'),{uid:'member',name:'Member',coins:95111,level:6});
  assert.deepEqual(dashboard.users.find(u=>u.uid==='owner'),{uid:'owner',name:'Owner',coins:0,level:1});
 });
+
+test('custom Nitro themes validate colors, persist across status reads, and expire safely',async()=>{
+ const s=setup();s.as('member');const gradient={colors:['#112233','#445566','#778899'],angle:210};
+ assert.equal((await s.call('chatTheme',{theme:'custom',gradient})).status,400);
+ s.set('novaControl/nitro/member',true);
+ for(const theme of ['lavender','mint','cosmic','slate'])assert.equal((await s.call('chatTheme',{theme})).status,200);
+ assert.equal((await s.call('chatTheme',{theme:'custom',gradient})).status,200);
+ assert.deepEqual((await s.call('themeStatus')).gradient,gradient);
+ assert.equal((await s.call('profileTheme',{theme:'custom',gradient})).status,200);
+ assert.deepEqual(s.get('novaChatV2/profiles/member/profileGradient'),gradient);
+ assert.equal((await s.call('chatTheme',{theme:'custom',gradient:{...gradient,colors:['red','blue','url(x)']}})).status,400);
+ assert.equal((await s.call('profileTheme',{theme:'custom',gradient:{...gradient,angle:999}})).status,400);
+ s.set('novaControl/nitro/member',false);assert.equal((await s.call('themeStatus')).theme,'black');
+});
+test('equipping a name color accepts only owned roles and leaves authority unchanged',async()=>{
+ const s=setup();s.as('member');s.set('novaChatV2/customRoles/rose',{name:'Rose',from:'#ffaaaa',to:'#ffffff'});
+ assert.equal((await s.call('nameColorRole',{role:'owner'})).status,400);
+ assert.equal((await s.call('nameColorRole',{role:'rose'})).status,400);
+ s.set('novaChatV2/memberRoles/member/rose',true);
+ assert.equal((await s.call('nameColorRole',{role:'rose'})).status,200);
+ assert.equal(s.get('novaChatV2/profiles/member/nameColorRole'),'rose');assert.equal(s.get('novaChatV2/roles/member'),'member');assert.equal(s.get('novaChatV2/memberRoles/member/rose'),true);assert.equal(s.get('novaChatV2/staffAccess/member'),null);
+ assert.equal((await s.call('nameColorRole',{role:'nitro'})).status,400);
+ assert.equal((await s.call('nameColorRole',{role:''})).status,200);assert.equal(s.get('novaChatV2/profiles/member/nameColorRole'),null);
+});
