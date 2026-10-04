@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {healthyPlayback} from '../Public/src/media-recovery.js';
+const before={source:'video',time:10,frames:100},after={source:'video',time:12,frames:150,paused:false,ended:false,error:null,ready:4,width:1920,height:1080};
+test('stale overlays are cleared only when decoded video and time advance',()=>{assert.equal(healthyPlayback(before,after),true);for(const change of [{frames:100},{frames:undefined},{time:10},{width:0},{paused:true},{error:{}},{ready:2},{source:'another'}])assert.equal(healthyPlayback(before,{...after,...change}),false);assert.equal(healthyPlayback(undefined,after),false)});

@@ -1,4 +1,7 @@
-import {cp} from 'node:fs/promises';
+import {cp,readFile,writeFile} from 'node:fs/promises';
 import './patch-wisp.mjs';
 for(const [pkg,dest] of [['scramjet','scram'],['scramjet-controller','controller'],['scramjet-utils','scram'],['libcurl-transport','clients']])await cp(new URL('../node_modules/@mercuryworkshop/'+pkg+'/dist/',import.meta.url),new URL('../Public/~/sj/'+dest+'/',import.meta.url),{recursive:true});
+const audioHook=await readFile(new URL('../Public/src/game-audio-inject.js',import.meta.url),'utf8');
+const injectFile=new URL('../Public/~/sj/controller/controller.inject.js',import.meta.url);
+await writeFile(injectFile,audioHook+'\n'+await readFile(injectFile,'utf8'));
 console.log('Built Neon Arcade pinned connection bundles.');

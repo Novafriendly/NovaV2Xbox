@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  const idleArt='data:image/svg+xml,'+encodeURIComponent("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 88 88\"><circle cx=\"44\" cy=\"44\" r=\"40\" fill=\"#1ed760\"/><g fill=\"none\" stroke=\"#07170c\" stroke-linecap=\"round\"><path d=\"M23 33Q45 25 67 37\" stroke-width=\"7\"/><path d=\"M26 45Q45 38 63 49\" stroke-width=\"6\"/><path d=\"M29 57Q45 51 59 60\" stroke-width=\"5\"/></g></svg>");
   const url = 'https://6ab87f0e6a91203ed89fa447--neoostesting.netlify.app/neo-os/music-v2/index.html?v=20260919-scholarnook-v1&theme=system-v1&widgets=live-v1&runtime=20260908-audio-performance-v1';
   const panel = document.getElementById('panel');
   const host = document.createElement('div'); host.id = 'nova-music'; host.hidden = true;
@@ -14,7 +15,7 @@
   const icon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="'+paths[name]+'"/></svg>';
   const card = document.createElement('section'); card.className = 'xg-music'; card.hidden = true; card.setAttribute('aria-label','Nova Music player');
   const info = document.createElement('button'); info.className = 'music-track'; info.title = 'Open Nova Music';
-  const cover = document.createElement('img'); cover.src = 'Nova12.png'; cover.alt = '';
+  const cover = document.createElement('img'); cover.referrerPolicy='no-referrer'; cover.src = 'Nova12.png'; cover.alt = '';
   const meta = document.createElement('span'), title = document.createElement('b'), artist = document.createElement('small');
   title.textContent = 'Nova Music'; artist.textContent = 'Choose a song'; meta.append(title,artist); info.append(cover,meta);
   info.onclick = async () => {await document.querySelector('.guide').close(); openPage('music');};
@@ -36,42 +37,45 @@
   seek.onchange=()=>{command('seek',Number(seek.value));dragging=false};
   seek.onblur=()=>{dragging=false};progress.append(elapsed,seek,duration);
   card.append(info,progress,controls); const bottom = document.querySelector('.xg-bottom'); bottom.before(card);
+  let playerDocument=null,lastArtworkTrack='',artCandidates=[];const failedArt=new Set();const artModule=import('./music-art.mjs');let collectArt=()=>[],loadedArt=()=>null,copyArt=()=>null,renderedArtKey='',renderedArt=null;const coverCanvas=document.createElement('canvas');artModule.then(m=>{collectArt=m.musicArtworkCandidates;loadedArt=m.loadedMusicArtwork;copyArt=m.copyMusicArtwork;update()}).catch(()=>{});
   function player() {
-    function find(win,depth=0){try{if(win.__NEO_METING_PLAYER__)return win.__NEO_METING_PLAYER__;if(depth<4)for(const f of win.document.querySelectorAll('iframe')){const p=find(f.contentWindow,depth+1);if(p)return p;}}catch{}return null;}
+    function find(win,depth=0){try{if(win.__NEO_METING_PLAYER__){playerDocument=win.document;return win.__NEO_METING_PLAYER__;}if(depth<4)for(const f of win.document.querySelectorAll('iframe')){const p=find(f.contentWindow,depth+1);if(p)return p;}}catch{}return null;}
     return view?find(view.element.contentWindow):null;
   }
   function artwork(src){
     if(!src||!view||!controller)return;
-    try{const target=new URL(src,url);if(!['https:','http:','blob:','data:'].includes(target.protocol))return;
+    try{const target=new URL(src,src.startsWith("/~/")?location.href:url);if(!['https:','http:','blob:','data:'].includes(target.protocol))return;
       const proxied=target.origin===location.origin||['blob:','data:'].includes(target.protocol)?target.href:view.prefix+controller.config.codec.encode(target.href);
-      if(cover.getAttribute('src')!==proxied)cover.src=proxied;
+      if(failedArt.has(proxied))return false;if(cover.getAttribute('src')!==proxied)cover.src=proxied;return true;
     }catch{}
   }
+  let pendingVolume=null,lastOSVolume=null;
   async function command(action,value) {
-    try {const p=player(); if(!p)throw Error('Open Nova Music to connect.'); await p[action](value); update();}
+    if(action==='setVolume'){value=Math.max(0,Math.min(1,Number(value)));if(!Number.isFinite(value))return;pendingVolume=value;}
+    try {const p=player(); if(!p)throw Error('Open Nova Music to connect.'); if(action==='setVolume')pendingVolume=null; const {controlMusic}=await import('./music-controls.mjs');await controlMusic(p,playerDocument,action,value);update();}
     catch {artist.textContent='Open Music to resume playback';}
   }
   const watchedMedia = new WeakSet();
   let hasPlayedMusic = false;
   function update() {
-    const p=player(); if(!p){card.hidden=!hasPlayedMusic;return;}
+    const p=player(); if(!p){card.classList.remove('playing','player-active');card.hidden=!window.NovaOS&&!hasPlayedMusic;if(window.NovaOS){title.textContent='Nova Music';artist.textContent='Choose a song';cover.src=idleArt}return;}
     const track=p.track(), media=p.media();
+    if(media&&pendingVolume!==null){const value=pendingVolume;pendingVolume=null;command('setVolume',value);return;}
     if(media?.addEventListener&&!watchedMedia.has(media)){
       watchedMedia.add(media);
-      for(const event of ['playing','play','pause','ended','emptied'])media.addEventListener(event,()=>{
+      for(const event of ['playing','play','pause','ended','emptied','volumechange'])media.addEventListener(event,()=>{
         if(event==='play'||event==='playing')hasPlayedMusic=true;
         update();
       });
     }
     title.textContent=track?.name || track?.title || 'Nova Music';
     artist.textContent=track?.artist || track?.author || (track ? 'Now playing' : 'Choose a song');
-    try {
-      const image=view.element.contentDocument.getElementById('npThumb');
-      const raw=track?.thumb||track?.pic||track?.cover||track?.artwork||track?.image;
-      const trackImage=typeof raw==='string'?raw:raw?.src||raw?.url;
-      const youtubeId=String(track?.id||'');
-      artwork(trackImage||image?.getAttribute('src')||(/^[A-Za-z0-9_-]{11}$/.test(youtubeId)?'https://i.ytimg.com/vi/'+youtubeId+'/hqdefault.jpg':''));
-    } catch {}
+    const artKey=String(track?.id||'')+'|'+(track?.name||track?.title||'');
+    if(artKey!==lastArtworkTrack){lastArtworkTrack=artKey;failedArt.clear();renderedArtKey='';renderedArt=null;cover.src=idleArt;}
+    try{const doc=playerDocument||view.element.contentDocument,image=loadedArt(doc);
+      if(image){const key=artKey+'|'+(image.currentSrc||image.getAttribute('src'))+'|'+image.naturalWidth;if(key!==renderedArtKey){renderedArtKey=key;renderedArt=copyArt(image,coverCanvas)}}
+      artCandidates=collectArt(track,doc);if(renderedArt){if(cover.getAttribute('src')!==renderedArt)cover.src=renderedArt;}else if(!artCandidates.some(artwork))cover.src=idleArt;
+    }catch{if(!renderedArt)cover.src=idleArt;}
     const length=Number(media?.duration),position=Number(media?.currentTime)||0;
     seek.disabled=!Number.isFinite(length)||length<=0;seek.max=seek.disabled?0:length;
     if(!dragging){seek.value=position;elapsed.textContent=stamp(position)}
@@ -80,23 +84,24 @@
     const playing=media&&!media.paused&&!media.ended;
     buttons.toggle.innerHTML=icon(playing?'pause':'play'); buttons.toggle.setAttribute('aria-label',playing?'Pause music':'Play music');
     if(playing)hasPlayedMusic=true;
-    card.hidden=!hasPlayedMusic;
-    card.classList.toggle('playing',!!playing);
+    card.hidden=!window.NovaOS&&!hasPlayedMusic;
+    card.classList.toggle('playing',!!playing);card.classList.toggle('player-active',!!track&&hasPlayedMusic);
     if(media && document.activeElement!==volume)volume.value=Math.round(media.volume*100);
+    if(window.NovaOS&&media&&Number.isFinite(media.volume)&&lastOSVolume!==media.volume){lastOSVolume=media.volume;window.dispatchEvent(new CustomEvent('nova-music-volume',{detail:{volume:media.volume}}));}
   }
-  cover.onerror=()=>{if(!cover.src.endsWith('/Nova12.png'))cover.src='Nova12.png';};
+  cover.onerror=()=>{failedArt.add(cover.getAttribute('src'));if(!artCandidates.some(artwork))cover.src=idleArt;};
   const glass = `html,body,.main-panel,.content-area{background:transparent!important;background-image:none!important} .sidebar,.top-bar,.spotify-player,.np-inline,.now-playing-bar{background:rgba(10,13,12,.62)!important;backdrop-filter:blur(22px);border-color:rgba(255,255,255,.1)!important} .library-panel,.music-primary-nav,.music-brand{background:rgba(20,24,22,.38)!important} .card,.music-card{background:rgba(255,255,255,.065)!important;transition:transform .2s,background .2s} .card:hover,.music-card:hover{background:rgba(255,255,255,.13)!important;transform:translateY(-3px)} .music-brand-mark{color:#76d14b!important}`;
   function customize() {
     try {
       const doc=view.element.contentDocument; if(!doc?.body)return;
       if(!doc.getElementById('nova-music-glass')) {
-        const style=doc.createElement('style'); style.id='nova-music-glass'; style.textContent=glass; doc.head.append(style);
+        const style=doc.createElement('style'); style.id='nova-music-glass'; style.textContent=glass+(window.NovaOS?' .sidebar,.top-bar,.spotify-player,.np-inline,.now-playing-bar,.library-panel,.music-primary-nav,.music-brand{background:#18213322!important;border-color:#ffffff26!important;backdrop-filter:none!important}.music-brand-mark{color:#e4edff!important}':''); doc.head.append(style);
         doc.title='Nova Music';
         doc.documentElement.style.setProperty('color-scheme','normal','important');
         doc.documentElement.style.setProperty('background','transparent','important');
         doc.body.style.setProperty('background','transparent','important');
         doc.querySelectorAll('.main-panel,.content-area,.np-view').forEach(el=>el.style.setProperty('background','transparent','important'));
-        doc.querySelectorAll('.sidebar,.top-bar,.spotify-player,.np-inline').forEach(el=>el.style.setProperty('background','rgba(10,13,12,.58)','important'));
+        doc.querySelectorAll('.sidebar,.top-bar,.spotify-player,.np-inline').forEach(el=>el.style.setProperty('background',window.NovaOS?'rgba(24,33,51,.13)':'rgba(10,13,12,.58)','important'));
         const walker=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT); let node;
         while((node=walker.nextNode()))if(!['SCRIPT','STYLE'].includes(node.parentElement?.tagName)&&/NEO Music|NEO MUSIC/.test(node.textContent))node.textContent=node.textContent.replace(/NEO Music|NEO MUSIC/g,'Nova Music');
       }
@@ -116,6 +121,6 @@
     })();return starting;
   }
   retry.onclick=()=>{clearTimeout(timer);view?.element.remove();view=null;starting=null;ready=false;start();};
-  window.NovaMusic={reload(){view?.element.contentWindow.location.reload();},open(){panel.classList.remove('full-library');panel.dataset.view='music';panel.hidden=false;document.getElementById('system').hidden=true;document.getElementById('panel-content').hidden=true;document.getElementById('panel-title').textContent='Nova Music';document.querySelectorAll('nav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page==='music'));host.hidden=false;start();},hide(){host.hidden=true;}};
+  window.NovaMusic={command,idleArt,reload(){view?.element.contentWindow.location.reload();},open(){panel.classList.remove('full-library');panel.dataset.view='music';panel.hidden=false;document.getElementById('system').hidden=true;document.getElementById('panel-content').hidden=true;document.getElementById('panel-title').textContent='Nova Music';document.querySelectorAll('nav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page==='music'));host.hidden=false;start();},hide(){if(host.closest('[data-window="app-music"]')&&!host.closest('.os-window').hidden)return;host.hidden=true;}};
   setInterval(()=>{if(view){customize();if(ready)update();}},750);
 })();

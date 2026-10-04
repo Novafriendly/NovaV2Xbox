@@ -2,6 +2,7 @@ const host = document.getElementById('cloud-background');
 const video = host.querySelector('video'), image = host.querySelector('img');
 image.onerror = () => image.hidden = true; video.addEventListener('error', () => video.hidden = true);
 export function syncBackground() {
+  if(document.documentElement.classList.contains('nova-os-embedded')){video.pause();host.hidden=true;return;}
   const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches || localStorage.getItem('nova_reduce_motion') === 'true';
   const quiet = localStorage.getItem('nova_performance_mode') === 'true';
   document.documentElement.classList.toggle('reduce-motion', reduced || quiet);

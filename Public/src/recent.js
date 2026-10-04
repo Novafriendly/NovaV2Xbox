@@ -7,7 +7,7 @@
   const identity=g=>kind(g)+':'+g.id;
   function list(){try{const rows=JSON.parse(localStorage.getItem(key())||'[]');return Array.isArray(rows)?rows.filter(g=>g&&g.id!=null&&typeof g.name==='string').slice(0,12):[]}catch{return []}}
   function record(g){const item={id:g.id,name:g.name,art:g.art,kind:kind(g),playedAt:Date.now()};const rows=[item,...list().filter(x=>identity(x)!==identity(item))].slice(0,12);localStorage.setItem(key(),JSON.stringify(rows));render();window.novaGuideRender?.('home');}
-  function freshFrame(){const el=document.createElement('iframe');el.id='system';el.title='Nova';el.allow='microphone; autoplay; fullscreen; display-capture';el.hidden=true;document.getElementById('panel-content').before(el);return el;}
+  function freshFrame(){const el=document.createElement('iframe');el.id='system';el.title='Nova';el.allow='microphone; camera; autoplay; fullscreen; display-capture';el.hidden=true;document.getElementById('panel-content').before(el);return el;}
   function park(){if(frame.dataset.session!=='true')return;frame.hidden=true;frame.removeAttribute('id');frame=freshFrame();}
   function launch(g){
     if(panel.dataset.view==='computer')frame.contentWindow?.postMessage({novaAction:'remoteDisconnect'},location.origin);
@@ -22,6 +22,14 @@
     stopOtherSessions(id);
     if(!el.dataset.counted){el.dataset.counted="true";dispatchEvent(new CustomEvent("nova-title-launched",{detail:{id:g.id,kind:kind(g)}}));}
     record(g);
+  }
+  function resume(g){
+    const el=sessions.get(account()+':'+identity(g));
+    if(!el?.isConnected)return false;
+    cancelAIMotion();if(frame!==el){frame.hidden=true;frame.removeAttribute('id')}
+    frame=el;frame.id='system';frame.title=g.name;frame.hidden=false;
+    panel.classList.remove('full-library');panel.dataset.view=kind(g);panel.hidden=false;content.hidden=true;
+    document.getElementById('panel-title').textContent=g.name;record(g);return true;
   }
   function stopOtherSessions(keepId){
     for(const [id,el] of sessions){
@@ -40,17 +48,19 @@
       const img=document.createElement('img');img.src=g.art||'Nova12.png';img.alt='';img.onerror=()=>{img.onerror=null;img.src='Nova12.png';};
       const caption=document.createElement('span');const name=document.createElement('b');name.textContent=g.name;caption.append(name);
       if(recent.length&&i===0){const label=document.createElement('small');label.textContent='▶ Resume '+(kind(g)==='app'?'app':'game');caption.prepend(label);}
-      b.append(img,caption);b.onclick=()=>launch(g);const select=()=>{host.querySelectorAll('.tile').forEach(x=>x.classList.toggle('selected',x===b));};b.onmouseenter=select;b.onfocus=select;host.append(b);
+      b.append(img,caption);b.onclick=()=>window.NovaRecent.launch(g);const select=()=>{host.querySelectorAll('.tile').forEach(x=>x.classList.toggle('selected',x===b));};b.onmouseenter=select;b.onfocus=select;host.append(b);
     });
   }
   function openSystem(page){
-    if(!['search','ai','computer','novatube','cloudgaming'].includes(page)){park();return;}
+    if(!['chat','search','ai','computer','novatube','cloudgaming','settings','leaderboard','admin'].includes(page)){park();return;}
     const key=account()+':'+page;
     if(frame.dataset.session==='true'){frame.hidden=true;frame.removeAttribute('id');}else frame.remove();
     if(!pages.has(key)){const el=freshFrame();el.dataset.session='true';pages.set(key,el);}
     frame=pages.get(key);frame.id='system';frame.hidden=false;
   }
-  window.NovaRecent={list,record,park,launch,openSystem};
+  function invalidate(g){const id=account()+':'+identity(g),el=sessions.get(id);if(el){el.src='about:blank';el.remove();sessions.delete(id)}if(!frame.isConnected)frame=freshFrame();}
+  function stopCurrent(target=frame){for(const [id,el]of sessions)if(el===target){el.src='about:blank';el.remove();sessions.delete(id)}if(!frame.isConnected)frame=freshFrame();}
+  window.NovaRecent={list,record,park,launch,resume,invalidate,openSystem,stopCurrent};
   fetch('home-covers.json').then(r=>r.json()).then(rows=>{defaults=rows;render();}).catch(render);
   addEventListener('storage',render);addEventListener('nova-profile-changed',render);render();window.novaGuideRender?.('home');
 })();

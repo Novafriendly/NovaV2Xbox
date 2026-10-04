@@ -12,7 +12,7 @@ export function createVoiceRequest(identity, fetcher=fetch, now=Date.now){
   if(response.ok)return data;
   const error=Object.assign(new Error(data.error||(response.status===429?'Voice is busy. Please wait before trying again.':response.status===403?'Voice access was denied. Reconnect your voice ID or check your account restrictions.':'Voice connection failed.')),{status:response.status});
   if(response.status===429){const header=response.headers.get('Retry-After'),seconds=Number(header);error.retryAfterMs=Math.min(120000,Math.max(1000,header&&Number.isFinite(seconds)?seconds*1000:30000));blocked.set(body.action==='call'?'action:call':'all',{until:now()+error.retryAfterMs,error});}
-  if(response.status===401||response.status===403||response.status===410)blocked.set(key,{until:now()+60000,error});
+  if(response.status===401||response.status===410)blocked.set(key,{until:now()+60000,error});
   throw error;
  };
 }

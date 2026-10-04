@@ -128,3 +128,5 @@ test('equipping a name color accepts only owned roles and leaves authority uncha
  assert.equal((await s.call('nameColorRole',{role:'nitro'})).status,400);
  assert.equal((await s.call('nameColorRole',{role:''})).status,200);assert.equal(s.get('novaChatV2/profiles/member/nameColorRole'),null);
 });
+
+test('administrative rewards notify only the affected account through its private inbox',async()=>{const s=setup();s.as('member');assert.equal((await s.call('user',{uid:'owner',kind:'reward',coins:100})).status,403);assert.equal(s.get('novaChatV2/botMessages/owner'),null);s.as('owner');assert.equal((await s.call('user',{uid:'member',kind:'reward',coins:50})).status,200);const notes=Object.values(s.get('novaChatV2/botMessages/member'));assert.equal(notes.length,1);assert.equal(notes[0].kind,'account-update');assert.equal(notes[0].author,'nova-bot');assert.equal(notes[0].staffRole,'owner');assert.equal(s.get('novaChatV2/botMessages/owner'),null);assert.equal(s.get('novaControl/progress/member/coins'),50)});

@@ -10,3 +10,31 @@
 
 /* Cameras stay opt-in, and video never duplicates the separate audio playback. */
 .voice-videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:12px;margin:16px 0}.voice-videos:empty{display:none}.voice-video{margin:0;position:relative;overflow:hidden;border-radius:20px;border:1px solid #ffffff30;background:#1118;aspect-ratio:16/9}.voice-video[hidden]{display:none}.voice-video video{width:100%;height:100%;object-fit:cover}.voice-video figcaption{position:absolute;bottom:8px;left:8px;max-width:85%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:5px 10px;border-radius:10px;background:#151515b0;color:white;backdrop-filter:blur(14px);font-size:12px}.voice-controls{flex-wrap:wrap}.nova-call-dialog{scrollbar-width:thin;scrollbar-color:#ffffff45 transparent}
+
+/* Compact channel presence, and a shared stage for camera + screen streams. */
+#side-nav .nova-voice-tab{width:100%;margin:3px 0;padding:9px 10px;border:0;border-radius:7px;background:transparent;font-size:13px;font-weight:500}
+#side-nav .nova-voice-tab:hover,#side-nav .nova-voice-tab.active{background:#ffffff0c}
+.voice-sidebar-members>div{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 24px;font-size:12px;color:#c8c8d0;min-width:0}
+.voice-sidebar-members>div>span:nth-child(2){overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1}
+.voice-sidebar-members small{font-size:9px;color:#ff8794;white-space:nowrap}
+.voice-sidebar-avatar{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:#ffffff16;overflow:hidden;flex-shrink:0}
+.voice-sidebar-avatar img{width:100%;height:100%;object-fit:cover}
+.chat-shell main.nova-voice-view{position:relative;display:flex;flex-direction:column}
+.chat-shell main.nova-voice-view>.nova-voice{flex:1;height:100%;background:linear-gradient(145deg,#13141ba8,#08090dc9)}
+.voice-heading h1{font-size:30px}.voice-room-summary{margin:20px 0;padding:18px;border-radius:16px}
+.voice-videos:has(.voice-screen:not([hidden])){grid-template-columns:repeat(2,minmax(0,1fr))}
+.voice-video.voice-screen{grid-column:1/-1;aspect-ratio:16/9;background:#050507}
+.voice-video.voice-screen video{object-fit:contain}
+.voice-video:not(.voice-screen){max-height:300px}
+.voice-videos:has(.voice-screen:not([hidden])) .voice-video:not(.voice-screen){max-height:180px}
+.voice-videos:not(:empty)+.voice-controls{position:sticky;bottom:0;background:#191a22e8;backdrop-filter:blur(12px);z-index:2}
+.nova-call-dialog{width:min(1100px,calc(100vw - 32px));border-radius:20px}
+.voice-private .voice-members{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.voice-private .voice-heading h1{font-size:28px}.voice-member{padding:18px 12px}.voice-member details{display:none}
+.nova-voice-view .voice-members:has(+.voice-videos:not(:empty)){display:flex;flex-wrap:wrap;gap:8px}
+.nova-voice-view .voice-members:has(+.voice-videos:not(:empty)) .voice-member{flex:1;min-width:130px;max-width:200px}
+@media(max-width:700px){.nova-voice{padding:16px}.voice-controls{gap:5px}.voice-controls button{padding:9px}.voice-videos{grid-template-columns:1fr}}
+
+.voice-sidebar-members .is-speaking .voice-sidebar-avatar{box-shadow:0 0 0 2px #82dca5}
+.voice-screen{order:-1}.voice-video-fullscreen{position:absolute;right:8px;bottom:8px;border:1px solid #ffffff25;border-radius:8px;padding:5px 10px;background:#151515b0;color:white;font-size:19px}
+.voice-video:fullscreen{width:100%;height:100%;aspect-ratio:auto;border-radius:0;background:#000}.voice-video:fullscreen video{object-fit:contain}

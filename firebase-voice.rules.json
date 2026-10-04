@@ -126,6 +126,11 @@
       ".read": "now < 1791345600000",
       ".write": "now < 1791345600000"
     },
+    "novaAuthHandoffs": {
+      ".read": false,
+      ".write": false,
+      ".indexOn": "expiresAt"
+    },
     "novaSecureAccounts": {
       ".read": false,
       ".write": false
@@ -278,6 +283,15 @@
           },
           "$other": {
             ".validate": false
+          },
+          "activityId": {
+            ".validate": "newData.isString() && newData.val().length <= 128"
+          },
+          "activityKind": {
+            ".validate": "newData.val() === 'game' || newData.val() === 'app' || newData.val() === 'cloud'"
+          },
+          "activityStartedAt": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= now + 60000"
           }
         }
       },
