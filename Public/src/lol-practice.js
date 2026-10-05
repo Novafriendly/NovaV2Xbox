@@ -144,6 +144,7 @@
    #nova-lol-practice footer{margin:0;padding:10px 16px;background:#0a0a0d;border-top:1px solid #ffffff0b}
    #nova-lol-practice .lol-metrics{display:flex;justify-content:space-between;padding:9px 0;color:#b4aab4;font-size:11px}
    #nova-lol-practice[data-compact=true]{width:370px}#nova-lol-practice[data-compact=true] .lol-layout{grid-template-columns:78px minmax(0,1fr)}
+   @media(max-height:800px),(min-width:441px) and (max-width:1440px){#nova-lol-practice{width:400px;top:10px;right:10px;font-size:11px;max-height:calc(100dvh - 20px)}#nova-lol-practice header{padding:10px 12px}#nova-lol-practice .lol-layout{grid-template-columns:84px minmax(0,1fr);min-height:0}#nova-lol-practice .lol-content{padding:9px}#nova-lol-practice .lol-session{padding:8px 12px}#nova-lol-practice nav{padding:9px 6px}#nova-lol-practice label{margin:5px 0}#nova-lol-practice footer{padding:7px 12px}}
    @media(max-width:440px){#nova-lol-practice{width:calc(100vw - 24px);min-width:0}#nova-lol-practice .lol-layout{grid-template-columns:75px minmax(0,1fr)}#nova-lol-practice .lol-content{padding:8px}#nova-lol-practice input[type=range]{width:90px}}
    #nova-lol-practice{border-color:var(--accent,#ef3340)}#nova-lol-practice header{background:linear-gradient(110deg,var(--accent-tint,#251015),var(--menu-bg,#0b0b0e))}
    #nova-lol-practice .lol-session,#nova-lol-practice nav,#nova-lol-practice footer,#nova-lol-practice [role=tabpanel]{background:var(--surface,#101014)}

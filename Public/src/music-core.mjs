@@ -1,6 +1,7 @@
 export const MAX_PARTY_MEMBERS=5,MAX_SONGS=200;
 export const validId=id=>typeof id==='string'&&/^[A-Za-z0-9_-]{1,100}$/.test(id);
-export function song(value){if(!validId(String(value?.id||'')))throw Error('Invalid song.');const text=(v,n)=>String(v||'').slice(0,n);const art=text(value.thumb||value.art,2000);return {id:String(value.id),src:text(value.src||'ytm',20),title:text(value.title||value.name,200)||'Unknown song',artist:text(value.artist,200),album:text(value.album,200),thumb:/^https:\/\//.test(art)?art:'',duration:Math.max(0,Math.min(86400,Number(value.duration)||0))}}
+export const validSongId=id=>typeof id==='string'&&/^(?:[A-Za-z0-9_-]{1,30}:)?[A-Za-z0-9_-]{1,100}$/.test(id);
+export function song(value){const id=String(value?.id??'').trim();if(!validSongId(id))throw Error('Invalid song.');const text=(v,n)=>String(v||'').slice(0,n);const art=text(value.thumb||value.art||value.thumbnail,2000);return {id,src:text(value.src||value.source||'ytm',20),title:text(value.title||value.name,200)||'Unknown song',artist:text(value.artist,200),album:text(value.album,200),thumb:/^https:\/\//.test(art)?art:'',duration:Math.max(0,Math.min(86400,Number(value.duration)||0))}}
 export const key=t=>t.src+':'+t.id;
 export function playbackPosition(p,now){return Math.max(0,Number(p?.position)||0)+(p?.playing?Math.max(0,now-p.updatedAt)/1000:0)}
 export function pruneParty(p,now){if(!p||p.expiresAt<=now||!p.members?.[p.owner]||now-p.members[p.owner].seenAt>90000)return null;for(const [uid,m]of Object.entries(p.members))if(uid!==p.owner&&now-m.seenAt>90000)delete p.members[uid];return p}

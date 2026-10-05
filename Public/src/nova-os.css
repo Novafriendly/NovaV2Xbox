@@ -111,3 +111,20 @@ body.nova-os .library-sticky #collection-search,body.nova-os .library-sticky .li
 body.nova-os .os-detached-player .os-player-tools{display:flex}body.nova-os .os-detached-player .os-player-identity{display:flex}body.nova-os .os-detached-player .os-window-tools{margin-left:auto}body.nova-os .os-detached-player .os-page-refresh{display:none}
 
 body.nova-os .os-window[data-window="app-search"] iframe{background:transparent!important;color-scheme:normal}body.nova-os .os-window[data-window="app-search"] .os-window-body{background:transparent!important}
+
+/* Give laptop taskbars the desktop rhythm, with scrolling instead of squeezed icons. */
+@media(min-width:761px) and (max-width:1500px){
+ body.nova-os .os-dock{grid-template-columns:minmax(225px,1fr) minmax(0,max-content) minmax(175px,1fr);height:76px;gap:14px;padding:0 16px}
+ body.nova-os .os-dock nav{min-width:0;max-width:100%;gap:8px;overflow-x:auto;scrollbar-width:none;justify-content:flex-start;padding:4px 2px}
+ body.nova-os .os-dock nav::-webkit-scrollbar{display:none}
+ body.nova-os .os-dock nav button{width:42px;height:48px;flex:0 0 42px;padding:9px}
+ body.nova-os .os-dock svg{width:24px;height:24px}
+ body.nova-os .os-dock-left,body.nova-os .os-shortcuts{gap:6px}
+ body.nova-os .os-shortcuts>button{width:36px;height:46px;flex-shrink:0}
+ body.nova-os .os-dock-right{gap:10px}
+ body.nova-os .os-profile-menu{bottom:86px}
+}
+
+/* Maximized immersive apps use the entire screen; restoring them brings the dock back. */
+body.nova-os:has(.os-window:is([data-window=app-chat],[data-window=app-music],[data-window=app-novatube],[data-window=app-search],[data-window=app-ai],[data-window=app-computer]).os-maximized.os-focused:not([hidden])) .os-dock{visibility:hidden;pointer-events:none}
+
