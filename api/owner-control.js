@@ -44,6 +44,26 @@ if(action==='leaveGroup'){if(!valid(b.id))throw Error('Choose a valid group.');c
 if(action==='staffReply'||action==='reply'||action==='deleteFeedback'){if(!['owner','admin','moderator'].includes(role.val()))return reply(403,{error:'Staff only.'});if(!valid(b.uid)||!valid(b.id))throw Error('Invalid submission.');const ticket=(await db.ref('novaChatV2/feedback/'+b.uid+'/'+b.id).get()).val();if(!ticket)throw Error('Submission not found.');if(action==='deleteFeedback'){await db.ref('novaChatV2/feedback/'+b.uid+'/'+b.id).remove();await db.ref('novaChatV2/feedbackReplies/'+b.uid+'/'+b.id).remove()}else{const message=text(b.text);if(!message)throw Error('Enter a reply.');const id=randomUUID();await db.ref('novaChatV2/feedbackReplies/'+b.uid+'/'+b.id+'/'+id).set({author:who.uid,text:message,createdAt:now});await db.ref('novaChatV2/botMessages/'+b.uid+'/'+id).set({author:'nova-bot',text:message,subject:ticket.subject,kind:ticket.kind,staffName:account.name,staffRole:role.val(),createdAt:now})}await db.ref('novaControl/audit').push({actor:who.uid,action,target:b.uid,at:now});return reply(200,{ok:true})}
 if(!owner)return reply(403,{error:'Only owners can use this panel.'});
 const audit=(details)=>db.ref('novaControl/audit').push({actor:who.uid,action,at:now,...details});
+if(['userInventory','setPlayerProgress','removeUserItem'].includes(action)){
+ if(!valid(b.uid)||!(await db.ref('novaAccounts/'+b.uid).get()).exists())throw Error('Choose a valid account.');
+ if(action==='setPlayerProgress'){
+  const coins=integer(b.coins,0,1000000000),chosenLevel=integer(b.level,1,2000);
+  const result=await db.ref('novaControl/progress/'+b.uid).transaction(p=>({...initial(),...p,coins,xp:total(chosenLevel)}));
+  await audit({target:b.uid,coins,level:chosenLevel});await notifyAccountChange(b.uid,'Your progress was updated',(account.name||'Nova Owner')+' set your balance to '+coins.toLocaleString()+' Nova Coins and level '+chosenLevel+'.');
+  return reply(200,{ok:true,...playerProgress(result.snapshot.val())});
+ }
+ const items=await catalog(),inventoryRef=db.ref('novaControl/inventory/'+b.uid);
+ if(action==='removeUserItem'){
+  if(b.all!==true&&!valid(b.id))throw Error('Choose a valid item.');
+  let removed=[];const result=await inventoryRef.transaction(inventory=>{inventory=inventory||{};removed=b.all===true?Object.keys(inventory):Object.hasOwn(inventory,b.id)?[b.id]:[];if(!removed.length)return;for(const id of removed)delete inventory[id];return inventory});
+  if(!result.committed)throw Error('No matching items remain in this inventory.');
+  await db.ref('novaChatV2/profiles/'+b.uid).transaction(p=>{if(!p)return;for(const field of ['decoration','effect','chatBanner','banner'])if(removed.includes(p[field]))delete p[field];return p});
+  await audit({target:b.uid,removed,all:b.all===true});await notifyAccountChange(b.uid,'Your inventory was updated',(account.name||'Nova Owner')+' removed '+removed.length+' profile item'+(removed.length===1?'':'s')+' from your inventory.');
+ }
+ const [inventory,profile,progress]=await Promise.all([inventoryRef.get(),db.ref('novaChatV2/profiles/'+b.uid).get(),db.ref('novaControl/progress/'+b.uid).get()]);
+ const equipped=profile.val()||{};
+ return reply(200,{...playerProgress(progress.val()),items:Object.entries(inventory.val()||{}).map(([id,owned])=>{const item=items.find(i=>i.id===id);return {id,name:item?.name||id,kind:item?.kind||'Unknown',src:item?.src||'',rarity:item?.rarity||'',count:owned?.count||1,equipped:['decoration','effect','chatBanner','banner'].some(field=>equipped[field]===id)}})});
+}
 if(action==='livePublish'){const message=text(b.text,500);if(!message)throw Error('Enter a message or poll question.');const options=b.kind==='poll'?String(b.options||'').split('\n').map(v=>text(v,80)).filter(Boolean):null;if(options&&(options.length<2||options.length>6))throw Error('Enter 2–6 poll options.');const live={id:randomUUID(),text:message,name:account.name||'Nova Owner',photo:account.photo||'',author:who.uid,at:now,expiresAt:now+integer(b.seconds||15,15,600)*1000,...(options?{options}:{})};await db.ref('novaControl/live').set(live);await audit({kind:b.kind});return reply(200,{ok:true})}
 if(action==='liveEnd'){await db.ref('novaControl/live').remove();await audit({});return reply(200,{ok:true})}
 if(action==='dashboard'){await recordActivity(db,now);const timelineDays=Array.from({length:3},(_,i)=>new Date(now-i*86400000).toISOString().slice(0,10));const timeline=Object.assign({},...(await Promise.all(timelineDays.map(d=>db.ref('novaControl/concurrency/'+d).get()))).map(s=>s.val()||{}));const names=['activity','days','visits','progress','siteBans','appeals','events','updates','polls','audit'];const snaps=await Promise.all(names.map(n=>db.ref('novaControl/'+n).get()));const data=Object.fromEntries(names.map((n,i)=>[n,snaps[i].val()||{}]));const [users,roles,bans,feedback]=await Promise.all(['novaAccounts','novaChatV2/roles','novaChatV2/bans','novaChatV2/feedback'].map(n=>db.ref(n).get()));return reply(200,{...data,timeline,protectedOwnerIds,canManageOwners:protectedOwner,users:Object.entries(users.val()||{}).map(([uid,u])=>({uid,name:u.name,photo:u.photo,createdAt:u.createdAt,...playerProgress(data.progress[uid])})),roles:roles.val()||{},chatBans:bans.val()||{},feedback:feedback.val()||{}})}
