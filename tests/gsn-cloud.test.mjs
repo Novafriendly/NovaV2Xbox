@@ -57,3 +57,25 @@ test('terminal provider errors reveal its retry UI, and page exit removes loadin
  const other=documentFixture();api.attach(other.doc);other.exit();assert.equal(other.disconnects,1);
  const missing={defaultView:{},getElementById:()=>null};assert.equal(api.attach(missing),false);
 });
+
+
+test('a missing heartbeat recovers when catalog discovery was skipped or cached',async()=>{
+ const calls=[],body='{"uuid":"existing-session"}';
+ const proxy=runtime().createGateway(async(...args)=>{calls.push(args);return {status:args[0].origin==='https://cherrion.top'?200:404}});
+ const headers=[['Cookie','private'],['Content-Type','application/json']];
+ assert.equal((await proxy(gateway('ping'),'POST',body,headers)).status,200);
+ assert.deepEqual(calls.map(([url])=>url.href),[gateway('ping').href,'https://cherrion.top/api/cloud/pingSession']);
+ assert.equal(calls[1][2],body);assert.deepEqual(calls[1][3],[['Content-Type','application/json']]);
+ await proxy(gateway('ping'),'POST',body,headers);assert.equal(calls.length,3);assert.equal(calls[2][0].pathname,'/api/cloud/pingSession');
+});
+
+test('heartbeat recovery preserves provider failures and never retries ambiguous writes',async()=>{
+ for(const status of [401,403,429,500]){
+  let calls=0;const response={status};const proxy=runtime().createGateway(async()=>{calls++;return response});
+  assert.equal(await proxy(gateway('ping'),'POST','body'),response);assert.equal(calls,1);
+ }
+ const proxy=runtime().createGateway(async url=>({status:url.origin==='https://cherrion.top'?403:404}));
+ assert.equal((await proxy(gateway('ping'),'POST','body')).status,403);
+ let calls=0;const broken=runtime().createGateway(async()=>{calls++;throw Error('connection reset')});
+ await assert.rejects(broken(gateway('ping'),'POST','body'),/connection reset/);assert.equal(calls,1);
+});

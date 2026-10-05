@@ -1,5 +1,6 @@
+import {withSharedBackend} from '../server/shared-backend.mjs';
 import {services,validAccount,voiceNameKey} from '../server/voice-service.js';
-export default async function handler(req,res){
+async function handler(req,res){
  res.setHeader('Cache-Control','no-store');if(req.method!=='POST')return res.status(405).json({error:'Use POST.'});
  try{
   const {db,auth}=await services();let user;
@@ -14,3 +15,5 @@ export default async function handler(req,res){
   return res.json({id:user.uid,name:body.name});
  }catch(e){return res.status(503).json({error:e.message?.startsWith('Publish the supplied')||e.message?.startsWith('Add FIREBASE_')?e.message:'Voice is unavailable. The owner should check the Firebase server configuration.'});}
 }
+
+export default withSharedBackend('voice-account',handler);

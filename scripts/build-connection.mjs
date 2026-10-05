@@ -1,7 +1,12 @@
+import {patchProxyHistory} from './patch-proxy-history.mjs';
 import {cp,readFile,writeFile} from 'node:fs/promises';
 import './patch-wisp.mjs';
 for(const [pkg,dest] of [['scramjet','scram'],['scramjet-controller','controller'],['scramjet-utils','scram'],['libcurl-transport','clients']])await cp(new URL('../node_modules/@mercuryworkshop/'+pkg+'/dist/',import.meta.url),new URL('../Public/~/sj/'+dest+'/',import.meta.url),{recursive:true});
+const scramFile=new URL('../Public/~/sj/scram/scramjet.js',import.meta.url);
+await writeFile(scramFile,patchProxyHistory(await readFile(scramFile,'utf8')));
+const adPolicy=(await readFile(new URL('../Public/src/ad-policy.mjs',import.meta.url),'utf8')).replaceAll('export function','function');
+const adHook=await readFile(new URL('../Public/src/ad-block-inject.js',import.meta.url),'utf8');
 const audioHook=await readFile(new URL('../Public/src/game-audio-inject.js',import.meta.url),'utf8');
 const injectFile=new URL('../Public/~/sj/controller/controller.inject.js',import.meta.url);
-await writeFile(injectFile,audioHook+'\n'+await readFile(injectFile,'utf8'));
+await writeFile(injectFile,'(()=>{'+adPolicy+'\n'+adHook+'})();\n'+audioHook+'\n'+await readFile(injectFile,'utf8'));
 console.log('Built Neon Arcade pinned connection bundles.');

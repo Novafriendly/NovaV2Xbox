@@ -1,6 +1,6 @@
 /* Provider selection is shared by standalone, Home and split-screen players. */
 (()=>{
-  const definitions={astra:{label:'Astra',detail:'Your original cloud library',mark:'A'},gsn:{label:'Nova Cloud',detail:'A new place to play',mark:'N'}};
+  const definitions={achroma:{label:'Achroma - Stratus',detail:'PC cloud games through Nova',mark:'S'},synapse:{label:'Achroma - Synapse',detail:'Mobile cloud games through Nova',mark:'M'},ghost:{label:'GhostCloud',detail:'Cloud streaming through Nova',mark:'G'},astra:{label:'Astra',detail:'Your original cloud library',mark:'A'},gsn:{label:'Nova Cloud',detail:'A new place to play',mark:'N'}};
   function entries(item){
     const source=item.providers||{astra:{url:item.url,name:item.name,sourceOccurrence:item.sourceOccurrence}};
     return Object.entries(definitions).filter(([id])=>source[id]?.url).map(([id,definition])=>({id,...definition,...source[id]}));

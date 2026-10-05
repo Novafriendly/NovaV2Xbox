@@ -1,3 +1,4 @@
+import {withSharedBackend} from '../server/shared-backend.mjs';
 import {playerProgress} from '../server/player-progress.mjs';
 import {services} from '../server/voice-service.js';
 export const createHandler=(getServices=services)=>async(req,res)=>{
@@ -18,4 +19,4 @@ export const createHandler=(getServices=services)=>async(req,res)=>{
   return reply(200,{users,next:more?users.at(-1).uid:null});
  }catch{return reply(503,{error:'Account directory unavailable. Check FIREBASE_SERVICE_ACCOUNT_JSON on the server.'});}
 };
-export default createHandler();
+export default withSharedBackend('staff-users',createHandler());

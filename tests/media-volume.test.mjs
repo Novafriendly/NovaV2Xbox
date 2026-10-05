@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createMediaVolumeSync} from '../Public/src/media-volume.mjs';
+test('background scans preserve player slider changes until the OS mixer actually changes',()=>{const sync=createMediaVolumeSync(),media={volume:1};sync(media,.8);assert.equal(media.volume,.8);media.volume=.3;assert.equal(sync(media,.8),false);assert.equal(media.volume,.3);sync(media,0);assert.equal(media.volume,0);sync(media,.5);assert.equal(media.volume,.5);});

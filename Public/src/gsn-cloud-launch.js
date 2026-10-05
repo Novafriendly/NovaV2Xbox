@@ -22,6 +22,13 @@
       if(!backend)return request(target,method,body,headers,signal);
       if(useBackend)return upstream(backend,method,body,headers,signal);
       let response=await request(target,method,body,headers,signal);
+      // A cached catalog can skip backend discovery. Heartbeats can safely recover
+      // from a missing gateway; never replay session reservations or game starts.
+      if(method==='POST'&&target.pathname.endsWith('/ping')&&response.status===404){
+        response=await upstream(backend,method,body,headers,signal);
+        if(response.status>=200&&response.status<300)useBackend=true;
+        return response;
+      }
       // Only the read-only catalog is retried. Session reservations are never replayed.
       if(method!=='GET'||!target.pathname.endsWith('/games')||response.status!==404)return response;
       onRecovery('Reconnecting to Nova Cloud…');

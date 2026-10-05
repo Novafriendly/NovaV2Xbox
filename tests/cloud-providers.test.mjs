@@ -34,7 +34,7 @@ test('Escape cancels and returns through the same exit callback',async()=>{
 });
 test('import is idempotent, preserves Astra IDs and counts every GSN source game once',async()=>{
  const games=JSON.parse(await readFile(new URL('Public/library-cloud.json',root),'utf8')),rows=JSON.parse(await readFile(new URL('scripts/data/gsn-cloud-20261001.json',root),'utf8'));
- const result=mergeCloudCatalog(games,rows);assert.equal(result.shared,180);assert.equal(result.added,29);assert.deepEqual(result.games,games);
+ const result=mergeCloudCatalog(games,rows);assert.equal(result.shared,209);assert.equal(result.added,0);assert.deepEqual(result.games,games);
  assert.equal(games.find(g=>g.id==='jy0091').providers.gsn.sourceId,'jy0091');
  assert.equal(games.find(g=>g.id==='jy0108').name,'Grand Theft Auto V');assert.equal(games.find(g=>g.id==='gsn-bs0095').name,'Red Dead Redemption');
 });
@@ -72,3 +72,14 @@ test('leaving before selecting cannot launch an orphaned cloud session',async()=
  const f=await playerFixture();f.windowListeners.get('pagehide')();f.resolveChoice({id:'gsn',...dual.providers.gsn});await f.execution;
  assert.deepEqual(f.requests,[]);assert.equal(f.timers.includes(60000),false);
 });
+
+ test('GhostCloud selection launches its native game link through the shared proxy',async()=>{
+ const f=await playerFixture(),url='https://ghost-mathmulti.zeoghost.workers.dev/?play=jy0108';
+ f.resolveChoice({id:'ghost',label:'GhostCloud',url,sourceId:'jy0108'});await f.execution;
+ assert.deepEqual(f.requests,[url]);f.frame.event('load');assert.equal(f.adapters.length,0);assert.equal(f.gsnLoads.length,0);
+ });
+ test('three providers include GhostCloud with the selected title link',async()=>{
+ const f=fixture(),url='https://ghost-mathmulti.zeoghost.workers.dev/?play=jy0108';
+ const promise=f.api.choose({...dual,providers:{...dual.providers,ghost:{url,sourceId:'jy0108'}}});
+ const buttons=f.get('cloud-options').children;assert.equal(buttons.length,3);buttons[0].onclick();const choice=await promise;assert.equal(choice.id,'ghost');assert.equal(choice.url,url);
+ });

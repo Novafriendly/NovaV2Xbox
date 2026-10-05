@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {eventNotice} from '../Public/src/owner-event.mjs';
+test('notifications describe active event owner and actual reward multipliers',()=>{const result=eventNotice({id:'one',authorName:'Orbit',title:'Coin rush',until:2000,xpMultiplier:1,coinMultiplier:2},1000);assert.equal(result.id,'one');assert.equal(result.title,'Coin rush');assert.match(result.text,/Orbit started this event: 1× gameplay XP and 2× challenge coins/);});
+test('expired and legacy events do not generate repeated notifications',()=>{assert.equal(eventNotice({id:'old',until:1000},1000),null);assert.equal(eventNotice({until:2000},1000),null);assert.equal(eventNotice(null),null);});

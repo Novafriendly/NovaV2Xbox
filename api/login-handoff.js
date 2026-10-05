@@ -5,7 +5,7 @@ export function origin(value){try{const u=new URL(value);return u.protocol==='ht
 export function configuration(env=process.env){
  const primary=origin(env.NOVA_LOGIN_ORIGIN||'https://novaoffical.vercel.app');
  const trusted=[...new Set([primary,...(env.NOVA_LOGIN_TRUSTED_ORIGINS||'').split(',').map(s=>origin(s.trim()))].filter(Boolean))];
- return {primary,trusted};
+ return {primary,trusted,userApproval:env.NOVA_LOGIN_USER_APPROVAL!=='false'};
 }
 export function privateRules(rules){
  const denied=node=>Object.entries(node||{}).every(([k,v])=>['.read','.write'].includes(k)?v===false:!v||typeof v!=='object'||denied(v));
@@ -16,15 +16,15 @@ export const createHandler=(getServices=services,getConfig=configuration,now=Dat
  const config=getConfig(),requestOrigin=req.headers?.origin;
  res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json');res.setHeader('Vary','Origin');res.setHeader('Referrer-Policy','no-referrer');
  const reply=(status,data)=>{res.statusCode=status;res.end(JSON.stringify(data))};
- if(req.method==='GET'){if(config.trusted.includes(requestOrigin))res.setHeader('Access-Control-Allow-Origin',requestOrigin);return reply(200,{primary:config.primary,trusted:config.trusted})}
- if(!config.primary||!config.trusted.includes(requestOrigin))return reply(403,{error:'This Nova website is not approved for shared login.'});
+ if(req.method==='GET'){if(config.trusted.includes(requestOrigin)||config.userApproval&&origin(requestOrigin))res.setHeader('Access-Control-Allow-Origin',requestOrigin);return reply(200,{primary:config.primary,trusted:config.trusted,userApproval:!!config.userApproval})}
+ if(!config.primary||!(config.trusted.includes(requestOrigin)||config.userApproval&&origin(requestOrigin)))return reply(403,{error:'This Nova website is not approved for shared login.'});
  res.setHeader('Access-Control-Allow-Origin',requestOrigin);
  res.setHeader('Access-Control-Allow-Methods','POST, OPTIONS');res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
  if(req.method==='OPTIONS'){res.statusCode=204;return res.end()}
  if(req.method!=='POST')return reply(405,{error:'Use POST.'});
  let b;try{if(req.body)b=typeof req.body==='string'?JSON.parse(req.body):req.body;else{let raw='';for await(const c of req){raw+=c;if(Buffer.byteLength(raw)>4096)return reply(413,{error:'Request too large.'})}b=JSON.parse(raw)}}catch{return reply(400,{error:'Invalid request.'})}
  if(!b||!['issue','redeem'].includes(b.action))return reply(400,{error:'Invalid action.'});
- if(b.action==='issue'&&(requestOrigin!==config.primary||!config.trusted.includes(b.target)||b.target===config.primary||!/^[-_A-Za-z0-9]{43}$/.test(b.challenge||'')))return reply(400,{error:'Invalid login destination.'});
+ if(b.action==='issue'&&(requestOrigin!==config.primary||!(config.trusted.includes(b.target)||config.userApproval&&origin(b.target)&&b.approved===true)||b.target===config.primary||!/^[-_A-Za-z0-9]{43}$/.test(b.challenge||'')))return reply(400,{error:'Invalid login destination.'});
  if(b.action==='redeem'&&(!/^[a-f0-9]{64}$/.test(b.code||'')||!/^[-_A-Za-z0-9]{43,128}$/.test(b.verifier||'')))return reply(400,{error:'Invalid login handoff.'});
  try{
   const {auth,db}=await getServices(false);

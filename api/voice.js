@@ -1,3 +1,4 @@
+import {withSharedBackend} from '../server/shared-backend.mjs';
 import {randomUUID} from 'node:crypto';
 import {services,validAccount,voiceNameKey} from '../server/voice-service.js';
 import {isProtectedOwner} from '../server/protected-owners.mjs';
@@ -81,4 +82,4 @@ export const createVoiceHandler=(service=services)=>async function handler(req,r
   return res.status(400).json({error:'Unknown voice action.'});
  }catch(e){console.error('Nova voice request failed',{action:typeof req.body==='object'?req.body?.action:'unknown',code:e.code||e.name});return res.status(503).json({error:e.message?.startsWith('Publish the supplied')||e.message?.startsWith('Add FIREBASE_')?e.message:'Voice could not complete this request. Please reconnect and try again.',code:'VOICE_REQUEST_FAILED'});}
 };
-export default createVoiceHandler();
+export default withSharedBackend('voice',createVoiceHandler());

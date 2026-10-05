@@ -22,3 +22,5 @@ body{background:radial-gradient(ellipse at 80% 0%,#20243255,transparent 55%),#08
 .fps-menu{position:absolute;bottom:calc(100% + 14px);left:0;width:225px;background:#18191ef5;border:1px solid #ffffff28;border-radius:12px;padding:12px;box-shadow:0 8px 25px #0006}
 .fps-menu p{margin:0 0 10px;color:#cdd0d8;font-size:12px}.fps-menu button{display:block;width:100%;text-align:left;margin:5px 0}
 .fps-menu button[aria-checked=true]{background:#ffffff20;border-color:#ffffff60}.fps-menu small{display:block!important;padding:8px 0 0!important;font-size:11px;color:#aeb2bd;line-height:1.5}
+
+.network-options{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 0;color:#e3e9f0}.network-options label{font-weight:650}.network-options select{background:#111923;color:#f2f6fc;border:1px solid #ffffff28;border-radius:10px;padding:10px 14px;font:inherit}.network-options small{color:#a6b7c9;font-size:12px}

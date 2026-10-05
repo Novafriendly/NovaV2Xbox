@@ -3,7 +3,7 @@ export const normalizeCloudTitle = name => String(name).replace(/[™®]/g, '').
 // These providers use the same upstream game key for this differently named title.
 const aliases = new Map([['jy0091', ['Witchers 3', 'The Witcher 3']]]);
 export function mergeCloudCatalog(existing, source) {
-  const games = existing.filter(game => !String(game.id).startsWith('gsn-')).map(game => ({ ...game, providers: { astra: { url: game.url, name: game.name, sourceOccurrence: game.sourceOccurrence } } }));
+  const games = existing.filter(game => !String(game.id).startsWith('gsn-') || Object.keys(game.providers||{}).some(id=>id!=='gsn')).map(game => {const providers={...(game.providers||{astra:{url:game.url,name:game.name,sourceOccurrence:game.sourceOccurrence}})};delete providers.gsn;return {...game,providers}});
   const seen = new Set(); let shared = 0;
   for (const entry of source) {
     if (entry.kind !== 'cloud' || !/^cloud-[a-zA-Z]{2}\d+$/.test(entry.id) || seen.has(entry.id)) throw Error('Invalid or duplicate GSN cloud entry.');

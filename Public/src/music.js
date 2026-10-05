@@ -10,7 +10,7 @@
   const note = document.createElement('p'); note.textContent = 'Connecting Nova Music…';
   const retry = document.createElement('button'); retry.textContent = 'Try again'; retry.hidden = true;
   status.append(note, retry); host.append(status); panel.append(host);
-  let view, controller, starting, timer, ready = false;
+  let view, controller, starting, timer, ready = false;let novaLibrary=null;const libraryDocs=new WeakSet();
   const paths = {previous:'M6 5v14M19 5 8 12l11 7Z',next:'M18 5v14M5 5l11 7-11 7Z',play:'m8 5 11 7-11 7Z',pause:'M8 5v14M16 5v14',volume:'M3 9h4l5-4v14l-5-4H3ZM16 8q4 4 0 8'};
   const icon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="'+paths[name]+'"/></svg>';
   const card = document.createElement('section'); card.className = 'xg-music'; card.hidden = true; card.setAttribute('aria-label','Nova Music player');
@@ -50,15 +50,15 @@
     }catch{}
   }
   let pendingVolume=null,lastOSVolume=null;
-  async function command(action,value) {
+  async function command(action,value,internal=false) {
     if(action==='setVolume'){value=Math.max(0,Math.min(1,Number(value)));if(!Number.isFinite(value))return;pendingVolume=value;}
-    try {const p=player(); if(!p)throw Error('Open Nova Music to connect.'); if(action==='setVolume')pendingVolume=null; const {controlMusic}=await import('./music-controls.mjs');await controlMusic(p,playerDocument,action,value);update();}
+    try {if(!internal&&novaLibrary&&!novaLibrary.applying&&await novaLibrary.control(action,value))return;const p=player(); if(!p)throw Error('Open Nova Music to connect.'); if(action==='setVolume')pendingVolume=null; const {controlMusic}=await import('./music-controls.mjs');await controlMusic(p,playerDocument,action,value);update();}
     catch {artist.textContent='Open Music to resume playback';}
   }
   const watchedMedia = new WeakSet();
   let hasPlayedMusic = false;
   function update() {
-    const p=player(); if(!p){card.classList.remove('playing','player-active');card.hidden=!window.NovaOS&&!hasPlayedMusic;if(window.NovaOS){title.textContent='Nova Music';artist.textContent='Choose a song';cover.src=idleArt}return;}
+    const p=player(); if(!p){if(window.NovaMusic?.activity){window.NovaMusic.activity=null;window.NovaMusic._activitySignature='null';dispatchEvent(new Event('nova-music-activity'))}card.classList.remove('playing','player-active');card.hidden=!window.NovaOS&&!hasPlayedMusic;if(window.NovaOS){title.textContent='Nova Music';artist.textContent='Choose a song';cover.src=idleArt}return;}
     const track=p.track(), media=p.media();
     if(media&&pendingVolume!==null){const value=pendingVolume;pendingVolume=null;command('setVolume',value);return;}
     if(media?.addEventListener&&!watchedMedia.has(media)){
@@ -82,6 +82,8 @@
     duration.textContent=stamp(length);seek.setAttribute('aria-valuetext',stamp(Number(seek.value))+' of '+stamp(length));
     Object.values(buttons).forEach(b=>b.disabled=!track); volume.disabled=!media;
     const playing=media&&!media.paused&&!media.ended;
+    const activity=playing&&track?{name:track.name||track.title||'Unknown song',artist:track.artist||track.author||'',art:renderedArt||artCandidates.find(a=>/^https?:/.test(a))||idleArt}:null;
+    const signature=JSON.stringify(activity);if(signature!==window.NovaMusic._activitySignature){window.NovaMusic._activitySignature=signature;window.NovaMusic.activity=activity;dispatchEvent(new Event('nova-music-activity'));}
     buttons.toggle.innerHTML=icon(playing?'pause':'play'); buttons.toggle.setAttribute('aria-label',playing?'Pause music':'Play music');
     if(playing)hasPlayedMusic=true;
     card.hidden=!window.NovaOS&&!hasPlayedMusic;
@@ -105,7 +107,7 @@
         const walker=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT); let node;
         while((node=walker.nextNode()))if(!['SCRIPT','STYLE'].includes(node.parentElement?.tagName)&&/NEO Music|NEO MUSIC/.test(node.textContent))node.textContent=node.textContent.replace(/NEO Music|NEO MUSIC/g,'Nova Music');
       }
-      if(player()) {ready=true;status.hidden=true;clearTimeout(timer);update();}
+      if(player()) {if(!libraryDocs.has(playerDocument)){libraryDocs.add(playerDocument);import('./music-library.js').then(m=>m.mountMusicLibrary({doc:playerDocument,player,playTrack:t=>{const win=playerDocument.defaultView;if(typeof win.playTrack!=='function')throw Error('The player is still loading.');win.playTrack(t)},command,profile:()=>window.novaHomeProfile})).then(value=>novaLibrary=value).catch(error=>{libraryDocs.delete(playerDocument);note.textContent=error.message;console.warn('Nova Music library could not load',error.message)})}ready=true;status.hidden=true;clearTimeout(timer);update();}
     } catch {}
   }
   async function start() {
@@ -120,7 +122,7 @@
       } catch(error) {note.textContent='Could not connect to Nova Music. '+error.message;retry.hidden=false;starting=null;}
     })();return starting;
   }
-  retry.onclick=()=>{clearTimeout(timer);view?.element.remove();view=null;starting=null;ready=false;start();};
+  retry.onclick=()=>{novaLibrary?.dispose();novaLibrary=null;clearTimeout(timer);view?.element.remove();view=null;starting=null;ready=false;start();};
   window.NovaMusic={command,idleArt,reload(){view?.element.contentWindow.location.reload();},open(){panel.classList.remove('full-library');panel.dataset.view='music';panel.hidden=false;document.getElementById('system').hidden=true;document.getElementById('panel-content').hidden=true;document.getElementById('panel-title').textContent='Nova Music';document.querySelectorAll('nav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page==='music'));host.hidden=false;start();},hide(){if(host.closest('[data-window="app-music"]')&&!host.closest('.os-window').hidden)return;host.hidden=true;}};
   setInterval(()=>{if(view){customize();if(ready)update();}},750);
 })();

@@ -23,10 +23,10 @@ function documentFixture(){
 
 test('every merged catalog entry retains its identity, source attribution and optimized cover',async()=>{
  const games=JSON.parse(await readFile(new URL('Public/library-cloud.json',root),'utf8'));
- assert.equal(games.length,304);assert.equal(new Set(games.map(g=>g.id)).size,304);
+ assert.equal(games.length,493);assert.equal(new Set(games.map(g=>g.id)).size,493);
  const astra=games.filter(g=>g.providers.astra),gsn=games.filter(g=>g.providers.gsn);
  assert.equal(astra.length,275);assert.equal(new Set(gsn.map(g=>g.providers.gsn.sourceId)).size,209);
- assert.equal(games.filter(g=>!g.providers.astra).length,29);
+ assert.equal(games.filter(g=>g.providers.gsn&&!g.providers.astra).length,29);
  const occurrences=new Map();
  for(const g of games){
   assert.equal(g.kind,'cloud');
@@ -59,7 +59,7 @@ test('cloud transport adapters are limited to cloud players and leave writes/oth
  const response=()=>({body:'fixture',status:200,statusText:'OK',headers:[['Content-Type','text/javascript']]});
  const active={state:'activated'},registration={active,addEventListener(){}};
  const sandbox={URL,setTimeout,clearTimeout,location:{origin:'https://nova.example',protocol:'https:'},navigator:{serviceWorker:{register:async()=>registration}},document:{createElement:()=>({}),head:{append(script){queueMicrotask(()=>script.onload())}}},LibcurlTransport:{LibcurlClient:class{init(){return Promise.resolve()}async request(target,method){requests.push([target.href,method]);return target.pathname==='/api/auth/me'?{...response(),status:401,statusText:'Unauthorized',body:'{"error":"Not authenticated"}'}:response()}}},$scramjetController:{Controller:class{constructor(options){transport=options.transport}wait(){return Promise.resolve()}}},NovaAstraCloud:{async patchRouter(r){patched.push(r);return {...r,body:'patched'}}}};
- sandbox.window=sandbox;sandbox.isSecureContext=true;vm.runInNewContext(await readFile(new URL('Public/src/connection.js',root),'utf8'),sandbox);
+ sandbox.window=sandbox;sandbox.isSecureContext=true;vm.runInNewContext((await readFile(new URL('Public/src/connection.js',root),'utf8')).replace("await import('/src/ad-policy.mjs')", "({isAdRequest:()=>false,adBlockingEnabled:()=>false})").replace("await import('/src/transport-recovery.mjs')", "({shouldReconnectTransport:()=>false})"),{...sandbox,localStorage:{}});
  await sandbox.NovaConnection.create({cloudGame:true});
  const router=new URL('https://astra-education.top/assets/math-sheets-test.js'),ad=new URL('https://pl31545542.profitableratecpmnetwork.com/overlay.js');
  assert.equal((await transport.request(router,'GET')).body,'patched');assert.equal(patched.length,1);
@@ -75,6 +75,7 @@ test('cloud transport adapters are limited to cloud players and leave writes/oth
  const auth=await transport.request(new URL('https://astra-education.top/api/auth/me'),'GET');
  assert.equal(auth.status,401);assert.equal(auth.body,'{"error":"Not authenticated"}');
  await sandbox.NovaConnection.create();await transport.request(optional,'GET');assert.equal(requests.length,checkpoint+4);
+ const page=new URL('https://cdn.jsdelivr.net/gh/achroma-ubg/svg@latest/pages/games.html');await sandbox.NovaConnection.create({cloudGame:true,cloudProvider:'achroma'});assert.ok((await transport.request(page,'GET')).headers.some(([n,v])=>n.toLowerCase()==='content-type'&&v.startsWith('text/html')));await sandbox.NovaConnection.create();assert.ok(!(await transport.request(page,'GET')).headers.some(([n,v])=>v.startsWith('text/html')));
 });
 
 test('stream Exit preserves provider cleanup and returns Home once after the stream disappears',()=>{

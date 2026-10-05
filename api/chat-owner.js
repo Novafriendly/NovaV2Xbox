@@ -1,6 +1,7 @@
+import {withSharedBackend} from '../server/shared-backend.mjs';
 import {timingSafeEqual,createHash} from 'node:crypto';
 import {services} from '../server/voice-service.js';
-export default async function handler(req,res){
+async function handler(req,res){
  const reply=(status,value)=>{res.statusCode=status;res.setHeader('Content-Type','application/json');res.end(JSON.stringify(value))};
  if(req.method!=='POST')return reply(405,{error:'Use POST.'});
  if(!process.env.NOVA_CHAT_OWNER_CODE)return reply(503,{error:'Owner setup is disabled. Set the private server setup code first.'});
@@ -14,3 +15,5 @@ export default async function handler(req,res){
  await db.ref('novaChatV2/roles/'+user.uid).set('owner');return reply(200,{ok:true});
  }catch{return reply(503,{error:'Owner setup could not complete. Check your sign-in and server Firebase admin configuration.'})}
 }
+
+export default withSharedBackend('chat-owner',handler);

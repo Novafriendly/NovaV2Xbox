@@ -4,41 +4,29 @@ import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
 const source=readFileSync('Public/src/game-hack-inject.js','utf8');
 const bowl='RetroBowl.0.savedata.ini',college='RetroBowlCollege.0.savedata.ini';
-function run(values=new Map(),answers=[],baseKey=bowl,token='apply-1'){
- const alerts=[],questions=[];let reloads=0;
- const element=()=>({style:{},append(){},setAttribute(){},remove(){}});
+function run(values=new Map(),baseKey=bowl,token='apply-1',loaded=false){
+ let interval,appended=0;const window={_Qm:()=>loaded?[{}]:[],GetWithArray:()=>loaded?[{}]:[]};
  vm.runInNewContext(source.replace('__NOVA_SAVE_KEY__',JSON.stringify(baseKey)).replace('__NOVA_APPLY_TOKEN__',JSON.stringify(token)),{
- document:{readyState:'complete',createElement:element,body:{append(){}}},setTimeout:fn=>fn(),
- localStorage:{getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)},
- prompt:q=>{questions.push(q);return answers.shift()??null},alert:s=>alerts.push(s),location:{reload(){reloads++}}
- });return {values,alerts,questions,reloads};
+ window,document:{getElementById:()=>({}),body:{append(){appended++;}}},setInterval:fn=>{interval=fn;return 1},clearInterval(){},addEventListener(){},localStorage:{getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)}
+ });return {window,api:window.NovaRetroTools,values,interval,appended,storage:{getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)}};
 }
-test('detects actual slot filenames and updates only the selected save',()=>{
- const first='team="Nova"\ncoach_credit="12"',second='season="2"\ncoach_credit="30"';
- const key='RetroBowl.0.savedata2.ini',values=new Map([[bowl,first],[key,second]]);
- const r=run(values,['2','500']);assert.match(r.questions[0],/1, 2/);
- assert.equal(values.get(bowl),first);assert.equal(values.get(key),second.replace('"30"','"500"'));
- assert.equal(values.get(key+'.nova-backup'),second);assert.equal(r.reloads,1);
-});
-test('detects slot five without relying on storage enumeration',()=>{
- const key='RetroBowl.0.savedata5.ini',r=run(new Map([[key,'coach_credit="1"']]),['5','999999999999']);
- assert.equal(r.values.get(key),'coach_credit="999999999999"');assert.equal(r.reloads,1);
-});
-test('College asks only for credits',()=>{
- const r=run(new Map([[college,'coach_credit="12"']]),['500'],college);
- assert.deepEqual(r.questions,['How many credits do you want?']);assert.equal(r.values.get(college),'coach_credit="500"');
-});
-test('missing saves, invalid choices, invalid credits and cancellation preserve progress',()=>{
- assert.equal(run().reloads,0);
- for(const answers of [[null],['2'],['1',null],['1','abc'],['1','1000000000000']]){
- const r=run(new Map([[bowl,'coach_credit="12"']]),answers);
- assert.equal(r.values.get(bowl),'coach_credit="12"');assert.equal(r.reloads,0);assert.equal(r.values.has(bowl+'.nova-backup'),false);
- }
-});
-test('Apply again detects newly created saves while reload does not repeat injection',()=>{
- const values=new Map();assert.equal(run(values).alerts.length,1);
- values.set('RetroBowl.0.savedata2.ini','coach_credit="10"');
- assert.equal(run(values,['2','100']).questions.length,0);
- const r=run(values,['2','100'],bowl,'apply-2');assert.equal(r.reloads,1);
- assert.equal(values.get('RetroBowl.0.savedata2.ini'),'coach_credit="100"');
-});
+const career=(credits=12)=>'[savegame]\ncoach_credit="'+credits+'"\nfacility_stadium="2"\nfacility_training="4"\nfacility_rehab="1"\nfacility_upgraded_stadium="3"\nfacility_upgraded_training="2"\nfacility_upgraded_rehab="1"\nweek="7"\nteam="Nova"\n';
+test('slot selection reads each actual filename and updates only selected save',()=>{const key='RetroBowl.0.savedata2.ini',first=career(),second=career(30),r=run(new Map([[bowl,first],[key,second]]));assert.equal(r.api.slots(r.storage)[1].data.coach_credit,30);assert.equal(r.api.update(r.storage,key,'credits','500'),true);assert.equal(r.values.get(bowl),first);assert.equal(r.values.get(key),second.replace('"30"','"500"'));assert.equal(r.values.get(key+'.nova-backup'),second);});
+test('slot five works without enumerating browser storage',()=>{const key='RetroBowl.0.savedata5.ini',r=run(new Map([[key,career()]]));r.api.update(r.storage,key,'credits','999999999999');assert.equal(r.api.fields(r.values.get(key)).coach_credit,999999999999);});
+test('College exposes its single career save without a slot chooser',()=>{const r=run(new Map([[college,career(25)]]),college);assert.equal(r.api.slots(r.storage).length,1);r.api.update(r.storage,college,'credits','800');assert.equal(r.api.fields(r.values.get(college)).coach_credit,800);});
+test('invalid credits and missing save data preserve progress and backups',()=>{for(const value of ['-1','abc','1.2','1000000000000','']){const original=career(),r=run(new Map([[bowl,original]]));assert.throws(()=>r.api.update(r.storage,bowl,'credits',value));assert.equal(r.values.get(bowl),original);assert.equal(r.values.has(bowl+'.nova-backup'),false);}const r=run();assert.throws(()=>r.api.update(r.storage,bowl,'credits','100'));});
+test('both games max only facility levels and record the actual upgrade week',()=>{for(const base of [bowl,college]){const original=career(),r=run(new Map([[base,original]]),base);r.api.update(r.storage,base,'facilities');const data=r.api.fields(r.values.get(base));for(const name of ['stadium','training','rehab']){assert.equal(data['facility_'+name],10);assert.equal(data['facility_upgraded_'+name],7);}assert.equal(data.coach_credit,12);assert.match(r.values.get(base),/team="Nova"/);assert.equal(r.values.get(base+'.nova-backup'),original);}});
+test('incomplete facilities fail atomically rather than inventing save fields',()=>{const original='coach_credit="12"\nfacility_stadium="2"',r=run(new Map([[bowl,original]]));assert.throws(()=>r.api.update(r.storage,bowl,'facilities'));assert.equal(r.values.get(bowl),original);assert.equal(r.values.has(bowl+'.nova-backup'),false);});
+test('newly created saves are detected by rescanning without Apply again',()=>{const r=run();assert.equal(r.api.slots(r.storage)[1].data.coach_credit,undefined);r.values.set('RetroBowl.0.savedata2.ini',career(42));assert.equal(r.api.slots(r.storage)[1].data.coach_credit,42);});
+test('tools wait for the game controller and consume no token during loading',()=>{const r=run();r.interval();assert.equal(r.api.ready(),false);assert.equal(r.values.has('nova-hack-applied-'+bowl),false);assert.equal(r.appended,0);assert.equal(run(new Map(),college,'apply-1',true).api.ready(),true);});
+test('already applied token prevents reopening until a new Apply token',()=>{const values=new Map([['nova-hack-applied-'+bowl,'apply-1']]);assert.equal(run(values).interval,undefined);assert.equal(typeof run(values,bowl,'apply-2').interval,'function');});
+test('save updates read the latest game progress rather than an old snapshot',()=>{const r=run(new Map([[bowl,career()]]));r.api.slots(r.storage);const latest=career(55).replace('week="7"','week="8"');r.values.set(bowl,latest);r.api.update(r.storage,bowl,'credits','100');assert.equal(r.values.get(bowl+'.nova-backup'),latest);assert.equal(r.api.fields(r.values.get(bowl)).week,8);});
+
+test('live score changes target the selected team for both builds',()=>{for(const base of [bowl,college]){const r=run(new Map(),base),object={[base===college?'gmlteam_score':'_fE1']:[7,10]};r.window[base===college?'GetWithArray':'_Qm']=id=>id===105?[object]:[];assert.equal(r.api.scoreState().scores[0],7);r.api.setScore('1','24');assert.equal(r.api.scoreState().scores[0],7);assert.equal(r.api.scoreState().scores[1],24);}});
+test('score editing rejects invalid targets, values, and unavailable matches',()=>{const r=run(),object={_fE1:[7,10]};assert.throws(()=>r.api.setScore('0','20'));r.window._Qm=()=>[object];for(const [side,value] of [['2','10'],['0','1000'],['0','-1'],['0','1.5'],['0','']])assert.throws(()=>r.api.setScore(side,value));assert.deepEqual(object._fE1,[7,10]);});
+
+test('fan support reaches 100 in both games without changing credits or unrelated data',()=>{for(const base of [bowl,college]){const original=career()+'fans="30"\n',r=run(new Map([[base,original]]),base);r.api.update(r.storage,base,'fans');assert.equal(r.api.fields(r.values.get(base)).fans,100);assert.equal(r.api.fields(r.values.get(base)).coach_credit,12);assert.equal(r.values.get(base+'.nova-backup'),original);}});
+test('salary cap and first-round picks change only their verified Retro Bowl fields',()=>{const original=career()+'salary_cap="150"\ndraft_picks_0="1"\ndraft_picks_1="2"\n',r=run(new Map([[bowl,original]]));r.api.update(r.storage,bowl,'salary','500');r.api.update(r.storage,bowl,'draft','5');const data=r.api.fields(r.values.get(bowl));assert.equal(data.salary_cap,500);assert.equal(data.draft_picks_0,5);assert.equal(data.draft_picks_1,2);assert.equal(data.coach_credit,12);});
+test('boosts reject unsupported saves, invalid values and College draft or salary changes',()=>{const original=career()+'salary_cap="150"\ndraft_picks_0="1"\n',r=run(new Map([[bowl,original]]));for(const [action,value] of [['salary','149'],['salary','10000'],['salary','200.5'],['draft','11'],['draft','-1']])assert.throws(()=>r.api.update(r.storage,bowl,action,value));assert.throws(()=>r.api.update(r.storage,bowl,'fans'));assert.equal(r.values.get(bowl),original);const c=run(new Map([[college,original]]),college);assert.throws(()=>c.api.update(c.storage,college,'salary','500'));assert.throws(()=>c.api.update(c.storage,college,'draft','5'));});
+
+test('embedded save tools request a player reload instead of navigating the proxy frame',()=>{const r=run(),messages=[];let reloads=0;const host={parent:{postMessage:(...args)=>messages.push(args)},location:{reload(){reloads++;}}};r.api.reloadGame(host);assert.equal(messages.length,1);assert.equal(messages[0][0].novaAction,'retroGameReload');assert.equal(reloads,0);const standalone={location:{reload(){reloads++;}}};standalone.parent=standalone;r.api.reloadGame(standalone);assert.equal(reloads,1);});

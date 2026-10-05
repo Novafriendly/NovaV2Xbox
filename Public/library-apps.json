@@ -412,5 +412,14 @@
     "genres": [
       "Gaming"
     ]
+  },
+  {
+    "id": "app-46",
+    "name": "Ani pm(anime streaming)",
+    "art": "Img/app/anipms.png",
+    "url": "https://ani.pm/",
+    "genres": [
+      "Entertainment"
+    ]
   }
 ]  

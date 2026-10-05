@@ -1,0 +1,1 @@
+export function createMediaVolumeSync(){const applied=new WeakMap();return (media,volume)=>{const value=Math.max(0,Math.min(1,Number(volume)||0));if(applied.get(media)===value)return false;applied.set(media,value);if(media.volume!==value)media.volume=value;return true;};}

@@ -2,7 +2,8 @@ import { cloudHistory, recordCloudGame } from './cloud-history.js';
 const $ = id => document.getElementById(id);
 const el = (tag, text, cls) => { const node = document.createElement(tag); if (text) node.textContent = text; if (cls) node.className = cls; return node; };
 const storageKey = () => 'nova_cloud_favorites_' + (localStorage.getItem('nova_user') || localStorage.getItem('nova_username') || 'guest');
-const providerLabel = game => game.providers?.astra && game.providers?.gsn ? 'Astra + Nova Cloud' : game.providers?.gsn ? 'Nova Cloud' : 'Astra';
+const providerNames={astra:'Astra',gsn:'Nova Cloud',ghost:'GhostCloud',achroma:'Achroma - Stratus',synapse:'Achroma - Synapse'};
+const providerLabel=game=>Object.keys(game.providers||{astra:{}}).filter(id=>providerNames[id]).map(id=>providerNames[id]).join(' + ');
 let games = [], filter = 'all', selected, searchTimer, activeTab = 'explore';
 const saved = () => { try { const rows = JSON.parse(localStorage.getItem(storageKey()) || '[]'); return Array.isArray(rows) ? rows : []; } catch { return []; } };
 const motion = () => matchMedia('(prefers-reduced-motion:reduce)').matches || localStorage.getItem('nova_reduce_motion') === 'true' ? 'instant' : 'smooth';
@@ -51,7 +52,7 @@ function render() {
   const active = query ? 'browse' : filter === 'favorites' ? 'my-library' : filter === 'recent' ? 'recent' : ['explore', 'browse'].includes(activeTab) ? activeTab : 'explore';
   document.querySelectorAll('.cloud-nav button').forEach(button => { const yes = button.id === active; button.classList.toggle('active', yes); if (yes) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current'); });
 }
-function details(game) { selected = game; $('details-art').src = game.art; $('details-name').textContent = game.name; $('details-provider').textContent = game.providers?.astra && game.providers?.gsn ? 'Available on Astra and Nova Cloud. Pick your cloud when you launch.' : 'Launch through Nova and connect to ' + providerLabel(game) + '. Follow the provider’s connection or sign-in prompts.'; paintFavorite($('details-favorite'), game, true); $('game-details').showModal(); }
+function details(game) { selected = game; $('details-art').src = game.art; $('details-name').textContent = game.name; $('details-provider').textContent = 'Available on '+providerLabel(game)+'. Launch through Nova and follow the provider’s connection prompts.'; paintFavorite($('details-favorite'), game, true); $('game-details').showModal(); }
 function launch(game) {
   $('game-details').close(); recordCloudGame(game); refreshPersonal();
   let novaParent = false; try { novaParent = parent !== window && !!parent.NovaRecent && !parent.NovaSplit?.owns(window); } catch {}
@@ -93,7 +94,7 @@ addEventListener('storage', sync); addEventListener('pageshow', sync); document.
 addEventListener('message', event => { if (event.origin === location.origin && event.source === parent && event.data?.novaAction === 'cloudLaunchError') { $('error').hidden = false; $('error').textContent = event.data.message; } });
 try {
   const response = await fetch('library-cloud.json'); if (!response.ok) throw Error('Cloud library unavailable. Please try again.'); games = await response.json();
-  $('catalog-count').textContent = games.length + ' games to discover'; $('source-count').textContent = games.length + ' games · Astra + Nova Cloud';
+  $('catalog-count').textContent = games.length + ' games to discover'; $('source-count').textContent = games.length + ' games · Astra + Nova Cloud + GhostCloud + Achroma';
   const byName = name => games.find(game => game.name === name);
   fill($('spotlight'), ['Grand Theft Auto V', 'Fortnite', 'Hogwarts Legacy', 'Cyberpunk 2077', 'Elden Ring', 'Roblox', 'Forza Horizon 4', 'Marvel’s Spider-Man Remastered'].map(byName).filter(Boolean));
   fill($('discover-shelf'), ['Stardew Valley', 'Hades', 'Cuphead', 'Among Us', 'Stray', 'It Takes Two', 'Hollow Knight', 'Dead Cells', 'Rocket League Sideswipe', 'Clash Royale', "Baldur's Gate 3", 'The Witcher 3'].map(byName).filter(Boolean));

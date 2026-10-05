@@ -6,3 +6,6 @@ html.nova-os-embedded,html.nova-os-embedded body{background:transparent!importan
 .nova-os-embedded .cloud-shade,.nova-os-embedded .nova-music-wallpaper{display:none!important}.nova-os-embedded body.xbox-ai aside{backdrop-filter:none!important}.nova-os-embedded body.xbox-ai #close{display:none!important}
 
 .nova-os-embedded #loading.nova-media-loading{background:#18213322!important;backdrop-filter:blur(8px)}.nova-os-embedded iframe[title="NovaTube videos"]{background:transparent!important;color-scheme:normal!important}
+
+/* Match the Search iframe canvas to its transparent OS host. */
+html.nova-os-embedded.nova-os-search,html.nova-os-embedded.nova-os-search body{background:transparent!important;background-image:none!important;color-scheme:normal!important}html.nova-os-embedded.nova-os-search main,html.nova-os-embedded.nova-os-search #frames{background:transparent!important}

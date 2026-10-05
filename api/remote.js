@@ -1,5 +1,7 @@
+import {remoteRelay} from '../server/remote-relay.mjs';
+import {withSharedBackend} from '../server/shared-backend.mjs';
 import {services} from '../server/voice-service.js';
-import {randomBytes,createHash,createHmac,timingSafeEqual} from 'node:crypto';
+import {randomBytes,createHash,timingSafeEqual} from 'node:crypto';
 const checkedRules=new WeakMap();
 async function privateRemoteRules(db){if(Date.now()-(checkedRules.get(db)||0)<60000)return;const {rules}=await db.getRulesJSON();const deny=node=>Object.entries(node||{}).every(([key,value])=>['.read','.write'].includes(key)?value===false:!value||typeof value!=='object'||deny(value));if(rules['.read']!==false||rules['.write']!==false||!deny(rules.novaRemote)||Object.entries(rules).some(([key,value])=>key.startsWith('$')&&!deny(value)))throw failure('Publish the private Nova Remote database rules first.',503);checkedRules.set(db,Date.now());}
 const hash=s=>createHash('sha256').update(s).digest('hex'),secret=()=>randomBytes(32).toString('base64url');
@@ -56,7 +58,7 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
   if(action==='list'){browserOnly();
    const maintenance=await db.ref(root+'maintenance').transaction(last=>!last||now-last>=600000?now:undefined);
    if(maintenance.committed){const expired={};for(const [path,field]of [['pairing','expires'],['sessions','expires'],['limits','until']]){const rows=(await db.ref(root+path).orderByChild(field).endAt(now).limitToFirst(100).get()).val()||{};for(const [id,row]of Object.entries(rows))if(Number.isFinite(row[field])&&row[field]<=now)expired[path+'/'+id]=null;}if(Object.keys(expired).length)await db.ref(root.slice(0,-1)).update(expired);}
-   const all=(await db.ref(root+'devices').orderByChild('uid').equalTo(uid).get()).val()||{};return reply(200,{devices:Object.entries(all).filter(([,d])=>d.uid===uid).map(([id,d])=>publicDevice({...d,id}))});}
+   const all=(await db.ref(root+'devices').orderByChild('uid').equalTo(uid).get()).val()||{};return reply(200,{relayConfigured:remoteRelay().relayConfigured,relayTLSConfigured:remoteRelay().relayTLSConfigured,devices:Object.entries(all).filter(([,d])=>d.uid===uid).map(([id,d])=>publicDevice({...d,id}))});}
   if(action==='heartbeat'){
    agentOnly();await db.ref(root+'devices/'+device.id).update({lastSeen:now});let session=device.session?await read('sessions/'+device.session):null;
    if(session&&(session.expires<=now||session.status==='ended'||!device.enabled)){await db.ref(root+'devices/'+device.id).update({session:null});session=null;}
@@ -70,10 +72,10 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
     if(action==='remove')browserOnly();if(device.session)await db.ref(root+'sessions/'+device.session).update({status:'ended',expires:now});
     if(action==='remove')await write('devices/'+device.id,null);else await db.ref(root+'devices/'+device.id).update({enabled:false,session:null});return reply(200,{ok:true});
    }
-   browserOnly();if(!device.enabled||now-device.lastSeen>=30000)throw failure('Computer is offline or remote access is disabled.');
+   browserOnly();const networkMode=b.networkMode==='relay'?'relay':'auto';if(networkMode==='relay'&&!remoteRelay().relayTLSConfigured)throw failure('Restricted Wi-Fi mode needs a configured TURN/TLS relay on port 443. Ask the Nova owner to finish relay setup.',503);if(!device.enabled||now-device.lastSeen>=30000)throw failure('Computer is offline or remote access is disabled.');
    const id=secret();const lock=await db.ref(root+'devices/'+device.id).transaction(d=>d===null?null:d&&d.uid===uid&&d.enabled&&now-d.lastSeen<30000&&(!d.session||d.sessionUntil<=now)?{...d,session:id,sessionUntil:now+45000}:undefined);
    if(!lock.committed||lock.snapshot.val()?.session!==id)throw failure('This computer already has a connection request or session.',409);
-   await write('sessions/'+id,{uid,device:device.id,status:'requested',viewer:clean(b.viewer,100)||'Nova browser',expires:now+45000,createdAt:now,signals:{}});return reply(200,{session:id,expires:now+45000});
+   await write('sessions/'+id,{uid,device:device.id,status:'requested',networkMode,viewer:clean(b.viewer,100)||'Nova browser',expires:now+45000,createdAt:now,signals:{}});return reply(200,{session:id,expires:now+45000});
   }
   if(!safe(b.session))throw failure('Invalid session.');const session=await read('sessions/'+b.session);
   if(!session||session.uid!==uid||(agent&&session.device!==device.id))throw failure('Session not found.',404);
@@ -91,12 +93,12 @@ export const createRemoteHandler=(service=services)=>async(req,res)=>{
    if(!signal||!['offer','answer','candidate'].includes(signal.type)||JSON.stringify(signal).length>22000)throw failure('Invalid signal.');
    if((['offer','answer'].includes(signal.type)&&typeof signal.sdp!=='string')||(signal.type==='candidate'&&(!signal.candidate||typeof signal.candidate.candidate!=='string')))throw failure('Invalid signal payload.');
    if(signal.type==='offer'&&!agent||signal.type==='answer'&&agent)throw failure('Invalid signaling direction.');
-   const result=await db.ref(root+'sessions/'+b.session+'/signals/'+side).transaction(old=>{const rows=old||[];return rows.length>=160||(signal.type!=='candidate'&&rows.some(r=>r.type===signal.type))?undefined:[...rows,signal]});if(!result.committed)throw failure('Signaling limit reached.',429);
+   const result=await db.ref(root+'sessions/'+b.session+'/signals/'+side).transaction(old=>{const rows=old||[];const previous=signal.type!=='candidate'&&rows.find(r=>r.type===signal.type);if(previous)return previous.sdp===signal.sdp?rows:undefined;return rows.length>=160?undefined:[...rows,signal]});if(!result.committed)throw failure('Signaling limit reached.',429);
   }
   const rows=await read('sessions/'+b.session+'/signals/'+other)||[];
   const offset=Number.isSafeInteger(b.offset)&&b.offset>=0?b.offset:0;
-  const iceServers=[{urls:'stun:stun.l.google.com:19302'}];if(process.env.NOVA_TURN_URL&&process.env.NOVA_TURN_SECRET){const username=Math.floor(session.expires/1000+60)+':'+uid,credential=createHmac('sha1',process.env.NOVA_TURN_SECRET).update(username).digest('base64');iceServers.push({urls:process.env.NOVA_TURN_URL.split(',').map(s=>s.trim()).filter(Boolean),username,credential})}else if(process.env.NOVA_TURN_URL&&process.env.NOVA_TURN_USERNAME&&process.env.NOVA_TURN_CREDENTIAL)iceServers.push({urls:process.env.NOVA_TURN_URL.split(',').map(s=>s.trim()).filter(Boolean),username:process.env.NOVA_TURN_USERNAME,credential:process.env.NOVA_TURN_CREDENTIAL});
-  return reply(200,{status:session.status,expires:session.expires,signals:rows.slice(offset),offset:rows.length,iceServers,relayConfigured:iceServers.length>1});
+  const relay=remoteRelay({uid,expires:session.expires,mode:session.networkMode||'auto'});
+  return reply(200,{status:session.status,expires:session.expires,signals:rows.slice(offset),offset:rows.length,...relay});
  }catch(error){return reply(error.status||400,{error:error.message||'Remote service unavailable.'})}
 };
-export default createRemoteHandler();
+export default withSharedBackend('remote',createRemoteHandler());

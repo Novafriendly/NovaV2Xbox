@@ -14,7 +14,7 @@
     cancelAIMotion();window.NovaMusic?.hide();const id=account()+':'+identity(g);
     if(frame.dataset.session==='true'){frame.hidden=true;frame.removeAttribute('id');}else frame.remove();
     let el=sessions.get(id);
-    if(!el){el=freshFrame();el.dataset.session='true';el.src='player.html?kind='+kind(g)+'&id='+encodeURIComponent(g.id);sessions.set(id,el);}
+    if(!el){el=freshFrame();el.dataset.session='true';el.dataset.sessionKind=kind(g);el.src='player.html?kind='+kind(g)+'&id='+encodeURIComponent(g.id);sessions.set(id,el);}
     else {sessions.delete(id);sessions.set(id,el);}
     frame=el;frame.id='system';frame.title=g.name;frame.hidden=false;
     panel.classList.remove('full-library');panel.dataset.view=kind(g);panel.hidden=false;content.hidden=true;document.getElementById('panel-title').textContent=g.name;
@@ -29,11 +29,14 @@
     cancelAIMotion();if(frame!==el){frame.hidden=true;frame.removeAttribute('id')}
     frame=el;frame.id='system';frame.title=g.name;frame.hidden=false;
     panel.classList.remove('full-library');panel.dataset.view=kind(g);panel.hidden=false;content.hidden=true;
-    document.getElementById('panel-title').textContent=g.name;record(g);return true;
+    document.getElementById('panel-title').textContent=g.name;stopOtherSessions(account()+':'+identity(g));record(g);return true;
   }
   function stopOtherSessions(keepId){
     for(const [id,el] of sessions){
       if(id===keepId)continue;
+      const active=sessions.get(keepId);
+      // Apps can coexist with a game; game and cloud sessions share one slot.
+      if(active?.dataset.sessionKind==='app'||el.dataset.sessionKind==='app'||id.includes(':app:'))continue;
       // Keep the selected game available for Resume, but destroy every replaced
       // game's entire context so nested audio engines and timers stop as well.
       el.src='about:blank';el.remove();sessions.delete(id);
