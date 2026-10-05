@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {createHandler} from '../api/account-login.js';
+import {createHandler} from '../api-handlers/account-login.js';
 const run=async({names={a:{name:'Player'}},password='correct',ready=true}={})=>{
  let issued=false;
  const handler=createHandler(async()=>{if(!ready)throw Error('missing');return {db:{ref:()=>({get:async()=>({val:()=>names})})},auth:{getUser:async()=>({email:'private@example.com'}),createCustomToken:async()=>{issued=true;return 'token'}}}},async(_url,options)=>({ok:JSON.parse(options.body).password==='correct',json:async()=>({localId:'a'})}));

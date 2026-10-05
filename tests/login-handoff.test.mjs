@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
-import {createHandler,configuration,privateRules} from '../api/login-handoff.js';
+import {createHandler,configuration,privateRules} from '../api-handlers/login-handoff.js';
 const primary='https://novaoffical.vercel.app',target='https://new-nova.example';
 const verifier='a'.repeat(43),challenge=createHash('sha256').update(verifier).digest('base64url');
 function harness(userApproval=false){

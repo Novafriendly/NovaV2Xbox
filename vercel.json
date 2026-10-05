@@ -41,6 +41,18 @@
   ],
   "rewrites": [
     {
+      "destination": "/api/account?novaEndpoint=account-login",
+      "source": "/api/account-login"
+    },
+    {
+      "destination": "/api/account?novaEndpoint=login-handoff",
+      "source": "/api/login-handoff"
+    },
+    {
+      "destination": "/api/account?novaEndpoint=secure-appeal",
+      "source": "/api/secure-appeal"
+    },
+    {
       "source": "/computer",
       "destination": "/computer.html"
     }
