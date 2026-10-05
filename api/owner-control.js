@@ -55,9 +55,9 @@ if(['userInventory','setPlayerProgress','removeUserItem'].includes(action)){
  const items=await catalog(),inventoryRef=db.ref('novaControl/inventory/'+b.uid);
  if(action==='removeUserItem'){
   if(b.all!==true&&!valid(b.id))throw Error('Choose a valid item.');
-  let removed=[];const result=await inventoryRef.transaction(inventory=>{inventory=inventory||{};removed=b.all===true?Object.keys(inventory):Object.hasOwn(inventory,b.id)?[b.id]:[];if(!removed.length)return;for(const id of removed)delete inventory[id];return inventory});
-  if(!result.committed)throw Error('No matching items remain in this inventory.');
-  await db.ref('novaChatV2/profiles/'+b.uid).transaction(p=>{if(!p)return;for(const field of ['decoration','effect','chatBanner','banner'])if(removed.includes(p[field]))delete p[field];return p});
+  let removed=[];const result=await inventoryRef.transaction(inventory=>{inventory=inventory||{};removed=b.all===true?Object.keys(inventory):Object.hasOwn(inventory,b.id)?[b.id]:[];for(const id of removed)delete inventory[id];return Object.keys(inventory).length?inventory:null});
+  if(!result.committed||!removed.length)throw Error('No matching items remain in this inventory.');
+  await db.ref('novaChatV2/profiles/'+b.uid).transaction(p=>{p=p||{};for(const field of ['decoration','effect','chatBanner','banner'])if(removed.includes(p[field]))delete p[field];return p});
   await audit({target:b.uid,removed,all:b.all===true});await notifyAccountChange(b.uid,'Your inventory was updated',(account.name||'Nova Owner')+' removed '+removed.length+' profile item'+(removed.length===1?'':'s')+' from your inventory.');
  }
  const [inventory,profile,progress]=await Promise.all([inventoryRef.get(),db.ref('novaChatV2/profiles/'+b.uid).get(),db.ref('novaControl/progress/'+b.uid).get()]);
