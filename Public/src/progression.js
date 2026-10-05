@@ -1,7 +1,7 @@
 (()=>{
 const uid=()=>localStorage.getItem('nova_user'),key=()=> 'nova-progress-'+uid();let lastScan=0,games=[],lastInput=-Infinity,lastTick=performance.now(),state,owner;
 const total=level=>500*(level-1)+125*(level-1)*(level-2);
-function load(){if(owner===uid()&&state)return;owner=uid();state=null;try{state=JSON.parse(localStorage.getItem(key()))}catch{}state=state||{xp:0,coins:0,challenges:[],resetAt:0};if(state.balanceVersion!==3){state.challenges.forEach((c,i)=>{if(!c.claimed){c.minutes=[10,15,20,30][i];c.reward=[50,100,150,250][i]}else c.reward??=c.minutes*25});state.balanceVersion=3;save()}}
+function load(){if(owner===uid()&&state)return;owner=uid();state=null;try{state=JSON.parse(localStorage.getItem(key()))}catch{}state=state||{xp:0,coins:0,challenges:[],resetAt:0};if(state.balanceVersion!==4){state.challenges.forEach((c,i)=>{if(!c.claimed){c.minutes=[10,15,20,30][i];c.reward=[100,200,300,500][i]}else c.reward??=c.minutes*25});state.balanceVersion=4;save()}}
 function save(){localStorage.setItem(key(),JSON.stringify(state))}
 function generate(){}
 function input(e){if(e.isTrusted)lastInput=performance.now()}

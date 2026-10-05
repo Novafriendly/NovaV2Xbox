@@ -147,3 +147,4 @@ body.nova-os.os-low-effects .os-dock,body.nova-os.os-low-effects .os-ribbon,body
 body.nova-os.os-low-effects .os-window-body{isolation:isolate}
 body.nova-os.os-low-effects .os-dragging,body.nova-os.os-low-effects .os-dragging .os-titlebar{backdrop-filter:none!important;box-shadow:none!important}
 body.nova-os .os-window[hidden]{content-visibility:hidden}
+.os-game-peers{display:flex;align-items:center;gap:4px;padding-left:9px;border-left:1px solid #ffffff24;flex-shrink:0}.os-game-peers button{display:grid;place-items:center;border:0;background:transparent;padding:2px;border-radius:50%;color:#fff;cursor:pointer;min-width:28px;height:30px}.os-game-peers button:hover{background:#ffffff20}.os-game-peers button:focus-visible{outline:2px solid #a7c6ff}.os-game-peers .nova-home-avatar{width:25px;height:25px}.os-player-identity:has(.os-game-peers){max-width:42%}
