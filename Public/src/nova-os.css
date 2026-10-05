@@ -141,3 +141,9 @@ body.nova-os:has(.os-window:is([data-window=app-chat],[data-window=app-music],[d
 
 /* App iframes already sit below their window header; use the whole body. */
 body.nova-os .os-window>.os-window-body>iframe,body.nova-os .os-window>.os-window-body>#system{height:100%!important;max-height:none!important;min-height:0;width:100%;display:block;margin:0;border:0}
+/* Limit costly wallpaper sampling on laptops while preserving glass colors. */
+body.nova-os.os-low-effects .os-window{backdrop-filter:none!important;box-shadow:0 10px 28px #03071938}
+body.nova-os.os-low-effects .os-dock,body.nova-os.os-low-effects .os-ribbon,body.nova-os.os-low-effects .home-challenges,body.nova-os.os-low-effects .os-profile-menu,body.nova-os.os-low-effects .os-audio,body.nova-os.os-low-effects .library-sticky{backdrop-filter:blur(6px)!important}
+body.nova-os.os-low-effects .os-window-body{isolation:isolate}
+body.nova-os.os-low-effects .os-dragging,body.nova-os.os-low-effects .os-dragging .os-titlebar{backdrop-filter:none!important;box-shadow:none!important}
+body.nova-os .os-window[hidden]{content-visibility:hidden}
