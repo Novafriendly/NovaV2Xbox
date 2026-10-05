@@ -6,3 +6,10 @@ test('copies forward auth and body to fixed primary',async()=>{let call;const fn
 test('primary and independently configured sites use local handler',async()=>{for(const [env,host]of [[{},'novaoffical.vercel.app'],[{FIREBASE_SERVICE_ACCOUNT_JSON:'private'},'copy.example']]){let called=false;await withSharedBackend('voice',()=>{called=true},{env,request:()=>assert.fail()})({headers:{host}},response());assert.ok(called)}});
 test('loops and oversized requests are rejected',async()=>{const fn=withSharedBackend('voice',()=>assert.fail(),{env:{},request:()=>assert.fail()});let res=response();await fn({method:'POST',headers:{host:'copy.example','x-nova-shared-hop':'1'}},res);assert.equal(res.statusCode,503);res=response();await fn({method:'POST',headers:{host:'copy.example'},body:'a'.repeat(250001)},res);assert.equal(res.statusCode,413)});
 test('failures hide details and unknown endpoints cannot forward',async()=>{const res=response();await withSharedBackend('voice',()=>assert.fail(),{env:{},request:()=>{throw Error('secret')}})({method:'POST',headers:{},body:{}},res);assert.equal(res.statusCode,503);assert.ok(!res.body.includes('secret'));assert.throws(()=>withSharedBackend('arbitrary',()=>{}))});
+
+test('upstream payment and HTML errors never masquerade as JSON',async()=>{
+ for(const [status,body]of [[402,'Payment required'],[500,'<html>Server failure</html>']]){
+  const res=response();await withSharedBackend('owner-control',()=>assert.fail(),{env:{},request:async()=>({status,text:async()=>body})})({method:'POST',headers:{},body:{}},res);
+  assert.equal(res.statusCode,503);assert.ok(JSON.parse(res.body).error.includes(status===402?'Vercel':'unavailable'));
+ }
+});
