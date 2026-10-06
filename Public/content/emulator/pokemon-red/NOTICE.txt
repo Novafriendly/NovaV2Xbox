@@ -1,0 +1,5 @@
+EmulatorJS bundle from a456pur/seraph, commit 81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76.
+Upstream project/source: https://github.com/EmulatorJS/EmulatorJS
+Game Boy core: Gambatte / libretro-gambatte.
+Compression helpers retain their bundled source notices.
+The game archive is unchanged from the existing Nova Pokemon Red catalog URL (recorded in manifest.json). Game artwork and ROM are separate from the emulator software license.

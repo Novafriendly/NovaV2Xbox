@@ -1,0 +1,11 @@
+import {mkdir,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const root=new URL('../Public/content/emulator/pokemon-red/',import.meta.url);
+const source='https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/';
+const rom='https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@cf2db6e9366385521ac2ce4e87b8d364aac61a37/Pokemon%20-%20Red%20Version%20(USA%2C%20Europe)%20(SGB%20Enhanced).zip';
+const files=['loader.js','emulator.min.js','emulator.min.css','cores/gambatte-wasm.data','compression/extract7z.js','compression/extractzip.js'];
+const manifest=[];
+for(const file of [...files,'pokemon-red.zip']){const url=file==='pokemon-red.zip'?rom:source+file;const response=await fetch(url);if(!response.ok)throw Error(file+': HTTP '+response.status);let bytes=new Uint8Array(await response.arrayBuffer());let patch;if(file==='emulator.min.js'){const sourceText=new TextDecoder().decode(bytes);const patched=sourceText.replace(/checkForUpdates\(\)\{[\s\S]*?\}constructor\(/,'checkForUpdates(){}constructor(');if(patched===sourceText)throw Error('Emulator update-check source changed.');bytes=new TextEncoder().encode(patched);patch='Optional developer update check disabled for the local bundle.'}const destination=new URL(file,root);await mkdir(new URL('./',destination),{recursive:true});await writeFile(destination,bytes);manifest.push({file,url,...(patch?{patch}:{}),bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')})}
+await writeFile(new URL('manifest.json',root),JSON.stringify(manifest,null,2)+'\n');
+await writeFile(new URL('NOTICE.txt',root),'EmulatorJS bundle from a456pur/seraph, commit 81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76.\nUpstream project/source: https://github.com/EmulatorJS/EmulatorJS\nGame Boy core: Gambatte / libretro-gambatte.\nCompression helpers retain their bundled source notices.\nThe game archive is unchanged from the existing Nova Pokemon Red catalog URL (recorded in manifest.json). Game artwork and ROM are separate from the emulator software license.\n');
+console.log('Bundled',manifest.length,'pinned game files,',manifest.reduce((n,f)=>n+f.bytes,0),'bytes.');
