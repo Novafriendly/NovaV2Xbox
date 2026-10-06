@@ -7,7 +7,8 @@
   let observer,timer,chosen=false,launched=false,stopped=false,exitRequested=false;
   function dialog(){
    const title=doc.getElementById('launch-session-title');
-   return title?.textContent.trim()===item.name?title.closest('[role="dialog"]'):null;
+   if(title?.textContent.trim()===item.name)return title.closest('[role="dialog"]');
+   return [...doc.querySelectorAll('[role="dialog"],dialog')].find(panel=>{if(typeof panel.querySelectorAll!=='function')return false;const heading=panel.querySelector?.('h1,h2,h3,[data-dialog-title]');return heading?.textContent.trim()===item.name||panel.getAttribute?.('aria-label')===item.name||panel.textContent?.trim().startsWith(item.name+'Do assignments')})||null;
   }
   function dismissButton(button){
    return button.querySelector('path[d="M1 1l12 12M13 1L1 13"]')||/^(close|dismiss)(?:\b|$)/i.test(button.getAttribute('aria-label')||'');

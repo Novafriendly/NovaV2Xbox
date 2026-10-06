@@ -5,6 +5,7 @@ const style=document.createElement('style');style.textContent=`.nova-notice{posi
 const queues={chat:[],reward:[]},active={};
 function show(kind,item){
  dispatchEvent(new CustomEvent('nova-notification',{detail:{kind,item}}));
+ if(localStorage.getItem('nova_os_quiet')==='true')return;
  if(kind==='chat'&&active.chat?.sender===item.sender){active.chat.update(item);return}
  const queued=kind==='chat'?queues.chat.findIndex(n=>n.sender===item.sender):-1;
  if(queued>=0)queues.chat[queued]=item;else queues[kind].push(item);

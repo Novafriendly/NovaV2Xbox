@@ -89,3 +89,5 @@ test('an Exit label outside the streaming HUD never routes Home',()=>{
  api.attach(fixture.doc,{name:'Grand Theft Auto V'},{onExit:()=>exits++});fixture.stream(true);
  fixture.event('click',{closest:()=>({textContent:'Exit',closest:()=>null})});fixture.stream(false);fixture.notify();assert.equal(exits,0);
 });
+
+test('current Astra dialogs without the old title ID still launch exactly the selected game',()=>{const api=runtime(),f=documentFixture();f.add('Stumble Guys','selected');const {panel}=f.modal('Stumble Guys');f.doc.getElementById=()=>null;const query=f.doc.querySelectorAll;f.doc.querySelectorAll=selector=>selector.includes('dialog')?[panel]:query(selector);panel.querySelector=()=>({textContent:'Stumble Guys'});api.attach(f.doc,{name:'Stumble Guys'});f.notify();assert.deepEqual(f.clicks,['selected','launch']);f.hide()});

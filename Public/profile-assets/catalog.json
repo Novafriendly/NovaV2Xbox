@@ -4,1098 +4,1390 @@
     "name": "Angry Banner",
     "kind": "banner",
     "src": "/profile-assets/Banner/AngryBanner.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-0.webp"
   },
   {
     "id": "banner-1",
     "name": "Bird",
     "kind": "banner",
     "src": "/profile-assets/Banner/Bird.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-1.webp"
   },
   {
     "id": "banner-2",
     "name": "blackbutterfly",
     "kind": "banner",
     "src": "/profile-assets/Banner/blackbutterfly.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-2.webp"
   },
   {
     "id": "banner-3",
     "name": "Blackflash",
     "kind": "banner",
     "src": "/profile-assets/Banner/Blackflash.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-3.webp"
   },
   {
     "id": "banner-4",
     "name": "blackgirl",
     "kind": "banner",
     "src": "/profile-assets/Banner/blackgirl.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-4.webp"
   },
   {
     "id": "banner-5",
     "name": "bluebearheart",
     "kind": "banner",
     "src": "/profile-assets/Banner/bluebearheart.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-5.webp"
   },
   {
     "id": "banner-6",
     "name": "Bluerockwaves",
     "kind": "banner",
     "src": "/profile-assets/Banner/Bluerockwaves.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-6.webp"
   },
   {
     "id": "banner-7",
     "name": "bluewavesbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/bluewavesbanner.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-7.webp"
   },
   {
     "id": "banner-8",
     "name": "bubleeffecriple",
     "kind": "banner",
     "src": "/profile-assets/Banner/bubleeffecriple.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-8.webp"
   },
   {
     "id": "banner-9",
     "name": "bunnthappyfirend",
     "kind": "banner",
     "src": "/profile-assets/Banner/bunnthappyfirend.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/banner-9.webp"
   },
   {
     "id": "banner-10",
     "name": "Butterflyblack",
     "kind": "banner",
     "src": "/profile-assets/Banner/Butterflyblack.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-10.webp"
   },
   {
     "id": "banner-11",
     "name": "china",
     "kind": "banner",
     "src": "/profile-assets/Banner/china.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-11.webp"
   },
   {
     "id": "banner-12",
     "name": "City Banner",
     "kind": "banner",
     "src": "/profile-assets/Banner/CityBanner.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-12.webp"
   },
   {
     "id": "banner-13",
     "name": "Darkvardbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/Darkvardbanner.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-13.webp"
   },
   {
     "id": "banner-14",
     "name": "Dog WOlf",
     "kind": "banner",
     "src": "/profile-assets/Banner/DogWOlf.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-14.webp"
   },
   {
     "id": "banner-15",
     "name": "firebanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/firebanner.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-15.webp"
   },
   {
     "id": "banner-16",
     "name": "Fireflygirls",
     "kind": "banner",
     "src": "/profile-assets/Banner/Fireflygirls.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-16.webp"
   },
   {
     "id": "banner-17",
     "name": "Fireplace",
     "kind": "banner",
     "src": "/profile-assets/Banner/Fireplace.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-17.webp"
   },
   {
     "id": "banner-18",
     "name": "Flowefallurple",
     "kind": "banner",
     "src": "/profile-assets/Banner/Flowefallurple.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-18.webp"
   },
   {
     "id": "banner-19",
     "name": "Fur",
     "kind": "banner",
     "src": "/profile-assets/Banner/Fur.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/banner-19.webp"
   },
   {
     "id": "banner-20",
     "name": "Ghost Eyes",
     "kind": "banner",
     "src": "/profile-assets/Banner/GhostEyes.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-20.webp"
   },
   {
     "id": "banner-21",
     "name": "Ghost Hands",
     "kind": "banner",
     "src": "/profile-assets/Banner/GhostHands.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-21.webp"
   },
   {
     "id": "banner-22",
     "name": "gojobanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/gojobanner.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-22.webp"
   },
   {
     "id": "banner-23",
     "name": "greenanimatl",
     "kind": "banner",
     "src": "/profile-assets/Banner/greenanimatl.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-23.webp"
   },
   {
     "id": "banner-24",
     "name": "Green Girlbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/GreenGirlbanner.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-24.webp"
   },
   {
     "id": "banner-25",
     "name": "Greenlights",
     "kind": "banner",
     "src": "/profile-assets/Banner/Greenlights.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-25.webp"
   },
   {
     "id": "banner-26",
     "name": "happybunny",
     "kind": "banner",
     "src": "/profile-assets/Banner/happybunny.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-26.webp"
   },
   {
     "id": "banner-27",
     "name": "hearbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/hearbanner.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-27.webp"
   },
   {
     "id": "banner-28",
     "name": "Love Heart",
     "kind": "banner",
     "src": "/profile-assets/Banner/LoveHeart.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/banner-28.webp"
   },
   {
     "id": "banner-29",
     "name": "Moon Banner",
     "kind": "banner",
     "src": "/profile-assets/Banner/MoonBanner.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-29.webp"
   },
   {
     "id": "banner-30",
     "name": "Mushrooms",
     "kind": "banner",
     "src": "/profile-assets/Banner/Mushrooms.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-30.webp"
   },
   {
     "id": "banner-31",
     "name": "orbbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/orbbanner.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-31.webp"
   },
   {
     "id": "banner-32",
     "name": "panterbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/panterbanner.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-32.webp"
   },
   {
     "id": "banner-33",
     "name": "pinkflowerbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/pinkflowerbanner.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-33.webp"
   },
   {
     "id": "banner-34",
     "name": "Pink Person",
     "kind": "banner",
     "src": "/profile-assets/Banner/PinkPerson.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-34.webp"
   },
   {
     "id": "banner-35",
     "name": "purplebanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/purplebanner.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-35.webp"
   },
   {
     "id": "banner-36",
     "name": "purple Butterflybanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/purpleButterflybanner.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-36.webp"
   },
   {
     "id": "banner-37",
     "name": "purpleclashair",
     "kind": "banner",
     "src": "/profile-assets/Banner/purpleclashair.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-37.webp"
   },
   {
     "id": "banner-38",
     "name": "purplefire",
     "kind": "banner",
     "src": "/profile-assets/Banner/purplefire.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/banner-38.webp"
   },
   {
     "id": "banner-39",
     "name": "purplethingy",
     "kind": "banner",
     "src": "/profile-assets/Banner/purplethingy.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-39.webp"
   },
   {
     "id": "banner-40",
     "name": "Purple Waves",
     "kind": "banner",
     "src": "/profile-assets/Banner/PurpleWaves.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-40.webp"
   },
   {
     "id": "banner-41",
     "name": "Racconbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/Racconbanner.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-41.webp"
   },
   {
     "id": "banner-42",
     "name": "Redtree",
     "kind": "banner",
     "src": "/profile-assets/Banner/Redtree.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-42.webp"
   },
   {
     "id": "banner-43",
     "name": "robotdance",
     "kind": "banner",
     "src": "/profile-assets/Banner/robotdance.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-43.webp"
   },
   {
     "id": "banner-44",
     "name": "skelton",
     "kind": "banner",
     "src": "/profile-assets/Banner/skelton.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-44.webp"
   },
   {
     "id": "banner-45",
     "name": "solarrainbow",
     "kind": "banner",
     "src": "/profile-assets/Banner/solarrainbow.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-45.webp"
   },
   {
     "id": "banner-46",
     "name": "somestateidk",
     "kind": "banner",
     "src": "/profile-assets/Banner/somestateidk.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-46.webp"
   },
   {
     "id": "banner-47",
     "name": "space",
     "kind": "banner",
     "src": "/profile-assets/Banner/space.png",
-    "rarity": "singularity"
+    "rarity": "singularity",
+    "thumbnail": "/profile-assets/thumbs/banner-47.webp"
   },
   {
     "id": "banner-48",
     "name": "Spideeffect",
     "kind": "banner",
     "src": "/profile-assets/Banner/Spideeffect.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-48.webp"
   },
   {
     "id": "banner-49",
     "name": "sunlight",
     "kind": "banner",
     "src": "/profile-assets/Banner/sunlight.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-49.webp"
   },
   {
     "id": "banner-50",
     "name": "Tigerbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/Tigerbanner.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-50.webp"
   },
   {
     "id": "banner-51",
     "name": "toys",
     "kind": "banner",
     "src": "/profile-assets/Banner/toys.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-51.webp"
   },
   {
     "id": "banner-52",
     "name": "Water Earth",
     "kind": "banner",
     "src": "/profile-assets/Banner/WaterEarth.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-52.webp"
   },
   {
     "id": "banner-53",
     "name": "Water Moon",
     "kind": "banner",
     "src": "/profile-assets/Banner/WaterMoon.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-53.webp"
   },
   {
     "id": "banner-54",
     "name": "waterspirits",
     "kind": "banner",
     "src": "/profile-assets/Banner/waterspirits.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-54.webp"
   },
   {
     "id": "banner-55",
     "name": "Wolfangry",
     "kind": "banner",
     "src": "/profile-assets/Banner/Wolfangry.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-55.webp"
   },
   {
     "id": "banner-56",
     "name": "Wolfbanner",
     "kind": "banner",
     "src": "/profile-assets/Banner/Wolfbanner.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/banner-56.webp"
   },
   {
     "id": "banner-57",
     "name": "Zeropointeffect",
     "kind": "banner",
     "src": "/profile-assets/Banner/Zeropointeffect.png",
-    "rarity": "singularity"
+    "rarity": "singularity",
+    "thumbnail": "/profile-assets/thumbs/banner-57.webp"
   },
   {
     "id": "decoration-58",
     "name": "1",
     "kind": "decoration",
     "src": "/profile-assets/Profile/1.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-58.webp"
   },
   {
     "id": "decoration-59",
     "name": "Angry",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Angry.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-59.webp"
   },
   {
     "id": "decoration-60",
     "name": "animated (2)",
     "kind": "decoration",
     "src": "/profile-assets/Profile/animated (2).png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-60.webp"
   },
   {
     "id": "decoration-61",
     "name": "animated",
     "kind": "decoration",
     "src": "/profile-assets/Profile/animated.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-61.webp"
   },
   {
     "id": "decoration-62",
     "name": "animated1",
     "kind": "decoration",
     "src": "/profile-assets/Profile/animated1.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-62.webp"
   },
   {
     "id": "decoration-63",
     "name": "animated2",
     "kind": "decoration",
     "src": "/profile-assets/Profile/animated2.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-63.webp"
   },
   {
     "id": "decoration-64",
     "name": "blue",
     "kind": "decoration",
     "src": "/profile-assets/Profile/blue.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-64.webp"
   },
   {
     "id": "decoration-65",
     "name": "bubble",
     "kind": "decoration",
     "src": "/profile-assets/Profile/bubble.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-65.webp"
   },
   {
     "id": "decoration-66",
     "name": "bunny",
     "kind": "decoration",
     "src": "/profile-assets/Profile/bunny.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-66.webp"
   },
   {
     "id": "decoration-67",
     "name": "Butterfly",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Butterfly.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/decoration-67.webp"
   },
   {
     "id": "decoration-68",
     "name": "cat",
     "kind": "decoration",
     "src": "/profile-assets/Profile/cat.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-68.webp"
   },
   {
     "id": "decoration-69",
     "name": "catfall",
     "kind": "decoration",
     "src": "/profile-assets/Profile/catfall.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-69.webp"
   },
   {
     "id": "decoration-70",
     "name": "catpors",
     "kind": "decoration",
     "src": "/profile-assets/Profile/catpors.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-70.webp"
   },
   {
     "id": "decoration-71",
     "name": "catprofile",
     "kind": "decoration",
     "src": "/profile-assets/Profile/catprofile.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-71.webp"
   },
   {
     "id": "decoration-72",
     "name": "Chinsehat",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Chinsehat.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-72.webp"
   },
   {
     "id": "decoration-73",
     "name": "cloudprofile",
     "kind": "decoration",
     "src": "/profile-assets/Profile/cloudprofile.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-73.webp"
   },
   {
     "id": "decoration-74",
     "name": "Coolanimationspinner",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Coolanimationspinner.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-74.webp"
   },
   {
     "id": "decoration-75",
     "name": "coolpurpleballs",
     "kind": "decoration",
     "src": "/profile-assets/Profile/coolpurpleballs.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-75.webp"
   },
   {
     "id": "decoration-76",
     "name": "Disco",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Disco.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-76.webp"
   },
   {
     "id": "decoration-77",
     "name": "dolphins",
     "kind": "decoration",
     "src": "/profile-assets/Profile/dolphins.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/decoration-77.webp"
   },
   {
     "id": "decoration-78",
     "name": "dragon",
     "kind": "decoration",
     "src": "/profile-assets/Profile/dragon.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-78.webp"
   },
   {
     "id": "decoration-79",
     "name": "earsfox",
     "kind": "decoration",
     "src": "/profile-assets/Profile/earsfox.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-79.webp"
   },
   {
     "id": "decoration-80",
     "name": "Eyephonk",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Eyephonk.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-80.webp"
   },
   {
     "id": "decoration-81",
     "name": "Feetprofile",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Feetprofile.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-81.webp"
   },
   {
     "id": "decoration-82",
     "name": "fire",
     "kind": "decoration",
     "src": "/profile-assets/Profile/fire.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-82.webp"
   },
   {
     "id": "decoration-83",
     "name": "Fish Tank",
     "kind": "decoration",
     "src": "/profile-assets/Profile/FishTank.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-83.webp"
   },
   {
     "id": "decoration-84",
     "name": "Fox",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Fox.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-84.webp"
   },
   {
     "id": "decoration-85",
     "name": "Fox Profile",
     "kind": "decoration",
     "src": "/profile-assets/Profile/FoxProfile.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-85.webp"
   },
   {
     "id": "decoration-86",
     "name": "Ghostspide",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Ghostspide.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-86.webp"
   },
   {
     "id": "decoration-87",
     "name": "gojoprofile",
     "kind": "decoration",
     "src": "/profile-assets/Profile/gojoprofile.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/decoration-87.webp"
   },
   {
     "id": "decoration-88",
     "name": "green",
     "kind": "decoration",
     "src": "/profile-assets/Profile/green.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-88.webp"
   },
   {
     "id": "decoration-89",
     "name": "hat",
     "kind": "decoration",
     "src": "/profile-assets/Profile/hat.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-89.webp"
   },
   {
     "id": "decoration-90",
     "name": "kinfire",
     "kind": "decoration",
     "src": "/profile-assets/Profile/kinfire.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-90.webp"
   },
   {
     "id": "decoration-91",
     "name": "maskman",
     "kind": "decoration",
     "src": "/profile-assets/Profile/maskman.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-91.webp"
   },
   {
     "id": "decoration-92",
     "name": "Meow",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Meow.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-92.webp"
   },
   {
     "id": "decoration-93",
     "name": "Moonflower",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Moonflower.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-93.webp"
   },
   {
     "id": "decoration-94",
     "name": "Moonprofile",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Moonprofile.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-94.webp"
   },
   {
     "id": "decoration-95",
     "name": "nightred",
     "kind": "decoration",
     "src": "/profile-assets/Profile/nightred.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-95.webp"
   },
   {
     "id": "decoration-96",
     "name": "panda",
     "kind": "decoration",
     "src": "/profile-assets/Profile/panda.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-96.webp"
   },
   {
     "id": "decoration-97",
     "name": "Panther",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Panther.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/decoration-97.webp"
   },
   {
     "id": "decoration-98",
     "name": "Pink Rose Profile",
     "kind": "decoration",
     "src": "/profile-assets/Profile/PinkRoseProfile.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-98.webp"
   },
   {
     "id": "decoration-99",
     "name": "pinktree",
     "kind": "decoration",
     "src": "/profile-assets/Profile/pinktree.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-99.webp"
   },
   {
     "id": "decoration-100",
     "name": "purple",
     "kind": "decoration",
     "src": "/profile-assets/Profile/purple.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-100.webp"
   },
   {
     "id": "decoration-101",
     "name": "purplemoon",
     "kind": "decoration",
     "src": "/profile-assets/Profile/purplemoon.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-101.webp"
   },
   {
     "id": "decoration-102",
     "name": "Raccon",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Raccon.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-102.webp"
   },
   {
     "id": "decoration-103",
     "name": "Ringpfp",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Ringpfp.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-103.webp"
   },
   {
     "id": "decoration-104",
     "name": "slashpink",
     "kind": "decoration",
     "src": "/profile-assets/Profile/slashpink.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-104.webp"
   },
   {
     "id": "decoration-105",
     "name": "smokefirek",
     "kind": "decoration",
     "src": "/profile-assets/Profile/smokefirek.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-105.webp"
   },
   {
     "id": "decoration-106",
     "name": "Soccer",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Soccer.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-106.webp"
   },
   {
     "id": "decoration-107",
     "name": "somethingidk",
     "kind": "decoration",
     "src": "/profile-assets/Profile/somethingidk.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-107.webp"
   },
   {
     "id": "decoration-108",
     "name": "Spideman",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Spideman.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-108.webp"
   },
   {
     "id": "decoration-109",
     "name": "strawberry",
     "kind": "decoration",
     "src": "/profile-assets/Profile/strawberry.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-109.webp"
   },
   {
     "id": "decoration-110",
     "name": "tiger",
     "kind": "decoration",
     "src": "/profile-assets/Profile/tiger.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-110.webp"
   },
   {
     "id": "decoration-111",
     "name": "venom",
     "kind": "decoration",
     "src": "/profile-assets/Profile/venom.png",
-    "rarity": "singularity"
+    "rarity": "singularity",
+    "thumbnail": "/profile-assets/thumbs/decoration-111.webp"
   },
   {
     "id": "decoration-112",
     "name": "Whale",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Whale.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-112.webp"
   },
   {
     "id": "decoration-113",
     "name": "Wings",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Wings.png",
-    "rarity": "singularity"
+    "rarity": "singularity",
+    "thumbnail": "/profile-assets/thumbs/decoration-113.webp"
   },
   {
     "id": "decoration-114",
     "name": "Wolf",
     "kind": "decoration",
     "src": "/profile-assets/Profile/Wolf.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-114.webp"
   },
   {
     "id": "decoration-115",
     "name": "yellow",
     "kind": "decoration",
     "src": "/profile-assets/Profile/yellow.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-115.webp"
   },
   {
     "id": "decoration-116",
     "name": "zero",
     "kind": "decoration",
     "src": "/profile-assets/Profile/zero.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/decoration-116.webp"
   },
   {
     "id": "effect-117",
     "name": "batmanugly",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/batmanugly.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/effect-117.webp"
   },
   {
     "id": "effect-118",
     "name": "Birdsfly",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Birdsfly.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/effect-118.webp"
   },
   {
     "id": "effect-119",
     "name": "blackgirl",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/blackgirl.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/effect-119.webp"
   },
   {
     "id": "effect-120",
     "name": "Black Handman",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/BlackHandman.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/effect-120.webp"
   },
   {
     "id": "effect-121",
     "name": "Black Roses",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/BlackRoses.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/effect-121.webp"
   },
   {
     "id": "effect-122",
     "name": "blacksmile",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/blacksmile.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/effect-122.webp"
   },
   {
     "id": "effect-123",
     "name": "blue Profileffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/blueProfileffect.png",
-    "rarity": "common"
+    "rarity": "common",
+    "thumbnail": "/profile-assets/thumbs/effect-123.webp"
   },
   {
     "id": "effect-124",
     "name": "blueprofileffect21",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/blueprofileffect21.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/effect-124.webp"
   },
   {
     "id": "effect-125",
     "name": "brightfall",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/brightfall.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/effect-125.webp"
   },
   {
     "id": "effect-126",
     "name": "buble",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/buble.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/effect-126.webp"
   },
   {
     "id": "effect-127",
     "name": "Coolerbutterfly",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Coolerbutterfly.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/effect-127.webp"
   },
   {
     "id": "effect-128",
     "name": "darkvardar",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/darkvardar.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/effect-128.webp"
   },
   {
     "id": "effect-129",
     "name": "Dog Bark",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/DogBark.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/effect-129.webp"
   },
   {
     "id": "effect-130",
     "name": "ezgif-76a7cc40627e7973",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/ezgif-76a7cc40627e7973.png",
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "thumbnail": "/profile-assets/thumbs/effect-130.webp"
   },
   {
     "id": "effect-131",
     "name": "Falleffectdwn",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Falleffectdwn.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/effect-131.webp"
   },
   {
     "id": "effect-132",
     "name": "Fallleafeffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Fallleafeffect.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/effect-132.webp"
   },
   {
     "id": "effect-133",
     "name": "Fallprofileffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Fallprofileffect.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/effect-133.webp"
   },
   {
     "id": "effect-134",
     "name": "Flowebutterfly",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Flowebutterfly.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/effect-134.webp"
   },
   {
     "id": "effect-135",
     "name": "flowers",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/flowers.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/effect-135.webp"
   },
   {
     "id": "effect-136",
     "name": "Girl Teethugly",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/GirlTeethugly.png",
-    "rarity": "epic"
+    "rarity": "epic",
+    "thumbnail": "/profile-assets/thumbs/effect-136.webp"
   },
   {
     "id": "effect-137",
     "name": "Gojoprofilebackground",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Gojoprofilebackground.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/effect-137.webp"
   },
   {
     "id": "effect-138",
     "name": "gojoprofileffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/gojoprofileffect.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/effect-138.webp"
   },
   {
     "id": "effect-139",
     "name": "greengirl",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/greengirl.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/effect-139.webp"
   },
   {
     "id": "effect-140",
     "name": "greenspermcells",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/greenspermcells.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/effect-140.webp"
   },
   {
     "id": "effect-141",
     "name": "Moonbat",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Moonbat.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/effect-141.webp"
   },
   {
     "id": "effect-142",
     "name": "ninjaeffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/ninjaeffect.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/effect-142.webp"
   },
   {
     "id": "effect-143",
     "name": "Pinkeffectbackgrund",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Pinkeffectbackgrund.png",
-    "rarity": "legendary"
+    "rarity": "legendary",
+    "thumbnail": "/profile-assets/thumbs/effect-143.webp"
   },
   {
     "id": "effect-144",
     "name": "pink Girl",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/pinkGirl.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-144.webp"
   },
   {
     "id": "effect-145",
     "name": "Pinktree",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Pinktree.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-145.webp"
   },
   {
     "id": "effect-146",
     "name": "Pink Treeprofileffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/PinkTreeprofileffect.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-146.webp"
   },
   {
     "id": "effect-147",
     "name": "purplebutterfly",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/purplebutterfly.png",
-    "rarity": "singularity"
+    "rarity": "singularity",
+    "thumbnail": "/profile-assets/thumbs/effect-147.webp"
   },
   {
     "id": "effect-148",
     "name": "purpledrip",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/purpledrip.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-148.webp"
   },
   {
     "id": "effect-149",
     "name": "purpledust",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/purpledust.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-149.webp"
   },
   {
     "id": "effect-150",
     "name": "purplerippleeffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/purplerippleeffect.png",
-    "rarity": "singularity"
+    "rarity": "singularity",
+    "thumbnail": "/profile-assets/thumbs/effect-150.webp"
   },
   {
     "id": "effect-151",
     "name": "purpleslide",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/purpleslide.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-151.webp"
   },
   {
     "id": "effect-152",
     "name": "Purpl Zombie",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/PurplZombie.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-152.webp"
   },
   {
     "id": "effect-153",
     "name": "Sharkeffecsat",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Sharkeffecsat.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-153.webp"
   },
   {
     "id": "effect-154",
     "name": "Sharkeffect",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/Sharkeffect.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-154.webp"
   },
   {
     "id": "effect-155",
     "name": "syperkpk",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/syperkpk.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-155.webp"
   },
   {
     "id": "effect-156",
     "name": "yellowlantern",
     "kind": "effect",
     "src": "/profile-assets/ProfileEffect/yellowlantern.png",
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "thumbnail": "/profile-assets/thumbs/effect-156.webp"
+  },
+  {
+    "id": "halloween-batsbanner",
+    "name": "Midnight Bats",
+    "kind": "banner",
+    "src": "/profile-assets/halloween/banner/batsbanner.png",
+    "rarity": "common",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-batsbanner.webp"
+  },
+  {
+    "id": "halloween-sparkle",
+    "name": "Spectral Sparkle",
+    "kind": "banner",
+    "src": "/profile-assets/halloween/banner/sparkle.png",
+    "rarity": "uncommon",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-sparkle.webp"
+  },
+  {
+    "id": "halloween-cathaghalloween",
+    "name": "Haunted Cat",
+    "kind": "decoration",
+    "src": "/profile-assets/halloween/profile/cathaghalloween.png",
+    "rarity": "epic",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-cathaghalloween.webp"
+  },
+  {
+    "id": "halloween-glow",
+    "name": "Pumpkin Glow",
+    "kind": "decoration",
+    "src": "/profile-assets/halloween/profile/glow.png",
+    "rarity": "uncommon",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-glow.webp"
+  },
+  {
+    "id": "halloween-halloweenpumpkin",
+    "name": "Halloween Pumpkin",
+    "kind": "decoration",
+    "src": "/profile-assets/halloween/profile/halloweenpumpkin.png",
+    "rarity": "common",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-halloweenpumpkin.webp"
+  },
+  {
+    "id": "halloween-pinkglobe",
+    "name": "Rose Moon",
+    "kind": "decoration",
+    "src": "/profile-assets/halloween/profile/pinkglobe.png",
+    "rarity": "legendary",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-pinkglobe.webp"
+  },
+  {
+    "id": "halloween-star",
+    "name": "Witching Star",
+    "kind": "decoration",
+    "src": "/profile-assets/halloween/profile/star.png",
+    "rarity": "mythic",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-star.webp"
+  },
+  {
+    "id": "halloween-teeth",
+    "name": "Vampire Bite",
+    "kind": "decoration",
+    "src": "/profile-assets/halloween/profile/teeth.png",
+    "rarity": "uncommon",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-teeth.webp"
+  },
+  {
+    "id": "halloween-batbackground",
+    "name": "Nightfall Singularity",
+    "kind": "effect",
+    "src": "/profile-assets/halloween/profileeffect/batbackground.png",
+    "rarity": "singularity",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-batbackground.webp"
+  },
+  {
+    "id": "halloween-girhalloween",
+    "name": "Witching Hour",
+    "kind": "effect",
+    "src": "/profile-assets/halloween/profileeffect/Girhalloween.png",
+    "rarity": "legendary",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-girhalloween.webp"
+  },
+  {
+    "id": "halloween-girlhalloweencat",
+    "name": "Cat Familiar",
+    "kind": "effect",
+    "src": "/profile-assets/halloween/profileeffect/girlhalloweencat.png",
+    "rarity": "mythic",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-girlhalloweencat.webp"
+  },
+  {
+    "id": "halloween-halloweendog",
+    "name": "Ghost Hound",
+    "kind": "effect",
+    "src": "/profile-assets/halloween/profileeffect/halloweendog.png",
+    "rarity": "epic",
+    "collection": "halloween",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-halloweendog.webp"
+  },
+  {
+    "id": "halloween-blackbackground",
+    "name": "Blackout",
+    "rarity": "legendary",
+    "kind": "effect",
+    "collection": "halloween",
+    "src": "/profile-assets/halloween/profileeffect/blackbackground.png",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-blackbackground.webp"
+  },
+  {
+    "id": "halloween-darkvard",
+    "name": "Dark Vard",
+    "rarity": "mythic",
+    "kind": "effect",
+    "collection": "halloween",
+    "src": "/profile-assets/halloween/profileeffect/darkvard.png",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-darkvard.webp"
+  },
+  {
+    "id": "halloween-venombackgrtound",
+    "name": "Venomous Night",
+    "rarity": "singularity",
+    "kind": "effect",
+    "collection": "halloween",
+    "src": "/profile-assets/halloween/profileeffect/venombackgrtound.png",
+    "thumbnail": "/profile-assets/halloween/thumbs/halloween-venombackgrtound.webp"
   }
 ]

@@ -51,3 +51,12 @@ document.addEventListener('click',event=>{if(!event.target.closest('.fps-control
 document.addEventListener('fullscreenchange',closeFPSMenu);
 
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeFPSMenu()});
+
+// Report real connection and download updates to the desktop, without polling.
+if(parent!==window){
+ const report=(channel,state,detail,progress)=>parent.postMessage({novaAction:'osConnectionStatus',channel,state,detail,progress},location.origin);
+ let last='';const reportConnection=()=>{const detail=[document.getElementById('session-status')?.textContent,notice.textContent].filter(Boolean).join(' · ');if(detail===last)return;last=detail;report('remote',failureNotice?'error':pc?.connectionState==='connected'?'ready':sessionId?'loading':'idle',detail)};
+ const observer=new MutationObserver(reportConnection);for(const n of [notice,document.getElementById('session-status')])if(n)observer.observe(n,{childList:true,subtree:true,characterData:true});reportConnection();
+ const downloadObserver=new MutationObserver(()=>{const text=document.getElementById('download')?.textContent||'';const m=/Downloading (\d+) \/ (\d+)/.exec(text);if(m)report('download','loading',text,(Number(m[1])-1)/Number(m[2])*100);else{const status=document.getElementById('pair-status')?.textContent||'';if(/Downloaded\./.test(status))report('download','ready',status,100);else if(/download|integrity/i.test(status))report('download','error',status)}});for(const n of [document.getElementById('download'),document.getElementById('pair-status')])if(n)downloadObserver.observe(n,{childList:true,subtree:true,characterData:true});
+ addEventListener('pagehide',()=>{observer.disconnect();downloadObserver.disconnect()},{once:true});
+}

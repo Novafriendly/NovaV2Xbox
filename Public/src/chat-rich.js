@@ -1,3 +1,4 @@
+import {appendGameInvite} from './game-invite.js';
 import {MAX_CHAT_FILE,validFile,fileCard} from './chat-files.js';
 import {glyph,emojiPicker,popover} from './chat-controls.js';
 const make=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n};
@@ -16,7 +17,7 @@ export function richComposer(form,input,uid,notify){let attachment=null,reply=nu
  return {payload(){return {...(attachment?{media:attachment}:{}),...(reply?{replyTo:reply.id}:{})}},hasMedia:()=>!!attachment,clear(){attachment=reply=null;draft()},reply(id,name){reply={id,name};draft();input.focus()},save};
 }
 export function decorateMessage(copy,m,id,{messages,name,reply,save,react,reactions,uid}){
- if(m.replyTo){const original=messages[m.replyTo];const b=make('button',original?'↳ '+name(original.author)+': '+(original.text||'Attachment').slice(0,100):'↳ Original message unavailable','chat-reply-reference');b.type='button';b.onclick=()=>{const row=[...document.querySelectorAll('[data-message]')].find(n=>n.dataset.message===m.replyTo);row?.scrollIntoView({behavior:'smooth',block:'center'})};copy.prepend(b)}
+ appendGameInvite(copy,m.text);if(m.replyTo){const original=messages[m.replyTo];const b=make('button',original?'↳ '+name(original.author)+': '+(original.text||'Attachment').slice(0,100):'↳ Original message unavailable','chat-reply-reference');b.type='button';b.onclick=()=>{const row=[...document.querySelectorAll('[data-message]')].find(n=>n.dataset.message===m.replyTo);row?.scrollIntoView({behavior:'smooth',block:'center'})};copy.prepend(b)}
  if(valid(m.media)){const wrap=make('div',null,'chat-attachment');wrap.append(media(m.media));if(m.media.type==='image'){const favorite=make('button','♡ Save','chat-save-media');favorite.type='button';favorite.onclick=()=>save(m.media);wrap.append(favorite)}copy.append(wrap)}
  const bar=make('div',null,'chat-message-social');
  function act(label,icon,fn){const b=make('button');b.type='button';b.title=label;b.setAttribute('aria-label',label);if(icon)b.append(glyph(icon));b.onclick=fn;bar.append(b);return b}
