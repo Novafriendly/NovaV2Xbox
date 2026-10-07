@@ -11,3 +11,6 @@ chat-legacy-backup-*.json
 chat-legacy-profiles-backup-*.json
 
 remote-agent/dist/
+
+# Generated browser audit logs and screenshots
+docs/game-audit/

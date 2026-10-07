@@ -36,7 +36,7 @@ test('every merged catalog entry retains its identity, source attribution and op
  }
 });
 
-test('selects the correct duplicate only after the remote library hydrates, once per document',()=>{const api=runtime(),fixture=documentFixture();api.attach(fixture.doc,{name:'NBA 2K23',sourceOccurrence:1});fixture.add('Other game','other');fixture.add('NBA 2K23','first');fixture.notify();assert.deepEqual(fixture.clicks,[]);fixture.add('NBA 2K23','second');fixture.notify();fixture.notify();api.attach(fixture.doc,{name:'NBA 2K23'});assert.deepEqual(fixture.clicks,['second']);assert.equal(fixture.disconnected,0);fixture.hide();assert.equal(fixture.disconnected,1)});
+test('selects the correct duplicate only after the remote library hydrates, once per document',()=>{const api=runtime(),fixture=documentFixture();api.attach(fixture.doc,{name:'NBA 2K23',sourceOccurrence:1});fixture.add('Other game','other');fixture.add('NBA 2K23','first');api.attach(fixture.doc,{name:'NBA 2K23',sourceOccurrence:1});fixture.notify();assert.deepEqual(fixture.clicks,[]);fixture.add('NBA 2K23','second');fixture.notify();fixture.notify();api.attach(fixture.doc,{name:'NBA 2K23'});assert.deepEqual(fixture.clicks,['second']);assert.equal(fixture.disconnected,0);fixture.hide();assert.equal(fixture.disconnected,1)});
 test('unavailable titles release the observer and never open a different game',()=>{const api=runtime(),fixture=documentFixture();fixture.add('Other game','other');api.attach(fixture.doc,{name:'Unavailable'});fixture.timeout();assert.equal(fixture.disconnected,1);assert.deepEqual(fixture.clicks,[])});
 test('auto launches only the selected panel once its launch button becomes enabled',()=>{
  const api=runtime(),fixture=documentFixture();fixture.add('Stardew Valley','selected');
@@ -91,3 +91,5 @@ test('an Exit label outside the streaming HUD never routes Home',()=>{
 });
 
 test('current Astra dialogs without the old title ID still launch exactly the selected game',()=>{const api=runtime(),f=documentFixture();f.add('Stumble Guys','selected');const {panel}=f.modal('Stumble Guys');f.doc.getElementById=()=>null;const query=f.doc.querySelectorAll;f.doc.querySelectorAll=selector=>selector.includes('dialog')?[panel]:query(selector);panel.querySelector=()=>({textContent:'Stumble Guys'});api.attach(f.doc,{name:'Stumble Guys'});f.notify();assert.deepEqual(f.clicks,['selected','launch']);f.hide()});
+
+test('empty proxy documents remain eligible for attachment after hydration',()=>{const api=runtime(),f=documentFixture();assert.equal(api.attach(f.doc,{name:'NBA 2K23'}),false);f.add('NBA 2K23','selected');f.modal('NBA 2K23');let ready=0;assert.equal(api.attach(f.doc,{name:'NBA 2K23'},{onReady:()=>ready++}),true);assert.deepEqual(f.clicks,['selected','launch']);assert.equal(ready,1);f.notify();assert.equal(ready,1);f.hide()});

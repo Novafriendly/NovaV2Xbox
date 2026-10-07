@@ -1,7 +1,11 @@
 /* Select only the requested Achroma cloud source and game; native code owns sessions. */
 (()=>{
+ const attached=new WeakSet();
  function attach(doc,item,{signal,onStatus=()=>{},onReady=()=>{},onError=()=>{}}={}){
   if(signal?.aborted||!['Stratus','Synapse'].includes(item.source)||!item.sourceId)return false;
+  if(attached.has(doc))return true;
+  if(!doc.getElementById('mode-toggle'))return false;
+  attached.add(doc);
   const win=doc.defaultView;let switched=false,chosen=false,searched=false,launched=false,ended=false;
   const style=doc.createElement('style');style.id='nova-achroma-player';style.textContent='#cloud-overlay:not([hidden]){position:fixed!important;inset:0!important;width:100%!important;height:100%!important;z-index:9999!important;background:#000!important}#cloud-overlay .cloud-frame{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important;border-radius:0!important}';doc.head.append(style);
   const cleanup=()=>{if(ended)return;ended=true;observer.disconnect();win.clearTimeout(timer);win.clearInterval(poll);signal?.removeEventListener('abort',cleanup);win.removeEventListener('pagehide',cleanup)};

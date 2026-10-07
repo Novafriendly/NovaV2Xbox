@@ -1,0 +1,57 @@
+{
+  "38": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/1/",
+    "cch": "resources/FNAF1HTML5.cch",
+    "parts": 8
+  },
+  "39": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/2/",
+    "cch": "resources/FiveNights2NOHACKS.cch",
+    "parts": 9
+  },
+  "40": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/3/",
+    "cch": "resources/fnaf 3.cch",
+    "parts": 10
+  },
+  "41": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/4/",
+    "cch": "resources/fnaf 4.cch",
+    "parts": 18
+  },
+  "185": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/sl/",
+    "cch": "resources/Five Night",
+    "parts": 40
+  },
+  "190": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/w/",
+    "cch": "resources/fnafw.cch",
+    "parts": 13
+  },
+  "191": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/ps/",
+    "cch": "resources/Fnafps.cch",
+    "parts": 19
+  },
+  "192": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/ucn/",
+    "cch": "resources/UCNHTML5.cch",
+    "parts": 16
+  },
+  "428": {
+    "base": "https://cdn.jsdelivr.net/gh/blazerida/fnaf@2bb119488b921da59a24521a2458a0a8272d9fd8/4-halloween/",
+    "cch": "resources/Fnaf-4-halloween.cch",
+    "parts": 19
+  },
+  "503": {
+    "base": "https://cdn.jsdelivr.net/gh/web-ports/fnac@ba0ff4088706af7db1da0a60a77b5b8704863376/1/",
+    "cch": "resources/fnac1.cch",
+    "parts": 7
+  },
+  "504": {
+    "base": "https://cdn.jsdelivr.net/gh/web-ports/fnac@ba0ff4088706af7db1da0a60a77b5b8704863376/2/",
+    "cch": "resources/fnac2.cch",
+    "parts": 12
+  }
+}

@@ -522,7 +522,7 @@
     ]
   },
   {
-    "id": 164,
+    "id": "164-164-temp2",
     "name": "Crazy Cattle 3D",
     "art": "content/covers/164.png",
     "url": "content/games/164-temp2.html",
@@ -531,7 +531,7 @@
     ]
   },
   {
-    "id": 164,
+    "id": "164-164",
     "name": "Crazy Cattle 3D",
     "art": "content/covers/164.png",
     "url": "content/games/164.html",
@@ -1983,7 +1983,7 @@
     "id": 310,
     "name": "Dreadhead Parkour",
     "art": "content/covers/310.png",
-    "url": "content/games/310.html",
+    "url": "https://htmlxm.github.io/h7/dreadhead-parkour/",
     "genres": [
       "Other"
     ]
@@ -5403,7 +5403,7 @@
     "id": 66,
     "name": "Basket Random",
     "art": "content/covers/66.png",
-    "url": "content/games/66.html",
+    "url": "https://htmlxm.github.io/h8/basket-random/",
     "genres": [
       "Other"
     ]
@@ -6195,7 +6195,7 @@
     "id": 739,
     "name": "Soccer Random",
     "art": "content/covers/739.png",
-    "url": "content/games/739.html",
+    "url": "https://23azostore.github.io/s8/soccer-random/",
     "genres": [
       "Sports"
     ]
@@ -6255,7 +6255,7 @@
     ]
   },
   {
-    "id": 744,
+    "id": "744-744",
     "name": "Escape Road City 2",
     "art": "content/covers/744.png",
     "url": "content/games/744.html",
@@ -6510,7 +6510,7 @@
     "id": 77,
     "name": "Boxing Random",
     "art": "content/covers/77.png",
-    "url": "content/games/77.html",
+    "url": "https://23azostore.github.io/s77/boxing-random/",
     "genres": [
       "Other"
     ]
@@ -6672,7 +6672,7 @@
     "id": 786,
     "name": "Volley Random",
     "art": "content/covers/786.png",
-    "url": "content/games/786.html",
+    "url": "https://23azostore.github.io/s9/volley-random/",
     "genres": [
       "Other"
     ]
@@ -7505,7 +7505,7 @@
       "Horror"
     ]
   },
-   {
+  {
     "id": 870,
     "name": "COD Nazi Zombies Portable",
     "art": "content/covers/870.png",
@@ -7523,7 +7523,7 @@
       "Racing"
     ]
   },
-   {
+  {
     "id": 872,
     "name": "Monster truck ",
     "art": "content/covers/872.png",
@@ -7548,6 +7548,51 @@
     "url": "https://play.fancade.com/605B9B73B0122DA1?max_w=999999&max_h=9999999&istart=1",
     "genres": [
       "Racing"
+    ]
+  },
+  {
+    "id": 875,
+    "name": "Subway Surfers San Francisco",
+    "art": "",
+    "url": "https://23azostore.github.io/s8/subway-surfers-san-francisco/",
+    "genres": [
+      "Action"
+    ]
+  },
+  {
+    "id": 876,
+    "name": "Subway Surfers Beijing",
+    "art": "",
+    "url": "https://23azostore.github.io/s8/subway-surfers-beijing/",
+    "genres": [
+      "Action"
+    ]
+  },
+  {
+    "id": 877,
+    "name": "Subway Surfers Monaco",
+    "art": "",
+    "url": "https://23azostore.github.io/s8/subway-surfers-monaco/",
+    "genres": [
+      "Action"
+    ]
+  },
+  {
+    "id": 878,
+    "name": "Subway Surfers New York",
+    "art": "",
+    "url": "https://23azostore.github.io/s8/subway-surfers-newyork/",
+    "genres": [
+      "Action"
+    ]
+  },
+  {
+    "id": 879,
+    "name": "Subway Surfers San Francisco",
+    "art": "",
+    "url": "https://htmlxm.github.io/h8/subway-surfers-san-francisco/",
+    "genres": [
+      "Action"
     ]
   },
   {

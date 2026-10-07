@@ -1,2 +1,4 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {createMediaVolumeSync} from '../Public/src/media-volume.mjs';
 test('background scans preserve player slider changes until the OS mixer actually changes',()=>{const sync=createMediaVolumeSync(),media={volume:1};sync(media,.8);assert.equal(media.volume,.8);media.volume=.3;assert.equal(sync(media,.8),false);assert.equal(media.volume,.3);sync(media,0);assert.equal(media.volume,0);sync(media,.5);assert.equal(media.volume,.5);});
+
+test('mute stays enforced if a game resets its volume and restores existing mute preference',()=>{const sync=createMediaVolumeSync(),m={volume:1,muted:false};sync(m,0);assert.equal(m.muted,true);m.volume=1;m.muted=false;sync(m,0);assert.equal(m.muted,true);sync(m,.7);assert.equal(m.muted,false);assert.equal(m.volume,.7);m.muted=true;sync(m,0);sync(m,.7);assert.equal(m.muted,true)});

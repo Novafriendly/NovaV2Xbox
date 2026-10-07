@@ -67,3 +67,7 @@ body.performance-mode *,body.performance-mode *:before{animation:none!important;
 .console-status .nova-hacks-button{padding:9px 12px;border:1px solid #ffffff2d;background:#ffffff14;border-radius:9px;font:600 12px system-ui}.console-status .nova-hacks-button:hover,.console-status .nova-hacks-button[aria-expanded=true]{background:#ffffff28;border-color:#ffffff66}
 
 .os-player-tools .nova-hacks-button,.xm-actions .nova-hacks-button{width:auto!important;min-width:52px;height:34px;padding:6px 10px!important;font:600 11px system-ui!important;color:#fff;background:#08090bd9;border:1px solid #ffffff26;border-radius:8px}.os-player-tools .nova-hacks-button[hidden],.xm-actions .nova-hacks-button[hidden]{display:none!important}.nova-hacks-game{grid-template-columns:42px minmax(0,1fr) auto}
+
+.collection .lib-new-badge{position:absolute;top:10px;left:10px;z-index:1;padding:4px 9px;border:1px solid #c0edff60;border-radius:7px;background:#172932df;color:#dcf6ff;font:600 11px "Segoe UI",sans-serif;letter-spacing:.3px;pointer-events:none;box-shadow:0 2px 8px #0003}
+
+.collection .lib-new-badge{top:10px;left:10px;padding:5px 11px;border:1px solid #ffb2b269;border-radius:8px;background:linear-gradient(135deg,#ef4057,#bd1837);color:#fff;font:800 10px "Segoe UI",sans-serif;letter-spacing:1px;text-transform:uppercase;box-shadow:0 3px 12px #ba173945,inset 0 1px #ffffff30}

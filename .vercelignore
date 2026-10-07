@@ -7,3 +7,6 @@ scramjet-2.0.67-alpha.2/
 Public/nova-proxy/
 
 curl-master/
+
+# Local audit evidence is not part of the website
+docs/game-audit/

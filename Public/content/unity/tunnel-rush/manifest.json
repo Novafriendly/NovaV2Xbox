@@ -1,0 +1,32 @@
+[
+  {
+    "file": "UnityLoader.js",
+    "url": "https://cdn.jsdelivr.net/gh/wnasmile/LAMAR@bf8ff775baa0b9d6e530315b2553db29093bca5a/tunnel-rush/UnityLoader.js",
+    "bytes": 155955,
+    "sha256": "1117c937d74a0c8a8b5ac0d1ec3c2d042ca25269a93bfcfa76e9c5c8fb74a882"
+  },
+  {
+    "file": "build.json",
+    "url": "https://cdn.jsdelivr.net/gh/wnasmile/LAMAR@bf8ff775baa0b9d6e530315b2553db29093bca5a/tunnel-rush/build.json",
+    "bytes": 523,
+    "sha256": "ae91b12663ed6cc5915560c1a8f2ed8d8fc6dab52662028dbe39d606b82f6f73"
+  },
+  {
+    "file": "tunnel_rush_v9data.unityweb",
+    "url": "https://cdn.jsdelivr.net/gh/wnasmile/LAMAR@bf8ff775baa0b9d6e530315b2553db29093bca5a/tunnel-rush/tunnel_rush_v9data.unityweb",
+    "bytes": 8252143,
+    "sha256": "ec9bcafb1261a6190e1a19521dc9ff683429becb9b75cfdb1ce6ada5242b8a70"
+  },
+  {
+    "file": "tunnel_rush_v9wasmcode.unityweb",
+    "url": "https://cdn.jsdelivr.net/gh/wnasmile/LAMAR@bf8ff775baa0b9d6e530315b2553db29093bca5a/tunnel-rush/tunnel_rush_v9wasmcode.unityweb",
+    "bytes": 3937078,
+    "sha256": "6751b99f3440fffb728fddaabcca478ed7b294e773e87322f638274563397659"
+  },
+  {
+    "file": "tunnel_rush_v9wasmframework.unityweb",
+    "url": "https://cdn.jsdelivr.net/gh/wnasmile/LAMAR@bf8ff775baa0b9d6e530315b2553db29093bca5a/tunnel-rush/tunnel_rush_v9wasmframework.unityweb",
+    "bytes": 711318,
+    "sha256": "d37d136999c0e63baeeed2979a59a4aa6882121f4171d891e2abd3ba7e4a9ce9"
+  }
+]

@@ -28,3 +28,5 @@ test('waits for native controls, selects exact key once, and cleans up on playba
  const window={};vm.runInNewContext(adapter,{window});assert.equal(window.NovaAchromaCloud.attach(doc,{source:'Stratus',sourceId:'jy0108',name:'GTA V'},{onReady:()=>ready++}),true);
  assert.equal(launches,0);bindings=true;poll();poll();observer();assert.equal(launches,1);live=true;poll();assert.equal(ready,1);assert.equal(disconnected,true);assert.equal(cleared,true);
 });
+
+test('empty proxy document is not marked attached before cloud controls hydrate',()=>{const window={};vm.runInNewContext(adapter,{window});const doc={getElementById:()=>null};assert.equal(window.NovaAchromaCloud.attach(doc,{source:'Stratus',sourceId:'jy0108'}),false)});

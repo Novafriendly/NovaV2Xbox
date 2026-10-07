@@ -2,6 +2,7 @@
 (()=>{
  if(window.__novaAudioMixer)return;
  let volume=1;
+ try{if(window.location?.pathname.startsWith('/content/games/')){const saved=JSON.parse(window.localStorage.getItem('nova_os_audio')||'{}');if(Number.isFinite(saved.game))volume=Math.max(0,Math.min(1,saved.game));}}catch{}
  const gains=new Set(),routes=new WeakMap();
  const clamp=value=>Math.max(0,Math.min(1,Number(value)||0));
  const node=window.AudioNode?.prototype;

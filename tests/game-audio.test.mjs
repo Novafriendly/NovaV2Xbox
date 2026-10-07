@@ -18,3 +18,5 @@ test('Web Audio mixer routes game output, changes volume, and preserves disconne
  a.disconnect();assert.equal(calls.at(-1).length,2);
  assert.equal(a.connect(b),b);
 });
+
+test('native games load the mixer before any game scripts',()=>{const files=[readFileSync(new URL('../Public/src/native-game-frame.mjs',import.meta.url),'utf8'),readFileSync(new URL('../Public/src/game-native-catalog.mjs',import.meta.url),'utf8')];for(const source of files)for(const [path]of source.matchAll(/\/content\/games\/[^"']+\.html/g)){const html=readFileSync(new URL('../Public'+path,import.meta.url),'utf8');assert.match(html,/<head[^>]*><script src="\/src\/game-audio-inject.js"><\/script>/i)}});

@@ -1,0 +1,2 @@
+import {fetchGameFile} from './five-nights-files.mjs';
+export async function loadBuildNowParts(config,kind,{fetcher,onProgress=()=>{},signal}={}){const chunks=[];for(let i=0;i<config.parts[kind].length;i++){const bytes=await fetchGameFile(config.base+'Build/'+config[kind]+'.part'+(i+1),{fetcher,signal,readBody:true});if(bytes.byteLength!==config.parts[kind][i])throw Error('Incomplete '+kind+' file. Please retry.');chunks.push(bytes);onProgress(i+1,config.parts[kind].length)}return new Blob(chunks,{type:kind==='wasm'?'application/wasm':'application/octet-stream'})}

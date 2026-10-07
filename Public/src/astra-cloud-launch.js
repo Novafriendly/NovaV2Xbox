@@ -1,8 +1,10 @@
 // Open the selected game and start its normal provider session once ready.
 (()=>{
  const attached=new WeakSet();
- function attach(doc,item,{onExit}={}){
-  if(attached.has(doc)||!item?.name)return;
+ function attach(doc,item,{onExit,onReady=()=>{},onError=()=>{},signal}={}){
+  if(signal?.aborted||!item?.name)return false;
+  if(attached.has(doc))return true;
+  if(!doc.querySelectorAll('button.mp-row[aria-label]').length)return false;
   const win=doc.defaultView;if(!win)return;attached.add(doc);
   let observer,timer,chosen=false,launched=false,stopped=false,exitRequested=false;
   function dialog(){
@@ -50,13 +52,13 @@
    const launch=buttons.find(b=>/^(play now|launch(?: game)?|start game)$/i.test(b.textContent.trim()));
    if(!launched&&launch&&!launch.disabled&&launch.getAttribute('aria-disabled')!=='true'){
     // Set before clicking: React can synchronously update the same panel.
-    launched=true;win.clearTimeout(timer);launch.click();
+    launched=true;win.clearTimeout(timer);launch.click();onReady();
    }
   }
   observer=new win.MutationObserver(advance);
   observer.observe(doc.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','aria-disabled']});
   doc.addEventListener('click',preventDismiss,true);doc.addEventListener('keydown',preventDismiss,true);doc.addEventListener('click',streamExit,true);
-  timer=win.setTimeout(stop,30000);win.addEventListener('pagehide',pageHidden,{once:true});advance();
+  timer=win.setTimeout(()=>{onError('Astra could not select this game. Try another cloud source.');stop()},30000);signal?.addEventListener('abort',stop,{once:true});win.addEventListener('pagehide',pageHidden,{once:true});advance();return true;
  }
  async function patchRouter(response){
   const text=await new Response(response.body).text();

@@ -1,0 +1,90 @@
+[
+  {
+    "file": "cores/mgba-wasm.data",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/cores/mgba-wasm.data"
+    ],
+    "bytes": 933634,
+    "sha256": "73973e3f879728527bb0b0c75395168c38ae8249a929dac5d5c6bce4308dbd0f"
+  },
+  {
+    "file": "cores/melonds-wasm.data",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/cores/melonds-wasm.data"
+    ],
+    "bytes": 1076126,
+    "sha256": "b50c439f6889a822ea298c92c01b57033e891befb640bfd8c1781d4d9e333abb"
+  },
+  {
+    "file": "pokemon-emerald.gba",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/games/pokemonemerald/pokemonemerald.gba"
+    ],
+    "bytes": 16777216,
+    "sha256": "a9dec84dfe7f62ab2220bafaef7479da0929d066ece16a6885f6226db19085af"
+  },
+  {
+    "file": "pokemon-firered.gba",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/games/pokemonfirered/rom.gba"
+    ],
+    "bytes": 16777216,
+    "sha256": "729041b940afe031302d630fdbe57c0c145f3f7b6d9b8eca5e98678d0ca4d059"
+  },
+  {
+    "file": "pokemon-heartgold.nds.part1",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@0173df20e16f381b39d3fc1a852b8b16bdf46a00/Pokemon%20-%20HeartGold%20Version%20(USA)/Pokemon%20-%20HeartGold%20Version%20(USA).nds.part1"
+    ],
+    "bytes": 19922944,
+    "sha256": "f607f0f3721dad6bdc7ba736d3893f7aca360acc374ab369158cf6208da659dc"
+  },
+  {
+    "file": "pokemon-heartgold.nds.part2",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@0173df20e16f381b39d3fc1a852b8b16bdf46a00/Pokemon%20-%20HeartGold%20Version%20(USA)/Pokemon%20-%20HeartGold%20Version%20(USA).nds.part2"
+    ],
+    "bytes": 19922944,
+    "sha256": "68f245ac26c7f685c7d12064a6d36a8b44c16cce11801602fd34ceef32a4a815"
+  },
+  {
+    "file": "pokemon-heartgold.nds.part3",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@0173df20e16f381b39d3fc1a852b8b16bdf46a00/Pokemon%20-%20HeartGold%20Version%20(USA)/Pokemon%20-%20HeartGold%20Version%20(USA).nds.part3"
+    ],
+    "bytes": 19922944,
+    "sha256": "d1f26402fbd41614fe9560f09bd9fa5944b0a963f9e71a151415fd6fa3a16748"
+  },
+  {
+    "file": "pokemon-heartgold.nds.part4",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@0173df20e16f381b39d3fc1a852b8b16bdf46a00/Pokemon%20-%20HeartGold%20Version%20(USA)/Pokemon%20-%20HeartGold%20Version%20(USA).nds.part4"
+    ],
+    "bytes": 19922944,
+    "sha256": "5ef1b7f0c09a7a53c8dd32c43d613721aef55f1eaf2a88c2d194e0da2fd15d78"
+  },
+  {
+    "file": "pokemon-heartgold.nds.part5",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@0173df20e16f381b39d3fc1a852b8b16bdf46a00/Pokemon%20-%20HeartGold%20Version%20(USA)/Pokemon%20-%20HeartGold%20Version%20(USA).nds.part5"
+    ],
+    "bytes": 19922944,
+    "sha256": "f469a26a39934e58c9a153dcb845c8859357401b74adf433800552f07a56ea54"
+  },
+  {
+    "file": "pokemon-heartgold.nds.part6",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@0173df20e16f381b39d3fc1a852b8b16bdf46a00/Pokemon%20-%20HeartGold%20Version%20(USA)/Pokemon%20-%20HeartGold%20Version%20(USA).nds.part6"
+    ],
+    "bytes": 19922944,
+    "sha256": "d11817a35e0d54933581e2be19372fa035135bdab4d34928def24e9190cbaa19"
+  },
+  {
+    "file": "pokemon-heartgold.nds.part7",
+    "urls": [
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@0173df20e16f381b39d3fc1a852b8b16bdf46a00/Pokemon%20-%20HeartGold%20Version%20(USA)/Pokemon%20-%20HeartGold%20Version%20(USA).nds.part7"
+    ],
+    "bytes": 14680064,
+    "sha256": "83a8dc79c8e0ef16e89670b82c3e67103b148b8404029f5688001231c55e18a2"
+  }
+]

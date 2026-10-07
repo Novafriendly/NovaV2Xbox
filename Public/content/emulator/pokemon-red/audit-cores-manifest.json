@@ -1,0 +1,26 @@
+[
+  {
+    "file": "cores/fceumm-wasm.data",
+    "url": "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/cores/fceumm-wasm.data",
+    "bytes": 919942,
+    "sha256": "e4110ff8cca16bbe094d7c1c6cc4b281ec4648f9daaa56cb538fabf99da6292a"
+  },
+  {
+    "file": "cores/pcsx_rearmed-wasm.data",
+    "url": "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/cores/pcsx_rearmed-wasm.data",
+    "bytes": 915521,
+    "sha256": "11ac63cc19ea0e63d6dcbcf3c178cfa3e31c0f392cddba5c9a2eecbe909c79b6"
+  },
+  {
+    "file": "cores/genesis_plus_gx-wasm.data",
+    "url": "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/cores/genesis_plus_gx-wasm.data",
+    "bytes": 1095102,
+    "sha256": "e36616fe09839c7f744484fc10e94d24fc60343ef970a3e4fa472d46a30487b3"
+  },
+  {
+    "file": "cores/mupen64plus_next-wasm.data",
+    "url": "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/cores/mupen64plus_next-wasm.data",
+    "bytes": 1339505,
+    "sha256": "186976564ec6aa0b9b2d338153c7ba3ca868d28720c76317c6d7a212b23a5b1e"
+  }
+]
