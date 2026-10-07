@@ -20,7 +20,7 @@ async function writeUpdates(values){
   const other=Object.fromEntries(Object.entries(values).filter(([path])=>!protectedPath(path)));if(Object.keys(other).length)await update(ref(db),other);
  }else await update(ref(db),values);
 }
-startCommunity({
+if(localStorage.getItem('nova_account_version')!=='2')startCommunity({
   now: () => Date.now() + offset,
   timestamp: serverTimestamp,
   subscribe: (path, callback, error) => onValue(ref(db, path), snap => callback(snap.val()), error),

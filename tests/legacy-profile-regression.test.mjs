@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+test('Settings reads current account and chat profile paths, not expired legacy users',()=>{const source=readFileSync(new URL('../Public/src/settings-panel.js',import.meta.url),'utf8');assert(!source.includes("'users/'"));assert(source.includes("'novaChatV2/profiles/'+account.uid"));assert(source.includes(".catch(()=>({val:()=>null}))"))});
+test('current Nova accounts do not start the retired community tracker',()=>{const source=readFileSync(new URL('../Public/community.js',import.meta.url),'utf8');assert(source.includes("if(localStorage.getItem('nova_account_version')!=='2')startCommunity({"))});
