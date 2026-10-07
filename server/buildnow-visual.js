@@ -31,7 +31,9 @@
  }
  function selectTarget(regions,width,height){let best=null;for(const point of regions)if(point.distance<=(Math.min(width,height)/2)**2&&(!best||point.distance<best.distance))best=point;return best;}
  function findTarget(pixels,width,height){return selectTarget(findRegions(pixels,width,height),width,height);}
- function aimDelta(point,speed,elapsed=16){const gain=speed*Math.max(0.5,Math.min(3,elapsed/16));return {dx:Math.abs(point.x)<2?0:Math.max(-36,Math.min(36,point.x*gain)),dy:Math.abs(point.y)<2?0:Math.max(-36,Math.min(36,-point.y*gain))};}
+ function aimDelta(point,speed,elapsed=16){const strength=Math.max(0,Math.min(.95,Number(speed)||0)),gain=1-Math.pow(1-strength,Math.max(1,Math.min(50,elapsed))/16);return {dx:Math.abs(point.x)<1?0:Math.max(-36,Math.min(36,point.x*gain)),dy:Math.abs(point.y)<1?0:Math.max(-36,Math.min(36,-point.y*gain))};}
+ function createTargetLock(){let previous=null,stamp=0;return {reset(){previous=null;stamp=0},update(regions,width,height,now){const valid=regions.filter(p=>p.distance<=(Math.min(width,height)/2)**2);let target=null;if(previous&&now-stamp<=120){const radius=Math.max(24,Math.min(64,Math.max(previous.width||0,previous.height||0)*.6));let best=radius*radius;for(const p of valid){const distance=(p.x-previous.x)**2+(p.y-previous.y)**2;if(distance<best){best=distance;target=p}}}if(!target)target=selectTarget(valid,width,height);if(!target){previous=null;stamp=0;return null}const same=previous&&(target.x-previous.x)**2+(target.y-previous.y)**2<64*64;const result=same?{...target,x:target.x*.8+previous.x*.2,y:target.y*.8+previous.y*.2}:{...target};previous=result;stamp=now;return result}}}
+ const targetLock=createTargetLock();
  function createAutoFire(send){let held=false,last=-Infinity;
   const stop=()=>{if(held){send('mouseup',{button:0,buttons:0});held=false;}last=-Infinity;};
   const update=(now,active)=>{if(!active){stop();return;}if(held&&now-last>=45){send('mouseup',{button:0,buttons:0});held=false;}if(!held&&now-last>=110){send('mousedown',{button:0,buttons:1});held=true;last=now;}};
@@ -59,7 +61,7 @@
   if(values.length>=16){record={matrix:values.slice(0,16),rows:15};}else if(values.length>=4){const row=Number(meta.name.match(/\[(\d)\]/)?.[1]||0);if(row>3)return;record.matrix.splice(row*4,4,...values.slice(0,4));record.rows|=1<<row;}
   modelMatrices.set(meta.program,record);state.modelUpdates++;
  }
- window.NovaLOLVisual={state,patchShader,findTarget,findRegions,selectTarget,aimDelta,createAutoFire,createMotionTracker,readUniform};
+ window.NovaLOLVisual={state,patchShader,findTarget,findRegions,selectTarget,aimDelta,createAutoFire,createMotionTracker,readUniform,createTargetLock};
  if(!window.WebGL2RenderingContext||!window.HTMLCanvasElement){state.message='WebGL 2 hooks unavailable.';return;}
  const proto=window.WebGL2RenderingContext.prototype,sourceNative=proto.shaderSource;
  const hook=(object,name,handler)=>{const original=object[name];object[name]=function(...args){return handler.call(this,original,args)};};
@@ -94,7 +96,7 @@
  });
  const autoFire=createAutoFire((type,options)=>{if(canvas)window.NovaLOLInput?.mouse(canvas,type,options);});
  function sample(now){
-  if(!context||!canvas||document.hidden){autoFire.stop();return;}
+  if(!context||!canvas||document.hidden){targetLock.reset();autoFire.stop();return;}
   if(!state.aim||!state.autoShoot||document.pointerLockElement!==canvas)autoFire.stop();
   lastFrame=now;
   if((!state.aim&&!state.motion&&!state.boxes&&!state.lines)||now-lastSample<8)return;const elapsed=lastSample?now-lastSample:16;lastSample=now;
@@ -103,8 +105,8 @@
   try{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,null);gl.readPixels(Math.floor((canvas.width-w)/2),Math.floor((canvas.height-h)/2),w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);}catch{state.aim=false;state.motion=false;state.message='Frame sampling unavailable.';autoFire.stop();return;}finally{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,previous);}
   if(state.motion){let changed=0,total=0;for(let i=0;i<pixels.length;i+=64){total++;if(motionPrevious&&Math.abs(pixels[i]-motionPrevious[i])+Math.abs(pixels[i+1]-motionPrevious[i+1])+Math.abs(pixels[i+2]-motionPrevious[i+2])>70)changed++;}state.motionPercent=Math.round(changed/total*100);motionPrevious=new Uint8Array(pixels);}else motionPrevious=null;
   state.regions=findRegions(pixels,w,h);state.scanWidth=w;state.scanHeight=h;
-  if(!state.aim||document.pointerLockElement!==canvas){remainderX=remainderY=0;return;}
-  const point=selectTarget(state.regions,w,h);if(!point){autoFire.stop();remainderX=remainderY=0;return;}
+  if(!state.aim||document.pointerLockElement!==canvas){targetLock.reset();remainderX=remainderY=0;return;}
+  const point=targetLock.update(state.regions,w,h,now);if(!point){autoFire.stop();remainderX=remainderY=0;return;}
   // Pixel readback is bottom-up; negative Y moves the camera upward.
   const {dx,dy}=aimDelta(point,state.speed,elapsed);
   remainderX+=dx;remainderY+=dy;const moveX=Math.trunc(remainderX),moveY=Math.trunc(remainderY);remainderX-=moveX;remainderY-=moveY;
@@ -112,7 +114,7 @@
   autoFire.update(now,state.autoShoot);
  }
  hook(window,'requestAnimationFrame',function(original,args){const callback=args[0];args[0]=function(now){if(frameStamp!==now){frameStamp=now;state.movingDraws=0;state.candidates=0;}const result=callback(now);if(lastFrame!==now)sample(now);return result;};return original.apply(this,args);});
- window.addEventListener('blur',()=>{state.aim=false;autoFire.stop();});
+ window.addEventListener('blur',()=>{state.aim=false;targetLock.reset();autoFire.stop();});
  document.addEventListener?.('visibilitychange',()=>{if(document.hidden)autoFire.stop();});
  document.addEventListener?.('pointerlockchange',()=>{if(document.pointerLockElement!==canvas)autoFire.stop();});
  window.addEventListener('pagehide',()=>{autoFire.stop();state.esp=state.aim=state.autoShoot=state.wireframe=state.spin=state.motion=false;},{once:true});
