@@ -67,6 +67,7 @@ if(['userInventory','setPlayerProgress','removeUserItem'].includes(action)){
  const equipped=profile.val()||{};
  return reply(200,{...playerProgress(progress.val()),items:Object.entries(inventory.val()||{}).map(([id,owned])=>{const item=items.find(i=>i.id===id);return {id,name:item?.name||id,kind:item?.kind||'Unknown',src:item?.src||'',rarity:item?.rarity||'',count:owned?.count||1,equipped:['decoration','effect','chatBanner','banner'].some(field=>equipped[field]===id)}})});
 }
+if(action==='buildNowTools'){const {buildNowTools}=await import('../server/buildnow-tools.mjs');return reply(200,{code:await buildNowTools()})}
 if(action==='setGameStatus'){const {id,value}=await statusUpdate(b,now);await db.ref('novaControl/gameStatuses/'+id).set(value);await audit({target:id,status:value.status});return reply(200,{ok:true,record:value})}
 if(action==='livePublish'){const message=text(b.text,500);if(!message)throw Error('Enter a message or poll question.');const options=b.kind==='poll'?String(b.options||'').split('\n').map(v=>text(v,80)).filter(Boolean):null;if(options&&(options.length<2||options.length>6))throw Error('Enter 2–6 poll options.');const live={id:randomUUID(),text:message,name:account.name||'Nova Owner',photo:account.photo||'',author:who.uid,at:now,expiresAt:now+integer(b.seconds||15,15,600)*1000,...(options?{options}:{})};await db.ref('novaControl/live').set(live);await audit({kind:b.kind});return reply(200,{ok:true})}
 if(action==='liveEnd'){await db.ref('novaControl/live').remove();await audit({});return reply(200,{ok:true})}
