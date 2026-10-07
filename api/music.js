@@ -1,3 +1,4 @@
+import {moveSong} from '../server/music-order.mjs';
 import {randomBytes,randomUUID,createHash} from 'node:crypto';
 import {services} from '../server/voice-service.js';
 import {withSharedBackend} from '../server/shared-backend.mjs';
@@ -18,9 +19,10 @@ export const createMusicHandler=(service=services,now=Date.now)=>async(req,res)=
   if(b.action==='createPlaylist')b.id=randomUUID();
   const action=b.action,time=now(),libraryRef=db.ref('novaMusic/libraries/'+uid);
   if(action==='library')return reply(200,{library:(await libraryRef.get()).val()||{liked:[],playlists:{}}});
-  if(['like','createPlaylist','renamePlaylist','pinPlaylist','deletePlaylist','playlistSong'].includes(action)){
-   let error='';const result=await libraryRef.transaction(current=>{try{const lib=current||{liked:[],playlists:{}};lib.liked=Object.values(lib.liked||{});lib.playlists||={};
-    if(action==='like'){const t=song(b.song),old=lib.liked.find(x=>key(x)===key(t));lib.liked=lib.liked.filter(x=>key(x)!==key(t));if(b.liked!==false){if(lib.liked.length>=MAX_SONGS)throw Error('Liked Songs is full (200 songs).');lib.liked.unshift({...t,addedAt:old?.addedAt||time})}}
+  if(['like','createPlaylist','renamePlaylist','pinPlaylist','deletePlaylist','playlistSong','reorderSong'].includes(action)){
+   const initialLibrary=(await libraryRef.get()).val();let error='';const result=await libraryRef.transaction(current=>{try{error='';const lib=current||structuredClone(initialLibrary)||{liked:[],playlists:{}};lib.liked=Object.values(lib.liked||{});lib.playlists||={};
+    if(action==='like'){const t=song(b.song),old=lib.liked.find(x=>key(x)===key(t));if(b.liked===false)lib.liked=lib.liked.filter(x=>key(x)!==key(t));else if(!old){if(lib.liked.length>=MAX_SONGS)throw Error('Liked Songs is full (200 songs).');lib.liked.push({...t,addedAt:time})}}
+    else if(action==='reorderSong'){if(b.collection==='liked')lib.liked=moveSong(lib.liked,b.songKey,b.beforeKey);else if(b.collection==='playlist'){if(!validId(b.id)||!Object.hasOwn(lib.playlists,b.id))throw Error('Playlist not found.');lib.playlists[b.id].songs=moveSong(lib.playlists[b.id].songs,b.songKey,b.beforeKey)}else throw Error('Choose Liked Songs or a playlist.');}
     else if(action==='createPlaylist'){if(Object.keys(lib.playlists).length>=40)throw Error('You can create up to 40 playlists.');const name=String(b.name||'').trim().slice(0,80);if(!name)throw Error('Give your playlist a name.');lib.playlists[b.id]={id:b.id,name,pinned:false,songs:[],createdAt:time}}
     else{if(!validId(b.id)||!Object.hasOwn(lib.playlists,b.id))throw Error('Playlist not found.');const p=lib.playlists[b.id];if(action==='deletePlaylist')delete lib.playlists[b.id];else if(action==='renamePlaylist'){p.name=String(b.name||'').trim().slice(0,80);if(!p.name)throw Error('Give your playlist a name.')}else if(action==='pinPlaylist')p.pinned=b.pinned===true;else{const t=song(b.song);p.songs=Object.values(p.songs||{}).filter(x=>key(x)!==key(t));if(b.remove!==true){if(p.songs.length>=MAX_SONGS)throw Error('Playlist is full (200 songs).');p.songs.push({...t,addedAt:time})}}}
     return lib;
@@ -36,7 +38,7 @@ export const createMusicHandler=(service=services,now=Date.now)=>async(req,res)=
   const partyRef=db.ref('novaMusic/parties/'+code);let error='',joined=false;
   if(action==='partyStatus'){const p=pruneParty((await partyRef.get()).val(),time);if(!p||!p.members[uid]||p.kicked?.[uid])return reply(410,{error:'This party ended or you were removed.'});return reply(200,partyPayload(code,p,time,b.version))}
   let newSong;if(action==='addSong')newSong={...song(b.song),addedBy:uid,addedAt:time,queueId:randomUUID()};
-  const r=await partyRef.transaction(current=>{try{let p=pruneParty(current,time);if(!p)throw Error('This party has ended.');if(action==='joinParty'){joined=!p.members[uid];return joinParty(p,uid,member,time)}if(!p.members[uid]||p.kicked?.[uid])throw Error('You are not in this party.');
+  await partyRef.get();const r=await partyRef.transaction(current=>{try{error='';if(current===null)return null;let p=pruneParty(current,time);if(!p)throw Error('This party has ended.');if(action==='joinParty'){joined=!p.members[uid];return joinParty(p,uid,member,time)}if(!p.members[uid]||p.kicked?.[uid])throw Error('You are not in this party.');
    if(action==='leaveParty'){if(p.owner===uid)return null;delete p.members[uid];return p}
    p.members[uid].seenAt=time;
    if(action==='heartbeat')return p;
@@ -44,7 +46,7 @@ export const createMusicHandler=(service=services,now=Date.now)=>async(req,res)=
    if(action==='kick'){if(uid!==p.owner||b.uid===uid||!Object.hasOwn(p.members,b.uid))throw Error('Only the host can remove a guest.');delete p.members[b.uid];p.kicked||={};p.kicked[b.uid]=true;return p}
    if(action==='control')return controlParty(p,uid,b.control,b.value,time);
    throw Error('Unknown music action.');
-  }catch(e){error=e.message;return}});if(!r.committed)return reply(400,{error:error||'Party could not update.'});if(action==='joinParty')await db.ref('novaMusic/userParty/'+uid).set(code);if(action==='leaveParty')await db.ref('novaMusic/userParty/'+uid).remove();return reply(200,{...partyPayload(code,r.snapshot.val(),time,action==='heartbeat'?b.version:null),joined});
+  }catch(e){error=e.message;return}});if(!r.committed)return reply(400,{error:error||'Party could not update.'});if(!r.snapshot.val()&&action!=='leaveParty')return reply(410,{error:'This party has ended. Ask the host for a new code.'});if(action==='joinParty')await db.ref('novaMusic/userParty/'+uid).set(code);if(action==='leaveParty')await db.ref('novaMusic/userParty/'+uid).remove();return reply(200,{...partyPayload(code,r.snapshot.val(),time,action==='heartbeat'?b.version:null),joined});
  }catch(e){return reply(503,{error:e.message==='Publish the private Nova Music database rules first.'?e.message:'Music service unavailable. Please retry.'})}
 };
 export default withSharedBackend('music',createMusicHandler());
