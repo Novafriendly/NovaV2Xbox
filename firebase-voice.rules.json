@@ -79,8 +79,22 @@
       ".write": "now < 1791345600000"
     },
     "novaStats": {
-      ".read": "now < 1791345600000",
-      ".write": "now < 1791345600000"
+      ".read": "auth != null",
+      "homeVisits": {
+        ".write": "auth != null",
+        ".validate": "newData.isNumber() && ((!data.exists() && newData.val() == 1) || (data.isNumber() && newData.val() == data.val() + 1))"
+      },
+      "popular": {
+        "$kind": {
+          "$game": {
+            ".write": "auth != null && ($kind == 'game' || $kind == 'app')",
+            ".validate": "newData.isNumber() && ((!data.exists() && newData.val() == 1) || (data.isNumber() && newData.val() == data.val() + 1))"
+          }
+        }
+      },
+      "$other": {
+        ".validate": false
+      }
     },
     "novaUnbanRequests": {
       ".read": "now < 1791345600000",
