@@ -9,3 +9,5 @@ body.nova-content-active main *,body.nova-content-active .open-space *,body.nova
 body.nova-content-active #panel{backdrop-filter:none;-webkit-backdrop-filter:none}
 
 #panel[data-view="leaderboard"]{background:transparent;backdrop-filter:none}
+
+#bg{background-image:var(--nova-wallpaper-preview,none);background-size:cover;background-position:center}#bg-video[hidden],#bg-img[hidden]{display:none}

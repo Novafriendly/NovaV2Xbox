@@ -327,55 +327,54 @@
     "name": "Choso Live Wallpaper",
     "src": "/backgrounds/choso-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/choso-live-wallpaper.jpg"
   },
   {
     "name": "Gachiakuta Live Wallpaper",
     "src": "/backgrounds/gachiakuta-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/gachiakuta-live-wallpaper.jpg"
   },
   {
     "name": "Midnight Meadow Live Wallpaper",
     "src": "/backgrounds/midnight-meadow-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/midnight-meadow-live-wallpaper.jpg"
   },
   {
     "name": "Minecraft Japanese Summer",
     "src": "/backgrounds/minecraft-japanese-summer-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/minecraft-japanese-summer-live-wallpaper.jpg"
   },
   {
     "name": "Minecraft Misty Forest",
     "src": "/backgrounds/minecraft-misty-forest-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/minecraft-misty-forest-live-wallpaper.jpg"
   },
   {
     "name": "Neverness to Everness Sports Car",
     "src": "/backgrounds/neverness-to-everness-sports-car-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/neverness-to-everness-sports-car-live-wallpaper.jpg"
   },
   {
     "name": "Night Vibe Assetto Corsa",
     "src": "/backgrounds/night-vibe-assetto-corsa-animated-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/night-vibe-assetto-corsa-animated-wallpaper.jpg"
   },
   {
     "name": "Red Anime Eye Close Up",
     "src": "/backgrounds/red-anime-eye-close-up-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/red-anime-eye-close-up-live-wallpaper.jpg"
   },
   {
     "name": "Yuji Itadori Blue Flame",
     "src": "/backgrounds/yuji-itadori-blue-flame-live-wallpaper.mp4",
     "type": "video",
-    "poster": ""
+    "poster": "/backgrounds/thumbnails/yuji-itadori-blue-flame-live-wallpaper.jpg"
   }
 ]
-
