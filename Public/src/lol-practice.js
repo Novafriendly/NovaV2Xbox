@@ -243,7 +243,7 @@
 
   };raf=requestAnimationFrame(frame);
 
-  addEventListener('blur',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+  addEventListener('blur',releaseMacro);document.addEventListener('visibilitychange',()=>{if(document.hidden)releaseMacro();});
 
   addEventListener('pagehide',()=>{releaseMacro();overlay.remove();cancelAnimationFrame(raf);macroDown=macroUp=()=>{};},{once:true});
 

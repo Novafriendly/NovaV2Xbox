@@ -1,6 +1,6 @@
 import {mountGameStatus} from './game-status.js';
 document.documentElement.classList.toggle('embedded',new URLSearchParams(location.search).has('embedded'));
-import {control} from './control-client.js';
+const now=Date.now();async function control(action){if(action==='status')return {owner:true};if(action==='dashboard')return {users:[],roles:{},activity:{},days:{},progress:{},appeals:{},feedback:{},audit:{},polls:{},events:{}};if(action==='buildNowInviteFeed')return {invite:{id:'preview',name:'Nova Owner',code:'NOVA42',isHost:true,expiresAt:now+600000},joins:[{uid:'preview-player',name:'NovaPlayer',photo:'',joinedAt:now}]};throw Error('Preview only — no invitations are sent.');}
 import {playerStats} from './player-stats.js';
 const $=s=>document.querySelector(s),el=(t,text,c)=>{const n=document.createElement(t);if(text!=null)n.textContent=text;if(c)n.className=c;return n},content=$('#content');let data,tab='Overview';
 const icons={'BuildNow lobby':'↗','Game Status':'◈',Overview:'⌂',People:'♙',Players:'♟',Inbox:'▤',Publish:'♧','Live announcements':'◉','Chat logs':'☷',Events:'ϟ','Reward codes':'◇','Owner audit':'♜'};

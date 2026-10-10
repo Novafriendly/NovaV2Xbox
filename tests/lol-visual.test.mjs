@@ -21,7 +21,7 @@ function runtime({rejectCompile=false,rejectLink=false}={}){
  const window={WebGL2RenderingContext:GL,HTMLCanvasElement:Canvas,requestAnimationFrame(){},addEventListener(){}};
  vm.runInNewContext(source,{window,document:{hidden:false},MouseEvent:class{}});return {api:window.NovaLOLVisual,GL,Canvas};
 }
-function program(r){const gl=new r.GL(),v={type:2},f={type:9};gl.shaderSource(v,vertex);gl.shaderSource(f,fragment);gl.compileShader(v);gl.compileShader(f);const p={shaders:[v,f]};gl.linkProgram(p);gl.program=p;return{gl,v,f,p};}
+function program(r,{player=false}={}){const gl=new r.GL(),v={type:2},f={type:9};gl.shaderSource(v,player?vertex.replace('void main','uniform bool OutlineEnabled;\nvoid main'):vertex);gl.shaderSource(f,fragment);gl.compileShader(v);gl.compileShader(f);const p={shaders:[v,f]};gl.linkProgram(p);gl.program=p;return{gl,v,f,p};}
 test('patches both Unity shader exits with matching GLSL 300 varyings',()=>{
  const {api}=runtime(),v=api.patchShader(vertex,true),f=api.patchShader(fragment,false);
  assert.ok(v.startsWith('#version 300 es\n'));assert.match(v,/out highp float novaDepth/);assert.match(f,/in highp float novaDepth/);
@@ -76,8 +76,8 @@ test('target selection rejects a wide floor highlight',()=>{
  for(let y=60;y<70;y++)for(let x=10;x<110;x++){const i=(y*w+x)*4;pixels[i]=255;pixels[i+2]=0;pixels[i+3]=255;}
  assert.equal(api.findTarget(pixels,w,h),null);
 });
-test('aim preserves highlighted candidates when world transforms are unavailable',()=>{
- const r=runtime(),{gl}=program(r);r.api.state.aim=true;r.api.state.movingOnly=true;gl.drawElements(4,5000,0,0);assert.deepEqual(gl.uniforms[0],['novaEnabled',1]);
+test('aim rejects unmarked geometry when world transforms are unavailable',()=>{
+ const r=runtime(),{gl}=program(r);r.api.state.aim=true;r.api.state.movingOnly=true;gl.drawElements(4,5000,0,0);assert.deepEqual(gl.uniforms[0],['novaEnabled',0]);
 });
 
 test('red regions provide boxes with top-down coordinates for tracer overlays',()=>{const {api}=runtime(),pixels=new Uint8Array(64*64*4);for(let y=20;y<40;y++)for(let x=30;x<38;x++){const i=(y*64+x)*4;pixels[i]=255;pixels[i+3]=255;}const regions=api.findRegions(pixels,64,64);assert.equal(regions.length,1);assert.equal(regions[0].left,30);assert.equal(regions[0].top,24);assert.equal(regions[0].height,20);});
@@ -90,3 +90,5 @@ test('auto fire pulses and releases immediately when detection is lost',()=>{con
 test('broader mesh detection includes smaller supported draw calls only when selected',()=>{const r=runtime(),{gl}=program(r);r.api.state.esp=true;gl.drawElements(4,2000,0,0);assert.deepEqual(gl.uniforms[0],['novaEnabled',0]);r.api.state.broadMeshes=true;gl.drawElements(4,2000,0,0);assert.deepEqual(gl.uniforms[1],['novaEnabled',1]);});
 
 test('mesh detection follows the selected highlight color',()=>{const {api}=runtime(),pixels=new Uint8Array(64*64*4);api.state.color=[0,1,0];for(let y=20;y<40;y++)for(let x=30;x<38;x++){const i=(y*64+x)*4;pixels[i+1]=255;pixels[i+3]=255;}assert.equal(api.findRegions(pixels,64,64).length,1);api.state.color=[1,0,0];assert.equal(api.findRegions(pixels,64,64).length,0);});
+
+test('aim accepts the reference player shader signature without targeting unmarked geometry',()=>{const r=runtime(),{gl}=program(r,{player:true});r.api.state.aim=true;gl.drawElements(4,5000,0,0);assert.deepEqual(gl.uniforms.at(-1),['novaEnabled',1]);assert.equal(r.api.state.playerPrograms,1)});

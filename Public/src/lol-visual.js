@@ -1,8 +1,8 @@
 /* Adapted from the supplied WebGL userscript. Mesh selection is a heuristic. */
 (()=>{
  'use strict';
- const state={color:[1,0,0],esp:false,boxes:false,lines:false,regions:[],aim:false,autoShoot:false,broadMeshes:false,wireframe:false,threshold:4.5,speed:0.4,fov:256,movingOnly:false,motion:false,motionPercent:0,spin:false,spinSpeed:350,modelUpdates:0,movingDraws:0,programs:0,fallbacks:0,candidates:0,message:'Waiting for WebGL 2.'};
- const originals=new WeakMap(),patched=new WeakSet(),programs=new WeakMap();let context=null,canvas=null,lastSample=0,frameStamp=0,lastFrame=0,remainderX=0,remainderY=0,motionPrevious=null,scanBuffer=null;
+ const state={color:[1,0,0],esp:false,boxes:false,lines:false,regions:[],aim:false,autoShoot:false,broadMeshes:false,wireframe:false,threshold:4.5,speed:0.4,fov:256,movingOnly:false,motion:false,motionPercent:0,spin:false,spinSpeed:350,modelUpdates:0,movingDraws:0,programs:0,playerPrograms:0,fallbacks:0,candidates:0,message:'Waiting for WebGL 2.'};
+ const originals=new WeakMap(),patched=new WeakSet(),programs=new WeakMap(),playerShaders=new WeakSet();let context=null,canvas=null,lastSample=0,frameStamp=0,lastFrame=0,remainderX=0,remainderY=0,motionPrevious=null,scanBuffer=null;
  function patchShader(source,vertex){
   if(!/^\s*#version\s+300\s+es\b/m.test(source))return null;
   const output=vertex?'':source.match(/\bout\s+(?:(?:lowp|mediump|highp)\s+)?vec4\s+(\w+)\s*;/)?.[1];
@@ -66,7 +66,7 @@
  hook(window.HTMLCanvasElement.prototype,'getContext',function(original,args){if(args[0]==='webgl2')args[1]={...(args[1]||{}),preserveDrawingBuffer:true};return original.apply(this,args);});
  hook(proto,'getUniformLocation',function(original,args){const result=original.apply(this,args);if(result)uniformNames.set(result,{program:args[0],name:args[1]});return result;});
  for(const name of ['uniform4fv','uniformMatrix4fv'])if(typeof proto[name]==='function')hook(proto,name,function(original,args){const result=original.apply(this,args);recordModel(args[0],args[name==='uniform4fv'?1:2],Number(args[name==='uniform4fv'?2:3])||0,Number(args[name==='uniform4fv'?3:4])||0);return result;});
- hook(proto,'shaderSource',function(original,args){const [shader,source]=args;originals.set(shader,source);const next=patchShader(source,this.getShaderParameter(shader,this.SHADER_TYPE)===this.VERTEX_SHADER);if(next){patched.add(shader);args[1]=next;}return original.apply(this,args);});
+ hook(proto,'shaderSource',function(original,args){const [shader,source]=args;if(/OutlineEnabled/.test(source))playerShaders.add(shader);originals.set(shader,source);const next=patchShader(source,this.getShaderParameter(shader,this.SHADER_TYPE)===this.VERTEX_SHADER);if(next){patched.add(shader);args[1]=next;}return original.apply(this,args);});
  const rawCompile=proto.compileShader;
  function restore(gl,shader){sourceNative.call(gl,shader,originals.get(shader));patched.delete(shader);}
  hook(proto,'compileShader',function(original,args){const result=original.apply(this,args),shader=args[0];if(patched.has(shader)&&!this.getShaderParameter(shader,this.COMPILE_STATUS)){
@@ -76,17 +76,17 @@
   if(!supported){for(const shader of shaders)if(patched.has(shader)){restore(this,shader);rawCompile.call(this,shader);}}
   let result=original.apply(this,args);
   if(supported&&!this.getProgramParameter(program,this.LINK_STATUS)){for(const shader of shaders){restore(this,shader);rawCompile.call(this,shader);}result=original.apply(this,args);supported=false;state.fallbacks++;}
-  if(supported&&this.getProgramParameter(program,this.LINK_STATUS)){programs.set(program,{enabled:this.getUniformLocation(program,'novaEnabled'),threshold:this.getUniformLocation(program,'novaThreshold'),color:this.getUniformLocation(program,'novaColor')});state.programs++;state.message='Experimental mesh highlighting available.';}return result;
+  if(supported&&this.getProgramParameter(program,this.LINK_STATUS)){const player=shaders.some(shader=>playerShaders.has(shader));if(player)state.playerPrograms++;programs.set(program,{player,enabled:this.getUniformLocation(program,'novaEnabled'),threshold:this.getUniformLocation(program,'novaThreshold'),color:this.getUniformLocation(program,'novaColor')});state.programs++;state.message='Experimental mesh highlighting available.';}return result;
  }
  hook(proto,'linkProgram',link);
- hook(proto,'drawElements',function(original,args){
+ const drawHook=function(original,args){
   context=this;canvas=this.canvas;const program=this.getParameter(this.CURRENT_PROGRAM),uniforms=program&&programs.get(program);
-  if(uniforms){const candidate=args[1]>(state.broadMeshes?1000:4000),model=modelMatrices.get(program);let moving=false;
+  if(uniforms){const candidate=args[1]>(state.broadMeshes?1000:3000)&&(!state.aim||uniforms.player),model=modelMatrices.get(program);let moving=false;
    if(candidate&&(state.aim||state.esp)&&model?.rows===15){const key=objectId(program)+':'+objectId(this.getParameter(this.VERTEX_ARRAY_BINDING))+':'+objectId(this.getParameter(this.ELEMENT_ARRAY_BUFFER_BINDING))+':'+args[1]+':'+args[3];moving=tracker.observe(key,model.matrix,frameStamp);}
    const eligible=candidate&&(!state.aim||!state.movingOnly||model?.rows!==15||moving);
    this.uniform1i(uniforms.enabled,(state.esp||state.aim||state.boxes||state.lines)&&eligible?1:0);this.uniform1f(uniforms.threshold,state.threshold);if(this.uniform3fv)this.uniform3fv(uniforms.color,state.color);if(candidate)state.candidates++;if(moving)state.movingDraws++;if(state.wireframe&&candidate)args[0]=this.LINES;
   }return original.apply(this,args);
- });
+ };for(const name of ['drawElements','drawElementsInstanced'])if(typeof proto[name]==='function')hook(proto,name,drawHook);
  const autoFire=createAutoFire((type,options)=>{if(canvas)window.NovaLOLInput?.mouse(canvas,type,options);});
  function sample(now){
   if(!context||!canvas||document.hidden){autoFire.stop();return;}
@@ -107,7 +107,7 @@
   autoFire.update(now,state.autoShoot);
  }
  hook(window,'requestAnimationFrame',function(original,args){const callback=args[0];args[0]=function(now){if(frameStamp!==now){frameStamp=now;state.movingDraws=0;state.candidates=0;}const result=callback(now);if(lastFrame!==now)sample(now);return result;};return original.apply(this,args);});
- window.addEventListener('blur',()=>{state.aim=false;autoFire.stop();});
+ window.addEventListener('blur',()=>{autoFire.stop();remainderX=remainderY=0;});
  document.addEventListener?.('visibilitychange',()=>{if(document.hidden)autoFire.stop();});
  document.addEventListener?.('pointerlockchange',()=>{if(document.pointerLockElement!==canvas)autoFire.stop();});
  window.addEventListener('pagehide',()=>{autoFire.stop();state.esp=state.aim=state.autoShoot=state.wireframe=state.spin=state.motion=false;},{once:true});
